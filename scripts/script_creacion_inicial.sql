@@ -427,24 +427,11 @@ SELECT DISTINCT Proveedor_Provincia, Proveedor_Localidad, Proveedor_Direccion
 FROM gd_esquema.Maestra
 WHERE Proveedor_Provincia IS NOT NULL;
 
--- Comprobaci�n de que se migraron todas las ubicaciones
--- cantidad de filas de ubicacion migradas:
-select count(*) as ubicaciones_migradas from LOS_POLLOS_HERMANOS.Ubicacion;
--- cantidad de filas �nicas en tabla maestra:
-
-select count(distinct sucursal_localidad+sucursal_direccion+sucursal_provincia)
-from gd_esquema.maestra
-select count(distinct proveedor_localidad+proveedor_direccion+proveedor_provincia)
-from gd_esquema.maestra
-select count(distinct cliente_localidad+cliente_direccion+cliente_provincia)
-from gd_esquema.maestra
-
 /*
 	----------------------------------------------
 				Migraci�n de Cliente
 	----------------------------------------------
 */
-BEGIN TRANSACTION;
 -- (1) Cliente
 INSERT INTO LOS_POLLOS_HERMANOS.Cliente (Cliente_Ubicacion, Cliente_Dni, Cliente_Nombre, Cliente_Apellido, Cliente_Fecha_Nacimiento, Cliente_Mail, Cliente_Telefono)
 SELECT DISTINCT
@@ -456,27 +443,11 @@ JOIN LOS_POLLOS_HERMANOS.Ubicacion u ON
     AND u.Ubicacion_Direccion = m.Cliente_Direccion
 order by m.Cliente_Dni
 
-ROLLBACK;
--- Comprobaci�n de que se migraron todos los clientes:
--- cantidad migradas:
-SELECT COUNT (*) as clientes_migrados FROM LOS_POLLOS_HERMANOS.Cliente
--- cantidad en tabla maestra:
-SELECT COUNT(*) as clientes_en_tabla_maestra
-FROM (
-    SELECT DISTINCT 
-        m.Cliente_DNI, m.Cliente_Nombre, m.Cliente_Apellido, m.Cliente_FechaNacimiento, m.Cliente_Mail, m.Cliente_Telefono, m.Cliente_Provincia, m.Cliente_Localidad, m.Cliente_Direccion
-    FROM gd_esquema.Maestra m
-    WHERE m.Cliente_Provincia IS NOT NULL
-        AND m.Cliente_Localidad IS NOT NULL
-        AND m.Cliente_Direccion IS NOT NULL
-) AS cantidad_de_clientes;
-
 /*
 	----------------------------------------------
 				Migraci�n de Sucursal
 	----------------------------------------------
 */
-BEGIN TRANSACTION;
 -- (3) Sucursal
 INSERT INTO LOS_POLLOS_HERMANOS.Sucursal (
     Sucursal_Codigo, Sucursal_Ubicacion, Sucursal_Telefono, Sucursal_Mail
@@ -492,19 +463,11 @@ JOIN LOS_POLLOS_HERMANOS.Ubicacion u ON
     AND u.Ubicacion_Localidad = m.Sucursal_Localidad
     AND u.Ubicacion_Direccion = m.Sucursal_Direccion;
 
-ROLLBACK;
--- Comprobaci�n de que se migraron todas las sucursales:
--- cantidad de sucursales distintas en la tabla maestra:
-SELECT COUNT(DISTINCT Sucursal_NroSucursal) as sucursales_en_tabla_maestra FROM gd_esquema.Maestra;
--- cantidad de sucursales migradas:
-select count(*) sucursales_migradas from LOS_POLLOS_HERMANOS.Sucursal;		
-
 /*
 	----------------------------------------------
 				Migraci�n de Proveedor
 	----------------------------------------------
 */
-BEGIN TRANSACTION;
 -- (4) Proveedor
 INSERT INTO LOS_POLLOS_HERMANOS.Proveedor (Proveedor_Ubicacion, Proveedor_Cuit, Proveedor_RazonSocial, Proveedor_Telefono, Proveedor_Mail)
 SELECT DISTINCT
@@ -518,21 +481,6 @@ JOIN LOS_POLLOS_HERMANOS.Ubicacion u ON
     u.Ubicacion_Provincia = m.Proveedor_Provincia  
     AND u.Ubicacion_Localidad = m.Proveedor_Localidad  
     AND u.Ubicacion_Direccion = m.Proveedor_Direccion;
-ROLLBACK;
--- Comprobaci�n de que se migraron todos los proveedores:
--- cantidad migradas:
-select count(*) as proveedores_migrados from LOS_POLLOS_HERMANOS.Proveedor;
--- cantidad en la tabla maestra:
-SELECT count(*) as proveedores_en_tabla_maestra
-FROM (
-    SELECT DISTINCT
-        u.Ubicacion_Codigo, m.Proveedor_CUIT, m.Proveedor_RazonSocial, m.Proveedor_Telefono, m.Proveedor_Mail
-    FROM gd_esquema.Maestra m
-    JOIN LOS_POLLOS_HERMANOS.Ubicacion u ON 
-        u.Ubicacion_Provincia = m.Proveedor_Provincia  
-        AND u.Ubicacion_Localidad = m.Proveedor_Localidad  
-        AND u.Ubicacion_Direccion = m.Proveedor_Direccion
-) AS cantidad_de_proveedores;
 
 /*
 ------------------------------------------------------
@@ -629,7 +577,7 @@ WHERE m.Sillon_Codigo IS NOT NULL
 
 /*
 ------------------------------------------------------
-                Migraci�n de DetallePedido
+                Migraci�n de PedidoCancelacion
 ------------------------------------------------------
 */
 -- (18) PedidoCancelacion
@@ -649,3 +597,63 @@ INSERT INTO LOS_POLLOS_HERMANOS.Envio(Envio_Numero, Envio_Factura, Envio_Fecha_P
 SELECT DISTINCT m.Envio_Numero, m.Factura_Numero, m.Envio_Fecha_Programada, m.Envio_Fecha, m.Envio_ImporteTraslado, m.Envio_ImporteSubida
 FROM gd_esquema.Maestra m
 WHERE m.Envio_Numero IS NOT NULL
+
+/*
+------------------------------------------------------
+                Migración de DetalleFactura
+------------------------------------------------------
+*/
+-- (20) DetalleFactura
+WITH MaestraFiltrada AS (
+  SELECT *,
+         ROW_NUMBER() OVER (
+           PARTITION BY Pedido_Numero, Detalle_Factura_Cantidad, Detalle_Factura_Precio, Detalle_Factura_SubTotal
+           ORDER BY (SELECT NULL)
+         ) AS rn
+  FROM gd_esquema.Maestra
+  WHERE Factura_Numero IS NOT NULL
+    AND Detalle_Factura_Cantidad IS NOT NULL
+    AND Detalle_Factura_Precio IS NOT NULL
+    AND Detalle_Factura_SubTotal IS NOT NULL
+),
+DetalleFiltrado AS (
+  SELECT *,
+         ROW_NUMBER() OVER (
+           PARTITION BY Detalle_Pedido_Pedido, Detalle_Pedido_Cantidad, Detalle_Pedido_Precio, Detalle_Pedido_Subtotal
+           ORDER BY (SELECT NULL)
+         ) AS rn
+  FROM LOS_POLLOS_HERMANOS.DetallePedido
+)
+INSERT INTO LOS_POLLOS_HERMANOS.DetalleFactura (
+  Detalle_Factura_Factura,
+  Detalle_Factura_Detalle_Pedido,
+  Detalle_Factura_Cantidad,
+  Detalle_Factura_Precio,
+  Detalle_Factura_Subtotal
+)
+SELECT m.Factura_Numero,
+       u.Detalle_Pedido_Numero,
+       m.Detalle_Factura_Cantidad,
+       m.Detalle_Factura_Precio,
+       m.Detalle_Factura_SubTotal
+FROM MaestraFiltrada m
+JOIN DetalleFiltrado u
+  ON m.Pedido_Numero = u.Detalle_Pedido_Pedido
+     AND m.Detalle_Factura_Cantidad = u.Detalle_Pedido_Cantidad
+     AND m.Detalle_Factura_Precio = u.Detalle_Pedido_Precio
+     AND m.Detalle_Factura_SubTotal = u.Detalle_Pedido_Subtotal
+     AND m.rn = u.rn;
+
+-- Se utiliza la función ROW_NUMBER() para emparejar filas de la tabla Maestra con DetallePedido
+-- de forma unívoca. Dado que los campos Cantidad, Precio y Subtotal pueden repetirse dentro de un mismo pedido,
+-- no es posible hacer un JOIN directo sin riesgo de generar combinaciones múltiples (producto cartesiano),
+-- lo que inflaría artificialmente la cantidad de registros insertados en DetalleFactura.
+--
+-- Por eso, se asigna un número de fila (ROW_NUMBER) dentro de cada grupo de coincidencias
+-- con los mismos valores de Pedido_Numero, Cantidad, Precio y Subtotal, tanto en Maestra como en DetallePedido.
+--
+-- Luego, se realiza el JOIN utilizando además de los campos de equivalencia, la coincidencia del número de fila (rn),
+-- garantizando así que cada combinación válida se relacione solo una vez y se eviten duplicaciones.
+--
+-- Este enfoque asegura que se mantenga la correspondencia uno a uno entre los detalles de la factura y los detalles del pedido,
+-- respetando la integridad lógica del modelo de datos.

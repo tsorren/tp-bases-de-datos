@@ -14,7 +14,7 @@ Tela no
 Relleno no
 Compra (79)
 DetalleCompra no
-DetalleFactura por ahora no
+DetalleFactura (61092)
 DetallePedido (72166)
 Envio (17408)
 Factura (17408)
