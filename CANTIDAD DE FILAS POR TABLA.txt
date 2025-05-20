@@ -1,0 +1,22 @@
+CANTIDAD DE FILAS POR TABLA
+Ubicación (20528)
+Cliente (20509)
+Sucursal (9)
+Proveedor (10)
+Sillon (72166)
+Medida (4)
+Modelo (7)
+MaterialPorSillon no
+Material no
+TipoMaterial no
+Madera no
+Tela no
+Relleno no
+Compra (79)
+DetalleCompra no
+DetalleFactura por ahora no
+DetallePedido (72166)
+Envio (17408)
+Factura (17408)
+Pedido (20509)
+PedidoCancelacion (3101)
