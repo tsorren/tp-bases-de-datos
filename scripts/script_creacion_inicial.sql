@@ -49,7 +49,7 @@ CREATE TABLE LOS_POLLOS_HERMANOS.Factura (
 
 -- (3) Sucursal
 CREATE TABLE LOS_POLLOS_HERMANOS.Sucursal (
-    Sucursal_Numero BIGINT NOT NULL,
+    Sucursal_Codigo BIGINT NOT NULL,
     Sucursal_Ubicacion BIGINT,
     Sucursal_Telefono NVARCHAR(255),
     Sucursal_Mail NVARCHAR(255)
@@ -57,7 +57,7 @@ CREATE TABLE LOS_POLLOS_HERMANOS.Sucursal (
 
 -- (4) Proveedor
 CREATE TABLE LOS_POLLOS_HERMANOS.Proveedor (
-    Proveedor_Id BIGINT IDENTITY(1,1) NOT NULL,
+    Proveedor_Codigo BIGINT IDENTITY(1,1) NOT NULL,
     Proveedor_Ubicacion BIGINT,
     Proveedor_Cuit NVARCHAR(255),
     Proveedor_RazonSocial NVARCHAR(255),
@@ -67,7 +67,7 @@ CREATE TABLE LOS_POLLOS_HERMANOS.Proveedor (
 
 -- (5) Ubicacion
 CREATE TABLE LOS_POLLOS_HERMANOS.Ubicacion (
-    Ubicacion_Id BIGINT IDENTITY (1,1) NOT NULL,
+    Ubicacion_Codigo BIGINT IDENTITY (1,1) NOT NULL,
     Ubicacion_Provincia NVARCHAR(255),
     Ubicacion_Localidad NVARCHAR(255),
     Ubicacion_Direccion NVARCHAR(255)
@@ -143,27 +143,27 @@ CREATE TABLE LOS_POLLOS_HERMANOS.TipoMaterial (
 
 -- (14) Tela
 CREATE TABLE LOS_POLLOS_HERMANOS.Tela (
-    Tela_Id BIGINT IDENTITY(1,1) NOT NULL,
+    Tela_Codigo BIGINT IDENTITY(1,1) NOT NULL,
     Tela_Color NVARCHAR(255),
     Tela_Textura NVARCHAR(255)
 );
 
 -- (15) Madera
 CREATE TABLE LOS_POLLOS_HERMANOS.Madera (
-    Madera_Id BIGINT IDENTITY(1,1) NOT NULL,
+    Madera_Codigo BIGINT IDENTITY(1,1) NOT NULL,
     Madera_Color NVARCHAR(255),
     Madera_Dureza NVARCHAR(255)
 );
 
 -- (16) Relleno
 CREATE TABLE LOS_POLLOS_HERMANOS.Relleno (
-    Relleno_Id BIGINT IDENTITY(1,1) NOT NULL,
+    Relleno_Codigo BIGINT IDENTITY(1,1) NOT NULL,
     Relleno_Dureza DECIMAL(38,2)
 );
 
 -- (17) DetalleCompra
 CREATE TABLE LOS_POLLOS_HERMANOS.DetalleCompra (
-    Detalle_Compra_Codigo BIGINT IDENTITY(1,1) NOT NULL,
+    Detalle_Compra_Numero BIGINT IDENTITY(1,1) NOT NULL,
     Detalle_Compra_Compra DECIMAL(18,0),
     Detalle_Compra_Material BIGINT,
     Detalle_Compra_Cantidad DECIMAL(18,0),
@@ -223,15 +223,15 @@ ADD CONSTRAINT PK_Factura PRIMARY KEY (Factura_Numero)
 
 -- (3) Sucursal
 ALTER TABLE LOS_POLLOS_HERMANOS.Sucursal
-ADD CONSTRAINT PK_Sucursal PRIMARY KEY (Sucursal_Numero)
+ADD CONSTRAINT PK_Sucursal PRIMARY KEY (Sucursal_Codigo)
 
 -- (4) Proveedor
 ALTER TABLE LOS_POLLOS_HERMANOS.Proveedor
-ADD CONSTRAINT PK_Proveedor PRIMARY KEY (Proveedor_Id)
+ADD CONSTRAINT PK_Proveedor PRIMARY KEY (Proveedor_Codigo)
 
 -- (5) Ubicacion
 ALTER TABLE LOS_POLLOS_HERMANOS.Ubicacion
-ADD CONSTRAINT PK_Ubicacion PRIMARY KEY (Ubicacion_Id)
+ADD CONSTRAINT PK_Ubicacion PRIMARY KEY (Ubicacion_Codigo)
 
 -- (6) Compra
 ALTER TABLE LOS_POLLOS_HERMANOS.Compra
@@ -267,19 +267,19 @@ ADD CONSTRAINT PK_TipoMaterial PRIMARY KEY (TipoMaterial_Codigo)
 
 -- (14) Tela
 ALTER TABLE LOS_POLLOS_HERMANOS.Tela
-ADD CONSTRAINT PK_Tela PRIMARY KEY (Tela_Id)
+ADD CONSTRAINT PK_Tela PRIMARY KEY (Tela_Codigo)
 
 -- (15) Madera
 ALTER TABLE LOS_POLLOS_HERMANOS.Madera
-ADD CONSTRAINT PK_Madera PRIMARY KEY (Madera_Id)
+ADD CONSTRAINT PK_Madera PRIMARY KEY (Madera_Codigo)
 
 -- (16) Relleno
 ALTER TABLE LOS_POLLOS_HERMANOS.Relleno
-ADD CONSTRAINT PK_Relleno PRIMARY KEY (Relleno_Id)
+ADD CONSTRAINT PK_Relleno PRIMARY KEY (Relleno_Codigo)
 
 -- (17) DetalleCompra
 ALTER TABLE LOS_POLLOS_HERMANOS.DetalleCompra
-ADD CONSTRAINT PK_DetalleCompra PRIMARY KEY (Detalle_Compra_Codigo)
+ADD CONSTRAINT PK_DetalleCompra PRIMARY KEY (Detalle_Compra_Numero)
 
 -- (18) PedidoCancelacion
 ALTER TABLE LOS_POLLOS_HERMANOS.PedidoCancelacion
@@ -305,32 +305,32 @@ ADD CONSTRAINT PK_MaterialPorSillon PRIMARY KEY (MaterialPorSillon_Codigo)
 
 -- (1) Cliente
 ALTER TABLE LOS_POLLOS_HERMANOS.Cliente
-ADD CONSTRAINT FK_Cliente_Ubicacion FOREIGN KEY (Cliente_Ubicacion) REFERENCES LOS_POLLOS_HERMANOS.Ubicacion(Ubicacion_Id)
+ADD CONSTRAINT FK_Cliente_Ubicacion FOREIGN KEY (Cliente_Ubicacion) REFERENCES LOS_POLLOS_HERMANOS.Ubicacion(Ubicacion_Codigo)
 
 -- (2) Factura
 ALTER TABLE LOS_POLLOS_HERMANOS.Factura
 ADD CONSTRAINT FK_Factura_Cliente FOREIGN KEY (Factura_Cliente) REFERENCES LOS_POLLOS_HERMANOS.Cliente(Cliente_Id)
 
 ALTER TABLE LOS_POLLOS_HERMANOS.Factura
-ADD CONSTRAINT FK_Factura_Sucursal FOREIGN KEY (Factura_Sucursal) REFERENCES LOS_POLLOS_HERMANOS.Sucursal(Sucursal_Numero)
+ADD CONSTRAINT FK_Factura_Sucursal FOREIGN KEY (Factura_Sucursal) REFERENCES LOS_POLLOS_HERMANOS.Sucursal(Sucursal_Codigo)
 
 -- (3) Sucursal
 ALTER TABLE LOS_POLLOS_HERMANOS.Sucursal
-ADD CONSTRAINT FK_Sucursal_Ubicacion FOREIGN KEY (Sucursal_Ubicacion) REFERENCES LOS_POLLOS_HERMANOS.Ubicacion(Ubicacion_Id)
+ADD CONSTRAINT FK_Sucursal_Ubicacion FOREIGN KEY (Sucursal_Ubicacion) REFERENCES LOS_POLLOS_HERMANOS.Ubicacion(Ubicacion_Codigo)
 
 -- (4) Proveedor
 ALTER TABLE LOS_POLLOS_HERMANOS.Proveedor
-ADD CONSTRAINT FK_Proveedor_Ubicacion FOREIGN KEY (Proveedor_Ubicacion) REFERENCES LOS_POLLOS_HERMANOS.Ubicacion(Ubicacion_Id)
+ADD CONSTRAINT FK_Proveedor_Ubicacion FOREIGN KEY (Proveedor_Ubicacion) REFERENCES LOS_POLLOS_HERMANOS.Ubicacion(Ubicacion_Codigo)
 
 -- (5) Ubicacion
 -- No tiene FK
 
 -- (6) Compra
 ALTER TABLE LOS_POLLOS_HERMANOS.Compra
-ADD CONSTRAINT FK_Compra_Sucursal FOREIGN KEY (Compra_Sucursal) REFERENCES LOS_POLLOS_HERMANOS.Sucursal(Sucursal_Numero)
+ADD CONSTRAINT FK_Compra_Sucursal FOREIGN KEY (Compra_Sucursal) REFERENCES LOS_POLLOS_HERMANOS.Sucursal(Sucursal_Codigo)
 
 ALTER TABLE LOS_POLLOS_HERMANOS.Compra
-ADD CONSTRAINT FK_Compra_Proveedor FOREIGN KEY (Compra_Proveedor) REFERENCES LOS_POLLOS_HERMANOS.Proveedor(Proveedor_Id)
+ADD CONSTRAINT FK_Compra_Proveedor FOREIGN KEY (Compra_Proveedor) REFERENCES LOS_POLLOS_HERMANOS.Proveedor(Proveedor_Codigo)
 
 -- (7) DetallePedido
 ALTER TABLE LOS_POLLOS_HERMANOS.DetallePedido
@@ -351,7 +351,7 @@ ALTER TABLE LOS_POLLOS_HERMANOS.Pedido
 ADD CONSTRAINT FK_Pedido_Cliente FOREIGN KEY (Pedido_Cliente) REFERENCES LOS_POLLOS_HERMANOS.Cliente(Cliente_Id)
 
 ALTER TABLE LOS_POLLOS_HERMANOS.Pedido
-ADD CONSTRAINT FK_Pedido_Sucursal FOREIGN KEY (Pedido_Sucursal) REFERENCES LOS_POLLOS_HERMANOS.Sucursal(Sucursal_Numero)
+ADD CONSTRAINT FK_Pedido_Sucursal FOREIGN KEY (Pedido_Sucursal) REFERENCES LOS_POLLOS_HERMANOS.Sucursal(Sucursal_Codigo)
 
 -- (10) Material
 ALTER TABLE LOS_POLLOS_HERMANOS.Material
@@ -368,15 +368,15 @@ ADD CONSTRAINT FK_Material_TipoMaterial FOREIGN KEY (Material_Tipo) REFERENCES L
 
 -- (14) Tela
 ALTER TABLE LOS_POLLOS_HERMANOS.Tela
-ADD CONSTRAINT FK_Tela_TipoMaterial FOREIGN KEY (Tela_Id) REFERENCES LOS_POLLOS_HERMANOS.TipoMaterial(TipoMaterial_Codigo)
+ADD CONSTRAINT FK_Tela_TipoMaterial FOREIGN KEY (Tela_Codigo) REFERENCES LOS_POLLOS_HERMANOS.TipoMaterial(TipoMaterial_Codigo)
 
 -- (15) Madera
 ALTER TABLE LOS_POLLOS_HERMANOS.Madera
-ADD CONSTRAINT FK_Madera_TipoMaterial FOREIGN KEY (Madera_Id) REFERENCES LOS_POLLOS_HERMANOS.TipoMaterial(TipoMaterial_Codigo)
+ADD CONSTRAINT FK_Madera_TipoMaterial FOREIGN KEY (Madera_Codigo) REFERENCES LOS_POLLOS_HERMANOS.TipoMaterial(TipoMaterial_Codigo)
 
 -- (16) Relleno
 ALTER TABLE LOS_POLLOS_HERMANOS.Relleno
-ADD CONSTRAINT FK_Relleno_TipoMaterial FOREIGN KEY (Relleno_Id) REFERENCES LOS_POLLOS_HERMANOS.TipoMaterial(TipoMaterial_Codigo)
+ADD CONSTRAINT FK_Relleno_TipoMaterial FOREIGN KEY (Relleno_Codigo) REFERENCES LOS_POLLOS_HERMANOS.TipoMaterial(TipoMaterial_Codigo)
 
 -- (17) DetalleCompra
 ALTER TABLE LOS_POLLOS_HERMANOS.DetalleCompra
@@ -409,8 +409,8 @@ ADD CONSTRAINT FK_MaterialPorSillon_Sillon FOREIGN KEY (MaterialPorSillon_Sillon
 
 /*
 	----------------------------------------------------------------------------------------------
-									Migración de Ubicacion
-			(Tiene que hacerse antes que la migración de Cliente, Proveedor y Sucursal)
+									Migraciï¿½n de Ubicacion
+			(Tiene que hacerse antes que la migraciï¿½n de Cliente, Proveedor y Sucursal)
 	---------------------------------------------------------------------------------------------
 */
 -- (5) Ubicacion 
@@ -427,10 +427,10 @@ SELECT DISTINCT Proveedor_Provincia, Proveedor_Localidad, Proveedor_Direccion
 FROM gd_esquema.Maestra
 WHERE Proveedor_Provincia IS NOT NULL;
 
--- Comprobación de que se migraron todas las ubicaciones
+-- Comprobaciï¿½n de que se migraron todas las ubicaciones
 -- cantidad de filas de ubicacion migradas:
 select count(*) as ubicaciones_migradas from LOS_POLLOS_HERMANOS.Ubicacion;
--- cantidad de filas únicas en tabla maestra:
+-- cantidad de filas ï¿½nicas en tabla maestra:
 
 select count(distinct sucursal_localidad+sucursal_direccion+sucursal_provincia)
 from gd_esquema.maestra
@@ -441,14 +441,14 @@ from gd_esquema.maestra
 
 /*
 	----------------------------------------------
-				Migración de Cliente
+				Migraciï¿½n de Cliente
 	----------------------------------------------
 */
 BEGIN TRANSACTION;
 -- (1) Cliente
 INSERT INTO LOS_POLLOS_HERMANOS.Cliente (Cliente_Ubicacion, Cliente_Dni, Cliente_Nombre, Cliente_Apellido, Cliente_Fecha_Nacimiento, Cliente_Mail, Cliente_Telefono)
 SELECT DISTINCT
-    u.Ubicacion_Id, m.Cliente_Dni, m.Cliente_Nombre, m.Cliente_Apellido, m.Cliente_FechaNacimiento, m.Cliente_Mail, m.Cliente_Telefono
+    u.Ubicacion_Codigo, m.Cliente_Dni, m.Cliente_Nombre, m.Cliente_Apellido, m.Cliente_FechaNacimiento, m.Cliente_Mail, m.Cliente_Telefono
 FROM gd_esquema.Maestra m
 JOIN LOS_POLLOS_HERMANOS.Ubicacion u ON 
     u.Ubicacion_Provincia = m.Cliente_Provincia  
@@ -457,7 +457,7 @@ JOIN LOS_POLLOS_HERMANOS.Ubicacion u ON
 order by m.Cliente_Dni
 
 ROLLBACK;
--- Comprobación de que se migraron todos los clientes:
+-- Comprobaciï¿½n de que se migraron todos los clientes:
 -- cantidad migradas:
 SELECT COUNT (*) as clientes_migrados FROM LOS_POLLOS_HERMANOS.Cliente
 -- cantidad en tabla maestra:
@@ -473,17 +473,17 @@ FROM (
 
 /*
 	----------------------------------------------
-				Migración de Sucursal
+				Migraciï¿½n de Sucursal
 	----------------------------------------------
 */
 BEGIN TRANSACTION;
 -- (3) Sucursal
 INSERT INTO LOS_POLLOS_HERMANOS.Sucursal (
-    Sucursal_Numero, Sucursal_Ubicacion, Sucursal_Telefono, Sucursal_Mail
+    Sucursal_Codigo, Sucursal_Ubicacion, Sucursal_Telefono, Sucursal_Mail
 )
 SELECT DISTINCT
     m.Sucursal_NroSucursal,
-    u.Ubicacion_Id,
+    u.Ubicacion_Codigo,
     m.Sucursal_Telefono,
     m.Sucursal_Mail
 FROM gd_esquema.Maestra m
@@ -493,7 +493,7 @@ JOIN LOS_POLLOS_HERMANOS.Ubicacion u ON
     AND u.Ubicacion_Direccion = m.Sucursal_Direccion;
 
 ROLLBACK;
--- Comprobación de que se migraron todas las sucursales:
+-- Comprobaciï¿½n de que se migraron todas las sucursales:
 -- cantidad de sucursales distintas en la tabla maestra:
 SELECT COUNT(DISTINCT Sucursal_NroSucursal) as sucursales_en_tabla_maestra FROM gd_esquema.Maestra;
 -- cantidad de sucursales migradas:
@@ -501,14 +501,14 @@ select count(*) sucursales_migradas from LOS_POLLOS_HERMANOS.Sucursal;
 
 /*
 	----------------------------------------------
-				Migración de Proveedor
+				Migraciï¿½n de Proveedor
 	----------------------------------------------
 */
 BEGIN TRANSACTION;
 -- (4) Proveedor
 INSERT INTO LOS_POLLOS_HERMANOS.Proveedor (Proveedor_Ubicacion, Proveedor_Cuit, Proveedor_RazonSocial, Proveedor_Telefono, Proveedor_Mail)
 SELECT DISTINCT
-    u.Ubicacion_Id,
+    u.Ubicacion_Codigo,
     m.Proveedor_Cuit,
     m.Proveedor_RazonSocial,
     m.Proveedor_Telefono,
@@ -519,14 +519,14 @@ JOIN LOS_POLLOS_HERMANOS.Ubicacion u ON
     AND u.Ubicacion_Localidad = m.Proveedor_Localidad  
     AND u.Ubicacion_Direccion = m.Proveedor_Direccion;
 ROLLBACK;
--- Comprobación de que se migraron todos los proveedores:
+-- Comprobaciï¿½n de que se migraron todos los proveedores:
 -- cantidad migradas:
 select count(*) as proveedores_migrados from LOS_POLLOS_HERMANOS.Proveedor;
 -- cantidad en la tabla maestra:
 SELECT count(*) as proveedores_en_tabla_maestra
 FROM (
     SELECT DISTINCT
-        u.Ubicacion_Id, m.Proveedor_CUIT, m.Proveedor_RazonSocial, m.Proveedor_Telefono, m.Proveedor_Mail
+        u.Ubicacion_Codigo, m.Proveedor_CUIT, m.Proveedor_RazonSocial, m.Proveedor_Telefono, m.Proveedor_Mail
     FROM gd_esquema.Maestra m
     JOIN LOS_POLLOS_HERMANOS.Ubicacion u ON 
         u.Ubicacion_Provincia = m.Proveedor_Provincia  
@@ -536,7 +536,7 @@ FROM (
 
 /*
 ------------------------------------------------------
-                Migración de Medida    
+                Migraciï¿½n de Medida    
 ------------------------------------------------------
 */
 
@@ -548,7 +548,7 @@ WHERE m.Sillon_Medida_Alto IS NOT NULL
 
 /*
 ------------------------------------------------------
-                Migración de Modelo
+                Migraciï¿½n de Modelo
 ------------------------------------------------------
 */
 
@@ -560,7 +560,7 @@ WHERE m.Sillon_Modelo_Codigo IS NOT NULL
 
 /*
 ------------------------------------------------------
-                Migración de Sillon
+                Migraciï¿½n de Sillon
 ------------------------------------------------------
 */
 
@@ -578,47 +578,47 @@ JOIN LOS_POLLOS_HERMANOS.Modelo u2 ON
 
 /*
 ------------------------------------------------------
-                Migración de Compra
+                Migraciï¿½n de Compra
 ------------------------------------------------------
 */
 -- (6) Compra
 INSERT INTO LOS_POLLOS_HERMANOS.Compra(Compra_Numero, Compra_Sucursal, Compra_Proveedor, Compra_Fecha, Compra_Total)
-SELECT DISTINCT m.Compra_Numero, s.Sucursal_Numero, p.Proveedor_Id, m.Compra_Fecha, m.Compra_Total
+SELECT DISTINCT m.Compra_Numero, s.Sucursal_Codigo, p.Proveedor_Codigo, m.Compra_Fecha, m.Compra_Total
 FROM gd_esquema.Maestra m
-JOIN LOS_POLLOS_HERMANOS.Sucursal s ON s.Sucursal_Numero = m.Sucursal_NroSucursal
+JOIN LOS_POLLOS_HERMANOS.Sucursal s ON s.Sucursal_Codigo = m.Sucursal_NroSucursal
 JOIN LOS_POLLOS_HERMANOS.Proveedor p ON p.Proveedor_Cuit = m.Proveedor_Cuit and p.Proveedor_RazonSocial = m.Proveedor_RazonSocial
 
 
 /*
 ------------------------------------------------------
-                Migración de Factura
+                Migraciï¿½n de Factura
 ------------------------------------------------------
 */
 -- (2) Factura
 
 INSERT INTO LOS_POLLOS_HERMANOS.Factura(Factura_Numero, Factura_Cliente, Factura_Sucursal, Factura_Fecha, Factura_Total)
-SELECT DISTINCT m.Factura_Numero, c.Cliente_Id, s.Sucursal_Numero, m.Factura_Fecha, m.Factura_Total
+SELECT DISTINCT m.Factura_Numero, c.Cliente_Id, s.Sucursal_Codigo, m.Factura_Fecha, m.Factura_Total
 FROM gd_esquema.Maestra m
 JOIN LOS_POLLOS_HERMANOS.Cliente c ON m.Cliente_Dni = c.Cliente_Dni AND m.Cliente_Apellido = c.Cliente_Apellido AND m.Cliente_Nombre = c.Cliente_Nombre
-JOIN LOS_POLLOS_HERMANOS.Sucursal s ON m.Sucursal_NroSucursal = s.Sucursal_Numero
+JOIN LOS_POLLOS_HERMANOS.Sucursal s ON m.Sucursal_NroSucursal = s.Sucursal_Codigo
 WHERE m.Factura_Numero IS NOT NULL
 
 /*
 ------------------------------------------------------
-                Migración de Pedido
+                Migraciï¿½n de Pedido
 ------------------------------------------------------
 */
 -- (9) Pedido
 INSERT INTO LOS_POLLOS_HERMANOS.Pedido(Pedido_Numero, Pedido_Cliente, Pedido_Sucursal, Pedido_Fecha, Pedido_Total, Pedido_Estado)
-SELECT DISTINCT m.Pedido_Numero, c.Cliente_Id, s.Sucursal_Numero, m.Pedido_Fecha, m.Pedido_Total, m.Pedido_Estado
+SELECT DISTINCT m.Pedido_Numero, c.Cliente_Id, s.Sucursal_Codigo, m.Pedido_Fecha, m.Pedido_Total, m.Pedido_Estado
 FROM gd_esquema.Maestra m
 JOIN LOS_POLLOS_HERMANOS.Cliente c ON m.Cliente_Dni = c.Cliente_Dni and m.Cliente_Nombre = c.Cliente_Nombre and m.Cliente_Apellido = m.Cliente_Apellido
-JOIN LOS_POLLOS_HERMANOS.Sucursal s ON m.Sucursal_NroSucursal = s.Sucursal_Numero
+JOIN LOS_POLLOS_HERMANOS.Sucursal s ON m.Sucursal_NroSucursal = s.Sucursal_Codigo
 WHERE m.Pedido_Numero IS NOT NULL
 
 /*
 ------------------------------------------------------
-                Migración de DetallePedido
+                Migraciï¿½n de DetallePedido
 ------------------------------------------------------
 */
 -- (7) DetallePedido
@@ -629,7 +629,7 @@ WHERE m.Sillon_Codigo IS NOT NULL
 
 /*
 ------------------------------------------------------
-                Migración de DetallePedido
+                Migraciï¿½n de DetallePedido
 ------------------------------------------------------
 */
 -- (18) PedidoCancelacion
@@ -641,7 +641,7 @@ WHERE m.Pedido_Cancelacion_Fecha IS NOT NULL
 
 /*
 ------------------------------------------------------
-                Migración de Envio
+                Migraciï¿½n de Envio
 ------------------------------------------------------
 */
 -- (19) Envio
