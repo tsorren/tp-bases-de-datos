@@ -112,9 +112,7 @@ CREATE TABLE LOS_POLLOS_HERMANOS.Pedido (
 -- (10) Material
 CREATE TABLE LOS_POLLOS_HERMANOS.Material (
     Material_Codigo BIGINT IDENTITY(1,1) NOT NULL,
-    Material_Tipo BIGINT, 
-    Material_Nombre NVARCHAR(255),
-    Material_Descripcion NVARCHAR(255),
+    Material_Tipo BIGINT,
     Material_Precio DECIMAL(38,2)
 );
 
@@ -138,12 +136,15 @@ CREATE TABLE LOS_POLLOS_HERMANOS.Modelo (
 -- (13) TipoMaterial
 CREATE TABLE LOS_POLLOS_HERMANOS.TipoMaterial (
     TipoMaterial_Codigo BIGINT IDENTITY(1,1) NOT NULL,
-    TipoMaterial_Tipo NVARCHAR(255)
+    TipoMaterial_Tipo NVARCHAR(255),
+    TipoMaterial_Nombre NVARCHAR(255),
+    TipoMaterial_Descripcion NVARCHAR(255)
 );
 
 -- (14) Tela
 CREATE TABLE LOS_POLLOS_HERMANOS.Tela (
     Tela_Codigo BIGINT IDENTITY(1,1) NOT NULL,
+    Tela_Material BIGINT,
     Tela_Color NVARCHAR(255),
     Tela_Textura NVARCHAR(255)
 );
@@ -151,6 +152,7 @@ CREATE TABLE LOS_POLLOS_HERMANOS.Tela (
 -- (15) Madera
 CREATE TABLE LOS_POLLOS_HERMANOS.Madera (
     Madera_Codigo BIGINT IDENTITY(1,1) NOT NULL,
+    Madera_Material BIGINT,
     Madera_Color NVARCHAR(255),
     Madera_Dureza NVARCHAR(255)
 );
@@ -158,6 +160,7 @@ CREATE TABLE LOS_POLLOS_HERMANOS.Madera (
 -- (16) Relleno
 CREATE TABLE LOS_POLLOS_HERMANOS.Relleno (
     Relleno_Codigo BIGINT IDENTITY(1,1) NOT NULL,
+    Relleno_Material BIGINT,
     Relleno_Dureza DECIMAL(38,2)
 );
 
@@ -368,15 +371,15 @@ ADD CONSTRAINT FK_Material_TipoMaterial FOREIGN KEY (Material_Tipo) REFERENCES L
 
 -- (14) Tela
 ALTER TABLE LOS_POLLOS_HERMANOS.Tela
-ADD CONSTRAINT FK_Tela_TipoMaterial FOREIGN KEY (Tela_Codigo) REFERENCES LOS_POLLOS_HERMANOS.TipoMaterial(TipoMaterial_Codigo)
+ADD CONSTRAINT FK_Tela_Material FOREIGN KEY (Tela_Material) REFERENCES LOS_POLLOS_HERMANOS.Material(Material_Codigo)
 
 -- (15) Madera
 ALTER TABLE LOS_POLLOS_HERMANOS.Madera
-ADD CONSTRAINT FK_Madera_TipoMaterial FOREIGN KEY (Madera_Codigo) REFERENCES LOS_POLLOS_HERMANOS.TipoMaterial(TipoMaterial_Codigo)
+ADD CONSTRAINT FK_Madera_Material FOREIGN KEY (Madera_Material) REFERENCES LOS_POLLOS_HERMANOS.Material(Material_Codigo)
 
 -- (16) Relleno
 ALTER TABLE LOS_POLLOS_HERMANOS.Relleno
-ADD CONSTRAINT FK_Relleno_TipoMaterial FOREIGN KEY (Relleno_Codigo) REFERENCES LOS_POLLOS_HERMANOS.TipoMaterial(TipoMaterial_Codigo)
+ADD CONSTRAINT FK_Relleno_Material FOREIGN KEY (Relleno_Material) REFERENCES LOS_POLLOS_HERMANOS.Material(Material_Codigo)
 
 -- (17) DetalleCompra
 ALTER TABLE LOS_POLLOS_HERMANOS.DetalleCompra
