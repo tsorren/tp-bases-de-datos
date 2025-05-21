@@ -161,7 +161,7 @@ CREATE TABLE LOS_POLLOS_HERMANOS.Madera (
 CREATE TABLE LOS_POLLOS_HERMANOS.Relleno (
     Relleno_Codigo BIGINT IDENTITY(1,1) NOT NULL,
     Relleno_Material BIGINT,
-    Relleno_Dureza DECIMAL(38,2)
+    Relleno_Densidad DECIMAL(38,2)
 );
 
 -- (17) DetalleCompra
@@ -411,10 +411,9 @@ ALTER TABLE LOS_POLLOS_HERMANOS.MaterialPorSillon
 ADD CONSTRAINT FK_MaterialPorSillon_Sillon FOREIGN KEY (MaterialPorSillon_Sillon) REFERENCES LOS_POLLOS_HERMANOS.Sillon(Sillon_Codigo)
 
 /*
-	----------------------------------------------------------------------------------------------
-									Migraci�n de Ubicacion
-			(Tiene que hacerse antes que la migraci�n de Cliente, Proveedor y Sucursal)
-	---------------------------------------------------------------------------------------------
+----------------------------------------------
+		        Migracion de Ubicacion
+----------------------------------------------
 */
 -- (5) Ubicacion 
 INSERT INTO LOS_POLLOS_HERMANOS.Ubicacion (Ubicacion_Provincia, Ubicacion_Localidad, Ubicacion_Direccion)
@@ -431,9 +430,9 @@ FROM gd_esquema.Maestra
 WHERE Proveedor_Provincia IS NOT NULL;
 
 /*
-	----------------------------------------------
-				Migraci�n de Cliente
-	----------------------------------------------
+----------------------------------------------
+				Migracion de Cliente
+----------------------------------------------
 */
 -- (1) Cliente
 INSERT INTO LOS_POLLOS_HERMANOS.Cliente (Cliente_Ubicacion, Cliente_Dni, Cliente_Nombre, Cliente_Apellido, Cliente_Fecha_Nacimiento, Cliente_Mail, Cliente_Telefono)
@@ -447,9 +446,9 @@ JOIN LOS_POLLOS_HERMANOS.Ubicacion u ON
 order by m.Cliente_Dni
 
 /*
-	----------------------------------------------
-				Migraci�n de Sucursal
-	----------------------------------------------
+----------------------------------------------
+				Migracion de Sucursal
+----------------------------------------------
 */
 -- (3) Sucursal
 INSERT INTO LOS_POLLOS_HERMANOS.Sucursal (
@@ -467,9 +466,9 @@ JOIN LOS_POLLOS_HERMANOS.Ubicacion u ON
     AND u.Ubicacion_Direccion = m.Sucursal_Direccion;
 
 /*
-	----------------------------------------------
-				Migraci�n de Proveedor
-	----------------------------------------------
+----------------------------------------------
+				Migracion de Proveedor
+----------------------------------------------
 */
 -- (4) Proveedor
 INSERT INTO LOS_POLLOS_HERMANOS.Proveedor (Proveedor_Ubicacion, Proveedor_Cuit, Proveedor_RazonSocial, Proveedor_Telefono, Proveedor_Mail)
@@ -487,7 +486,7 @@ JOIN LOS_POLLOS_HERMANOS.Ubicacion u ON
 
 /*
 ------------------------------------------------------
-                Migraci�n de Medida    
+                Migracion de Medida    
 ------------------------------------------------------
 */
 
@@ -499,7 +498,7 @@ WHERE m.Sillon_Medida_Alto IS NOT NULL
 
 /*
 ------------------------------------------------------
-                Migraci�n de Modelo
+                Migracion de Modelo
 ------------------------------------------------------
 */
 
@@ -511,7 +510,7 @@ WHERE m.Sillon_Modelo_Codigo IS NOT NULL
 
 /*
 ------------------------------------------------------
-                Migraci�n de Sillon
+                Migracion de Sillon
 ------------------------------------------------------
 */
 
@@ -529,7 +528,7 @@ JOIN LOS_POLLOS_HERMANOS.Modelo u2 ON
 
 /*
 ------------------------------------------------------
-                Migraci�n de Compra
+                Migracion de Compra
 ------------------------------------------------------
 */
 -- (6) Compra
@@ -542,7 +541,7 @@ JOIN LOS_POLLOS_HERMANOS.Proveedor p ON p.Proveedor_Cuit = m.Proveedor_Cuit and 
 
 /*
 ------------------------------------------------------
-                Migraci�n de Factura
+                Migracion de Factura
 ------------------------------------------------------
 */
 -- (2) Factura
@@ -556,7 +555,7 @@ WHERE m.Factura_Numero IS NOT NULL
 
 /*
 ------------------------------------------------------
-                Migraci�n de Pedido
+                Migracion de Pedido
 ------------------------------------------------------
 */
 -- (9) Pedido
@@ -569,7 +568,7 @@ WHERE m.Pedido_Numero IS NOT NULL
 
 /*
 ------------------------------------------------------
-                Migraci�n de DetallePedido
+                Migracion de DetallePedido
 ------------------------------------------------------
 */
 -- (7) DetallePedido
@@ -580,7 +579,7 @@ WHERE m.Sillon_Codigo IS NOT NULL
 
 /*
 ------------------------------------------------------
-                Migraci�n de PedidoCancelacion
+                Migracion de PedidoCancelacion
 ------------------------------------------------------
 */
 -- (18) PedidoCancelacion
@@ -592,7 +591,7 @@ WHERE m.Pedido_Cancelacion_Fecha IS NOT NULL
 
 /*
 ------------------------------------------------------
-                Migraci�n de Envio
+                Migracion de Envio
 ------------------------------------------------------
 */
 -- (19) Envio
@@ -603,10 +602,11 @@ WHERE m.Envio_Numero IS NOT NULL
 
 /*
 ------------------------------------------------------
-                Migración de DetalleFactura
+                Migracion de DetalleFactura
 ------------------------------------------------------
 */
 -- (20) DetalleFactura
+GO
 WITH MaestraFiltrada AS (
   SELECT *,
          ROW_NUMBER() OVER (
@@ -660,3 +660,90 @@ JOIN DetalleFiltrado u
 --
 -- Este enfoque asegura que se mantenga la correspondencia uno a uno entre los detalles de la factura y los detalles del pedido,
 -- respetando la integridad lógica del modelo de datos.
+
+/*
+------------------------------------------------------
+                Migracion de TipoMaterial
+------------------------------------------------------
+*/
+-- (13) TipoMaterial
+INSERT INTO LOS_POLLOS_HERMANOS.TipoMaterial(TipoMaterial_Tipo, TipoMaterial_Nombre, TipoMaterial_Descripcion)
+SELECT DISTINCT m.Material_Tipo, m.Material_Nombre, m.Material_Descripcion
+FROM gd_esquema.Maestra m
+WHERE m.material_tipo IS NOT NULL
+
+/*
+------------------------------------------------------
+                Migracion de Material
+------------------------------------------------------
+*/
+-- (10) Material
+INSERT INTO LOS_POLLOS_HERMANOS.Material(Material_Tipo, Material_Precio)
+SELECT DISTINCT u.TipoMaterial_Codigo, m.Material_Precio
+FROM gd_esquema.Maestra m
+JOIN LOS_POLLOS_HERMANOS.TipoMaterial u ON u.TipoMaterial_Tipo = m.Material_Tipo AND u.TipoMaterial_Nombre = m.Material_Nombre AND u.TipoMaterial_Descripcion = m.Material_Descripcion
+
+/*
+------------------------------------------------------
+                Migracion de MaterialPorSillon
+------------------------------------------------------
+*/
+-- (21) MaterialPorSillon
+INSERT INTO LOS_POLLOS_HERMANOS.MaterialPorSillon(MaterialPorSillon_Material, MaterialPorSillon_Sillon)
+SELECT u2.Material_Codigo, m.Sillon_Codigo
+FROM gd_esquema.Maestra m
+JOIN LOS_POLLOS_HERMANOS.TipoMaterial u1 ON u1.TipoMaterial_Tipo = m.Material_Tipo AND u1.TipoMaterial_Nombre = m.Material_Nombre AND u1.TipoMaterial_Descripcion = m.Material_Descripcion
+JOIN LOS_POLLOS_HERMANOS.Material u2 ON u2.Material_Tipo = u1.TipoMaterial_Codigo
+WHERE m.Sillon_Codigo IS NOT NULL
+
+/*
+------------------------------------------------------
+                Migracion de Tela
+------------------------------------------------------
+*/
+-- (14) Tela
+INSERT INTO LOS_POLLOS_HERMANOS.Tela(Tela_Material, Tela_Color, Tela_Textura)
+SELECT DISTINCT u2.Material_Codigo, m.Tela_Color, m.Tela_Textura
+FROM gd_esquema.Maestra m
+JOIN LOS_POLLOS_HERMANOS.TipoMaterial u1 ON u1.TipoMaterial_Tipo = m.Material_Tipo AND u1.TipoMaterial_Nombre = m.Material_Nombre AND u1.TipoMaterial_Descripcion = m.Material_Descripcion
+JOIN LOS_POLLOS_HERMANOS.Material u2 ON u2.Material_Tipo = u1.TipoMaterial_Codigo
+WHERE m.Tela_Color IS NOT NULL AND m.Tela_Textura IS NOT NULL
+
+/*
+------------------------------------------------------
+                Migracion de Madera
+------------------------------------------------------
+*/
+-- (15) Madera
+INSERT INTO LOS_POLLOS_HERMANOS.Madera(Madera_Material, Madera_Color, Madera_Dureza)
+SELECT DISTINCT u2.Material_Codigo, m.Madera_Color, m.Madera_Dureza
+FROM gd_esquema.Maestra m
+JOIN LOS_POLLOS_HERMANOS.TipoMaterial u1 ON u1.TipoMaterial_Tipo = m.Material_Tipo AND u1.TipoMaterial_Nombre = m.Material_Nombre AND u1.TipoMaterial_Descripcion = m.Material_Descripcion
+JOIN LOS_POLLOS_HERMANOS.Material u2 ON u2.Material_Tipo = u1.TipoMaterial_Codigo
+WHERE m.madera_color IS NOT NULL AND m.Madera_Dureza IS NOT NULL
+
+/*
+------------------------------------------------------
+                Migracion de Relleno
+------------------------------------------------------
+*/
+-- (16) Relleno
+INSERT INTO LOS_POLLOS_HERMANOS.Relleno(Relleno_Material, Relleno_Densidad)
+SELECT DISTINCT u2.Material_Codigo, m.Relleno_Densidad
+FROM gd_esquema.Maestra m
+JOIN LOS_POLLOS_HERMANOS.TipoMaterial u1 ON u1.TipoMaterial_Tipo = m.Material_Tipo AND u1.TipoMaterial_Nombre = m.Material_Nombre AND u1.TipoMaterial_Descripcion = m.Material_Descripcion
+JOIN LOS_POLLOS_HERMANOS.Material u2 ON u2.Material_Tipo = u1.TipoMaterial_Codigo
+WHERE m.Relleno_Densidad IS NOT NULL
+
+/*
+------------------------------------------------------
+                Migracion de DetalleCompra
+------------------------------------------------------
+*/
+-- (17) DetalleCompra
+INSERT INTO LOS_POLLOS_HERMANOS.DetalleCompra(Detalle_Compra_Compra, Detalle_Compra_Material, Detalle_Compra_Cantidad, Detalle_Compra_Precio, Detalle_Compra_Subtotal)
+SELECT DISTINCT m.Compra_Numero, u2.Material_Codigo, m.Detalle_Compra_Cantidad, m.Detalle_Compra_Precio, m.Detalle_Compra_Subtotal
+FROM gd_esquema.Maestra m
+JOIN LOS_POLLOS_HERMANOS.TipoMaterial u1 ON u1.TipoMaterial_Tipo = m.Material_Tipo AND u1.TipoMaterial_Nombre = m.Material_Nombre AND u1.TipoMaterial_Descripcion = m.Material_Descripcion
+JOIN LOS_POLLOS_HERMANOS.Material u2 ON u2.Material_Tipo = u1.TipoMaterial_Codigo
+WHERE m.Compra_Numero IS NOT NULL
