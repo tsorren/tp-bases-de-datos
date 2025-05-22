@@ -1,4 +1,5 @@
 CREATE SCHEMA LOS_POLLOS_HERMANOS;
+GO
 /*
 ENTIDADES:
 
@@ -443,7 +444,7 @@ JOIN LOS_POLLOS_HERMANOS.Ubicacion u ON
     u.Ubicacion_Provincia = m.Cliente_Provincia  
     AND u.Ubicacion_Localidad = m.Cliente_Localidad  
     AND u.Ubicacion_Direccion = m.Cliente_Direccion
-order by m.Cliente_Dni
+ORDER BY m.Cliente_Dni
 
 /*
 ----------------------------------------------
@@ -606,60 +607,21 @@ WHERE m.Envio_Numero IS NOT NULL
 ------------------------------------------------------
 */
 -- (20) DetalleFactura
-GO
-WITH MaestraFiltrada AS (
-  SELECT *,
-         ROW_NUMBER() OVER (
-           PARTITION BY Pedido_Numero, Detalle_Factura_Cantidad, Detalle_Factura_Precio, Detalle_Factura_SubTotal
-           ORDER BY (SELECT NULL)
-         ) AS rn
-  FROM gd_esquema.Maestra
-  WHERE Factura_Numero IS NOT NULL
-    AND Detalle_Factura_Cantidad IS NOT NULL
-    AND Detalle_Factura_Precio IS NOT NULL
-    AND Detalle_Factura_SubTotal IS NOT NULL
-),
-DetalleFiltrado AS (
-  SELECT *,
-         ROW_NUMBER() OVER (
-           PARTITION BY Detalle_Pedido_Pedido, Detalle_Pedido_Cantidad, Detalle_Pedido_Precio, Detalle_Pedido_Subtotal
-           ORDER BY (SELECT NULL)
-         ) AS rn
-  FROM LOS_POLLOS_HERMANOS.DetallePedido
-)
-INSERT INTO LOS_POLLOS_HERMANOS.DetalleFactura (
-  Detalle_Factura_Factura,
-  Detalle_Factura_Detalle_Pedido,
-  Detalle_Factura_Cantidad,
-  Detalle_Factura_Precio,
-  Detalle_Factura_Subtotal
-)
-SELECT m.Factura_Numero,
-       u.Detalle_Pedido_Numero,
-       m.Detalle_Factura_Cantidad,
-       m.Detalle_Factura_Precio,
-       m.Detalle_Factura_SubTotal
-FROM MaestraFiltrada m
-JOIN DetalleFiltrado u
-  ON m.Pedido_Numero = u.Detalle_Pedido_Pedido
-     AND m.Detalle_Factura_Cantidad = u.Detalle_Pedido_Cantidad
-     AND m.Detalle_Factura_Precio = u.Detalle_Pedido_Precio
-     AND m.Detalle_Factura_SubTotal = u.Detalle_Pedido_Subtotal
-     AND m.rn = u.rn;
-
--- Se utiliza la función ROW_NUMBER() para emparejar filas de la tabla Maestra con DetallePedido
--- de forma unívoca. Dado que los campos Cantidad, Precio y Subtotal pueden repetirse dentro de un mismo pedido,
--- no es posible hacer un JOIN directo sin riesgo de generar combinaciones múltiples (producto cartesiano),
--- lo que inflaría artificialmente la cantidad de registros insertados en DetalleFactura.
---
--- Por eso, se asigna un número de fila (ROW_NUMBER) dentro de cada grupo de coincidencias
--- con los mismos valores de Pedido_Numero, Cantidad, Precio y Subtotal, tanto en Maestra como en DetallePedido.
---
--- Luego, se realiza el JOIN utilizando además de los campos de equivalencia, la coincidencia del número de fila (rn),
--- garantizando así que cada combinación válida se relacione solo una vez y se eviten duplicaciones.
---
--- Este enfoque asegura que se mantenga la correspondencia uno a uno entre los detalles de la factura y los detalles del pedido,
--- respetando la integridad lógica del modelo de datos.
+INSERT INTO LOS_POLLOS_HERMANOS.DetalleFactura (Detalle_Factura_Factura, Detalle_Factura_Detalle_Pedido, Detalle_Factura_Cantidad, Detalle_Factura_Precio, Detalle_Factura_Subtotal)
+SELECT m.Factura_Numero, dp.Detalle_Pedido_Numero, m.Detalle_Factura_Cantidad, m.Detalle_Factura_Precio, m.Detalle_Factura_Subtotal
+FROM gd_esquema.Maestra m
+JOIN LOS_POLLOS_HERMANOS.Factura f ON m.Factura_Numero = f.Factura_Numero
+JOIN (SELECT MIN(Detalle_Pedido_Numero) AS Detalle_Pedido_Numero, Detalle_Pedido_Pedido, Detalle_Pedido_Cantidad, Detalle_Pedido_Precio, Detalle_Pedido_Subtotal
+FROM LOS_POLLOS_HERMANOS.DetallePedido 
+GROUP BY Detalle_Pedido_Pedido, Detalle_Pedido_Cantidad, Detalle_Pedido_Precio, Detalle_Pedido_Subtotal) dp -- uso subselect dentro del join porque hay filas con valores repetidos
+ON dp.Detalle_Pedido_Pedido = m.Pedido_Numero
+AND dp.Detalle_Pedido_Cantidad = m.Detalle_Factura_Cantidad
+AND dp.Detalle_Pedido_Precio = m.Detalle_Factura_Precio
+AND dp.Detalle_Pedido_Subtotal = m.Detalle_Factura_Subtotal
+WHERE m.Detalle_Factura_Precio IS NOT NULL
+AND m.Detalle_Factura_Cantidad IS NOT NULL
+AND m.Detalle_Factura_Subtotal IS NOT NULL
+AND m.Pedido_Numero IS NOT NULL
 
 /*
 ------------------------------------------------------
