@@ -35,7 +35,7 @@ GO
 CREATE PROCEDURE LOS_POLLOS_HERMANOS.CrearTabla_Sucursal AS
 BEGIN
     CREATE TABLE LOS_POLLOS_HERMANOS.Sucursal (
-        Sucursal_Codigo BIGINT IDENTITY (203,1) NOT NULL, -- HARDCODE: Inicializamos Identity en MAX(Sucursal_Codigo) + 1 
+        Sucursal_Codigo BIGINT NOT NULL, 
         Sucursal_Ubicacion BIGINT,
         Sucursal_Telefono NVARCHAR(255),
         Sucursal_Mail NVARCHAR(255)
@@ -61,7 +61,7 @@ GO
 CREATE PROCEDURE LOS_POLLOS_HERMANOS.CrearTabla_Factura AS
 BEGIN
     CREATE TABLE LOS_POLLOS_HERMANOS.Factura (
-        Factura_Numero BIGINT IDENTITY(46136266,1) NOT NULL, -- HARDCODE: Inicializamos Identity en MAX(Factura_Numero) + 1
+        Factura_Numero BIGINT IDENTITY(46118858,1) NOT NULL, -- HARDCODE: Inicializamos Identity en MIN(Factura_Numero)
         Factura_Cliente BIGINT,
         Factura_Sucursal BIGINT,
         Factura_Fecha DATETIME2(6),
@@ -74,7 +74,7 @@ GO
 CREATE PROCEDURE LOS_POLLOS_HERMANOS.CrearTabla_Compra AS
 BEGIN
     CREATE TABLE LOS_POLLOS_HERMANOS.Compra (
-        Compra_Numero DECIMAL(18,0) IDENTITY(12242232,1) NOT NULL, -- HARDCODE: Inicializamos Identity en MAX(Compra_Numero) + 1
+        Compra_Numero DECIMAL(18,0) IDENTITY(12242153,1) NOT NULL, -- HARDCODE: Inicializamos Identity en MIN(Compra_Numero)
         Compra_Sucursal BIGINT,
         Compra_Proveedor BIGINT,
         Compra_Fecha DATETIME2(6),
@@ -87,7 +87,7 @@ GO
 CREATE PROCEDURE LOS_POLLOS_HERMANOS.CrearTabla_Pedido AS
 BEGIN
     CREATE TABLE LOS_POLLOS_HERMANOS.Pedido (
-        Pedido_Numero DECIMAL(18,0) IDENTITY(56381012,1) NOT NULL, -- HARDCODE: Inicializamos Identity en MAX(Pedido_Numero) + 1
+        Pedido_Numero DECIMAL(18,0) IDENTITY(56360503,1) NOT NULL, -- HARDCODE: Inicializamos Identity en MIN(Pedido_Numero)
         Pedido_Cliente BIGINT,
         Pedido_Sucursal BIGINT,
         Pedido_Fecha DATETIME2(6),
@@ -97,11 +97,36 @@ BEGIN
 END
 GO
 
--- (8) Stored Procedure para crear la tabla Sillon
+-- (8) Stored Procedure para crear la tabla Medida
+CREATE PROCEDURE LOS_POLLOS_HERMANOS.CrearTabla_Medida AS
+BEGIN
+    CREATE TABLE LOS_POLLOS_HERMANOS.Medida (
+        Medida_Codigo BIGINT IDENTITY(1,1) NOT NULL,
+        Medida_Ancho DECIMAL(18,2),
+        Medida_Alto DECIMAL(18,2),
+        Medida_Profundidad DECIMAL(18,2),
+        Medida_Precio DECIMAL(18,2)
+    );
+END
+GO
+
+-- (9) Stored Procedure para crear la tabla Modelo
+CREATE PROCEDURE LOS_POLLOS_HERMANOS.CrearTabla_Modelo AS
+BEGIN
+    CREATE TABLE LOS_POLLOS_HERMANOS.Modelo (
+        Modelo_Codigo BIGINT NOT NULL,
+        Modelo_Codigo_Numero NVARCHAR(255),
+        Modelo_Descripcion NVARCHAR(255),
+        Modelo_Precio_Base DECIMAL(18,2)
+    );
+END
+GO
+
+-- (10) Stored Procedure para crear la tabla Sillon
 CREATE PROCEDURE LOS_POLLOS_HERMANOS.CrearTabla_Sillon AS
 BEGIN
     CREATE TABLE LOS_POLLOS_HERMANOS.Sillon (
-        Sillon_Codigo BIGINT IDENTITY(569555,1) NOT NULL, -- HARDCODE: Inicializamos Identity en MAX(Sillon_Codigo) + 1
+        Sillon_Codigo BIGINT NOT NULL,
         Sillon_Medida BIGINT,
         Sillon_Modelo BIGINT 
     );
@@ -109,7 +134,7 @@ END
 GO
 
 
--- (9) Stored Procedure para crear la tabla DetallePedido
+-- (11) Stored Procedure para crear la tabla DetallePedido
 CREATE PROCEDURE LOS_POLLOS_HERMANOS.CrearTabla_DetallePedido AS
 BEGIN
     CREATE TABLE LOS_POLLOS_HERMANOS.DetallePedido (
@@ -123,7 +148,7 @@ BEGIN
 END
 GO
 
--- (10) Stored Procedure para crear la tabla TipoMaterial
+-- (12) Stored Procedure para crear la tabla TipoMaterial
 CREATE PROCEDURE LOS_POLLOS_HERMANOS.CrearTabla_TipoMaterial AS
 BEGIN
     CREATE TABLE LOS_POLLOS_HERMANOS.TipoMaterial (
@@ -131,31 +156,6 @@ BEGIN
         TipoMaterial_Tipo NVARCHAR(255),
         TipoMaterial_Nombre NVARCHAR(255),
         TipoMaterial_Descripcion NVARCHAR(255)
-    );
-END
-GO
-
--- (11) Stored Procedure para crear la tabla Medida
-CREATE PROCEDURE LOS_POLLOS_HERMANOS.CrearTabla_Medida AS
-BEGIN
-    CREATE TABLE LOS_POLLOS_HERMANOS.Medida (
-        Medida_Codigo BIGINT IDENTITY(1,1) NOT NULL,
-        Medida_Ancho DECIMAL(18,2),
-        Medida_Alto DECIMAL(18,2),
-        Medida_Profundidad DECIMAL(18,2),
-        Medida_Precio DECIMAL(18,2)
-    );
-END
-GO
-
--- (12) Stored Procedure para crear la tabla Modelo
-CREATE PROCEDURE LOS_POLLOS_HERMANOS.CrearTabla_Modelo AS
-BEGIN
-    CREATE TABLE LOS_POLLOS_HERMANOS.Modelo (
-        Modelo_Codigo BIGINT IDENTITY(971177,1) NOT NULL, -- HARDCODE: Inicializamos Identity en MAX(Modelo_Codigo) + 1
-        Modelo_Codigo_Numero NVARCHAR(255),
-        Modelo_Descripcion NVARCHAR(255),
-        Modelo_Precio_Base DECIMAL(18,2)
     );
 END
 GO
@@ -236,7 +236,7 @@ GO
 CREATE PROCEDURE LOS_POLLOS_HERMANOS.CrearTabla_Envio AS
 BEGIN
     CREATE TABLE LOS_POLLOS_HERMANOS.Envio (
-        Envio_Numero DECIMAL(18,0) IDENTITY(90682336,1) NOT NULL, -- HARDCODE: Inicializamos Identity en MAX(Envio_Numero) + 1
+        Envio_Numero DECIMAL(18,0) IDENTITY(90664928,1) NOT NULL, -- HARDCODE: Inicializamos Identity en MIN(Envio_Numero)
         Envio_Factura BIGINT,
         Envio_Fecha_Programada DATETIME2(6),
         Envio_Fecha_Entrega DATETIME2(6),
@@ -274,19 +274,19 @@ GO
 -- Stored procedure que ejecuta los stored procedures para crear todas las tablas
 CREATE PROCEDURE LOS_POLLOS_HERMANOS.CrearTablas AS
 BEGIN
+    EXEC LOS_POLLOS_HERMANOS.CrearTabla_Ubicacion;
     EXEC LOS_POLLOS_HERMANOS.CrearTabla_Cliente;
-    EXEC LOS_POLLOS_HERMANOS.CrearTabla_Factura;
     EXEC LOS_POLLOS_HERMANOS.CrearTabla_Sucursal;
     EXEC LOS_POLLOS_HERMANOS.CrearTabla_Proveedor;
-    EXEC LOS_POLLOS_HERMANOS.CrearTabla_Ubicacion;
+    EXEC LOS_POLLOS_HERMANOS.CrearTabla_Factura;
     EXEC LOS_POLLOS_HERMANOS.CrearTabla_Compra;
-    EXEC LOS_POLLOS_HERMANOS.CrearTabla_DetallePedido;
-    EXEC LOS_POLLOS_HERMANOS.CrearTabla_Sillon;
     EXEC LOS_POLLOS_HERMANOS.CrearTabla_Pedido;
-    EXEC LOS_POLLOS_HERMANOS.CrearTabla_Material;
     EXEC LOS_POLLOS_HERMANOS.CrearTabla_Medida;
     EXEC LOS_POLLOS_HERMANOS.CrearTabla_Modelo;
+    EXEC LOS_POLLOS_HERMANOS.CrearTabla_Sillon;
+    EXEC LOS_POLLOS_HERMANOS.CrearTabla_DetallePedido;
     EXEC LOS_POLLOS_HERMANOS.CrearTabla_TipoMaterial;
+    EXEC LOS_POLLOS_HERMANOS.CrearTabla_Material;
     EXEC LOS_POLLOS_HERMANOS.CrearTabla_Tela;
     EXEC LOS_POLLOS_HERMANOS.CrearTabla_Madera;
     EXEC LOS_POLLOS_HERMANOS.CrearTabla_Relleno;
@@ -298,7 +298,7 @@ BEGIN
 END
 GO
 
--- Ejecución del stored procedure que crea todas las tablas
+-- Ejecuciï¿½n del stored procedure que crea todas las tablas
 EXEC LOS_POLLOS_HERMANOS.CrearTablas;
 GO
 
@@ -308,7 +308,7 @@ GO
 ----------------------------------------------
 */
 
--- (1) Stored procedure de Creación de PK de Ubicacion
+-- (1) Stored procedure de Creaciï¿½n de PK de Ubicacion
 CREATE PROCEDURE LOS_POLLOS_HERMANOS.CrearConstraint_PK_Ubicacion AS
 BEGIN
     ALTER TABLE LOS_POLLOS_HERMANOS.Ubicacion
@@ -316,7 +316,7 @@ BEGIN
 END
 GO
 
--- (2) Stored procedure de Creación de PK de Cliente
+-- (2) Stored procedure de Creaciï¿½n de PK de Cliente
 CREATE PROCEDURE LOS_POLLOS_HERMANOS.CrearConstraint_PK_Cliente AS
 BEGIN
     ALTER TABLE LOS_POLLOS_HERMANOS.Cliente
@@ -324,7 +324,7 @@ BEGIN
 END
 GO
 
--- (3) Stored procedure de Creación de PK de Sucursal
+-- (3) Stored procedure de Creaciï¿½n de PK de Sucursal
 CREATE PROCEDURE LOS_POLLOS_HERMANOS.CrearConstraint_PK_Sucursal AS
 BEGIN
     ALTER TABLE LOS_POLLOS_HERMANOS.Sucursal
@@ -332,7 +332,7 @@ BEGIN
 END
 GO
 
--- (4) Stored procedure de Creación de PK de Proveedor
+-- (4) Stored procedure de Creaciï¿½n de PK de Proveedor
 CREATE PROCEDURE LOS_POLLOS_HERMANOS.CrearConstraint_PK_Proveedor AS
 BEGIN
     ALTER TABLE LOS_POLLOS_HERMANOS.Proveedor
@@ -340,7 +340,7 @@ BEGIN
 END
 GO
 
--- (5) Stored procedure de Creación de PK de Factura
+-- (5) Stored procedure de Creaciï¿½n de PK de Factura
 CREATE PROCEDURE LOS_POLLOS_HERMANOS.CrearConstraint_PK_Factura AS
 BEGIN
     ALTER TABLE LOS_POLLOS_HERMANOS.Factura
@@ -348,7 +348,7 @@ BEGIN
 END
 GO
 
--- (6) Stored procedure de Creación de PK de Compra
+-- (6) Stored procedure de Creaciï¿½n de PK de Compra
 CREATE PROCEDURE LOS_POLLOS_HERMANOS.CrearConstraint_PK_Compra AS
 BEGIN
     ALTER TABLE LOS_POLLOS_HERMANOS.Compra
@@ -356,7 +356,7 @@ BEGIN
 END
 GO
 
--- (7) Stored procedure de Creación de PK de Pedido
+-- (7) Stored procedure de Creaciï¿½n de PK de Pedido
 CREATE PROCEDURE LOS_POLLOS_HERMANOS.CrearConstraint_PK_Pedido AS
 BEGIN
     ALTER TABLE LOS_POLLOS_HERMANOS.Pedido
@@ -364,31 +364,7 @@ BEGIN
 END
 GO
 
--- (8) Stored procedure de Creación de PK de Sillon
-CREATE PROCEDURE LOS_POLLOS_HERMANOS.CrearConstraint_PK_Sillon AS
-BEGIN
-    ALTER TABLE LOS_POLLOS_HERMANOS.Sillon
-    ADD CONSTRAINT PK_Sillon PRIMARY KEY (Sillon_Codigo);
-END
-GO
-
--- (9) Stored procedure de Creación de PK de DetallePedido
-CREATE PROCEDURE LOS_POLLOS_HERMANOS.CrearConstraint_PK_DetallePedido AS
-BEGIN
-    ALTER TABLE LOS_POLLOS_HERMANOS.DetallePedido
-    ADD CONSTRAINT PK_DetallePedido PRIMARY KEY (Detalle_Pedido_Numero);
-END
-GO
-
--- (10) Stored procedure de Creación de PK de TipoMaterial
-CREATE PROCEDURE LOS_POLLOS_HERMANOS.CrearConstraint_PK_TipoMaterial AS
-BEGIN
-    ALTER TABLE LOS_POLLOS_HERMANOS.TipoMaterial
-    ADD CONSTRAINT PK_TipoMaterial PRIMARY KEY (TipoMaterial_Codigo);
-END
-GO
-
--- (11) Stored procedure de Creación de PK de Medida
+-- (8) Stored procedure de Creaciï¿½n de PK de Medida
 CREATE PROCEDURE LOS_POLLOS_HERMANOS.CrearConstraint_PK_Medida AS
 BEGIN
     ALTER TABLE LOS_POLLOS_HERMANOS.Medida
@@ -396,7 +372,7 @@ BEGIN
 END
 GO
 
--- (12) Stored procedure de Creación de PK de Modelo
+-- (9) Stored procedure de Creaciï¿½n de PK de Modelo
 CREATE PROCEDURE LOS_POLLOS_HERMANOS.CrearConstraint_PK_Modelo AS
 BEGIN
     ALTER TABLE LOS_POLLOS_HERMANOS.Modelo
@@ -404,7 +380,31 @@ BEGIN
 END
 GO
 
--- (13) Stored procedure de Creación de PK de Material
+-- (10) Stored procedure de Creaciï¿½n de PK de Sillon
+CREATE PROCEDURE LOS_POLLOS_HERMANOS.CrearConstraint_PK_Sillon AS
+BEGIN
+    ALTER TABLE LOS_POLLOS_HERMANOS.Sillon
+    ADD CONSTRAINT PK_Sillon PRIMARY KEY (Sillon_Codigo);
+END
+GO
+
+-- (11) Stored procedure de Creaciï¿½n de PK de DetallePedido
+CREATE PROCEDURE LOS_POLLOS_HERMANOS.CrearConstraint_PK_DetallePedido AS
+BEGIN
+    ALTER TABLE LOS_POLLOS_HERMANOS.DetallePedido
+    ADD CONSTRAINT PK_DetallePedido PRIMARY KEY (Detalle_Pedido_Numero);
+END
+GO
+
+-- (12) Stored procedure de Creaciï¿½n de PK de TipoMaterial
+CREATE PROCEDURE LOS_POLLOS_HERMANOS.CrearConstraint_PK_TipoMaterial AS
+BEGIN
+    ALTER TABLE LOS_POLLOS_HERMANOS.TipoMaterial
+    ADD CONSTRAINT PK_TipoMaterial PRIMARY KEY (TipoMaterial_Codigo);
+END
+GO
+
+-- (13) Stored procedure de Creaciï¿½n de PK de Material
 CREATE PROCEDURE LOS_POLLOS_HERMANOS.CrearConstraint_PK_Material AS
 BEGIN
     ALTER TABLE LOS_POLLOS_HERMANOS.Material
@@ -412,7 +412,7 @@ BEGIN
 END
 GO
 
--- (14) Stored procedure de Creación de PK de Tela
+-- (14) Stored procedure de Creaciï¿½n de PK de Tela
 CREATE PROCEDURE LOS_POLLOS_HERMANOS.CrearConstraint_PK_Tela AS
 BEGIN
     ALTER TABLE LOS_POLLOS_HERMANOS.Tela
@@ -420,7 +420,7 @@ BEGIN
 END
 GO
 
--- (15) Stored procedure de Creación de PK de Madera
+-- (15) Stored procedure de Creaciï¿½n de PK de Madera
 CREATE PROCEDURE LOS_POLLOS_HERMANOS.CrearConstraint_PK_Madera AS
 BEGIN
     ALTER TABLE LOS_POLLOS_HERMANOS.Madera
@@ -428,7 +428,7 @@ BEGIN
 END
 GO
 
--- (16) Stored procedure de Creación de PK de Relleno
+-- (16) Stored procedure de Creaciï¿½n de PK de Relleno
 CREATE PROCEDURE LOS_POLLOS_HERMANOS.CrearConstraint_PK_Relleno AS
 BEGIN
     ALTER TABLE LOS_POLLOS_HERMANOS.Relleno
@@ -436,7 +436,7 @@ BEGIN
 END
 GO
 
--- (17) Stored procedure de Creación de PK de DetalleCompra
+-- (17) Stored procedure de Creaciï¿½n de PK de DetalleCompra
 CREATE PROCEDURE LOS_POLLOS_HERMANOS.CrearConstraint_PK_DetalleCompra AS
 BEGIN
     ALTER TABLE LOS_POLLOS_HERMANOS.DetalleCompra
@@ -444,7 +444,7 @@ BEGIN
 END
 GO
 
--- (18) Stored procedure de Creación de PK de PedidoCancelacion
+-- (18) Stored procedure de Creaciï¿½n de PK de PedidoCancelacion
 CREATE PROCEDURE LOS_POLLOS_HERMANOS.CrearConstraint_PK_PedidoCancelacion AS
 BEGIN
     ALTER TABLE LOS_POLLOS_HERMANOS.PedidoCancelacion
@@ -452,7 +452,7 @@ BEGIN
 END
 GO
 
--- (19) Stored procedure de Creación de PK de Envio
+-- (19) Stored procedure de Creaciï¿½n de PK de Envio
 CREATE PROCEDURE LOS_POLLOS_HERMANOS.CrearConstraint_PK_Envio AS
 BEGIN
     ALTER TABLE LOS_POLLOS_HERMANOS.Envio
@@ -460,7 +460,7 @@ BEGIN
 END
 GO
 
--- (20) Stored procedure de Creación de PK de DetalleFactura
+-- (20) Stored procedure de Creaciï¿½n de PK de DetalleFactura
 CREATE PROCEDURE LOS_POLLOS_HERMANOS.CrearConstraint_PK_DetalleFactura AS
 BEGIN
     ALTER TABLE LOS_POLLOS_HERMANOS.DetalleFactura
@@ -468,7 +468,7 @@ BEGIN
 END
 GO
 
--- (21) Stored procedure de Creación de PK de MaterialPorSillon
+-- (21) Stored procedure de Creaciï¿½n de PK de MaterialPorSillon
 CREATE PROCEDURE LOS_POLLOS_HERMANOS.CrearConstraint_PK_MaterialPorSillon AS
 BEGIN
     ALTER TABLE LOS_POLLOS_HERMANOS.MaterialPorSillon
@@ -479,19 +479,19 @@ GO
 -- Stored procedure que engloba todas las creaciones de PKs
 CREATE PROCEDURE LOS_POLLOS_HERMANOS.CrearPKs AS
 BEGIN
+    EXEC LOS_POLLOS_HERMANOS.CrearConstraint_PK_Ubicacion;
     EXEC LOS_POLLOS_HERMANOS.CrearConstraint_PK_Cliente;
-    EXEC LOS_POLLOS_HERMANOS.CrearConstraint_PK_Factura;
     EXEC LOS_POLLOS_HERMANOS.CrearConstraint_PK_Sucursal;
     EXEC LOS_POLLOS_HERMANOS.CrearConstraint_PK_Proveedor;
-    EXEC LOS_POLLOS_HERMANOS.CrearConstraint_PK_Ubicacion;
+    EXEC LOS_POLLOS_HERMANOS.CrearConstraint_PK_Factura;
     EXEC LOS_POLLOS_HERMANOS.CrearConstraint_PK_Compra;
-    EXEC LOS_POLLOS_HERMANOS.CrearConstraint_PK_DetallePedido;
-    EXEC LOS_POLLOS_HERMANOS.CrearConstraint_PK_Sillon;
     EXEC LOS_POLLOS_HERMANOS.CrearConstraint_PK_Pedido;
-    EXEC LOS_POLLOS_HERMANOS.CrearConstraint_PK_Material;
     EXEC LOS_POLLOS_HERMANOS.CrearConstraint_PK_Medida;
     EXEC LOS_POLLOS_HERMANOS.CrearConstraint_PK_Modelo;
+    EXEC LOS_POLLOS_HERMANOS.CrearConstraint_PK_Sillon;
+    EXEC LOS_POLLOS_HERMANOS.CrearConstraint_PK_DetallePedido;
     EXEC LOS_POLLOS_HERMANOS.CrearConstraint_PK_TipoMaterial;
+    EXEC LOS_POLLOS_HERMANOS.CrearConstraint_PK_Material;
     EXEC LOS_POLLOS_HERMANOS.CrearConstraint_PK_Tela;
     EXEC LOS_POLLOS_HERMANOS.CrearConstraint_PK_Madera;
     EXEC LOS_POLLOS_HERMANOS.CrearConstraint_PK_Relleno;
@@ -503,7 +503,7 @@ BEGIN
 END
 GO
 
--- Ejecución de Stored procedure de creación de PKs
+-- Ejecuciï¿½n de Stored procedure de creaciï¿½n de PKs
 EXEC LOS_POLLOS_HERMANOS.CrearPKs;
 GO
 
@@ -567,7 +567,13 @@ BEGIN
 END
 GO
 
--- (8) Sillon
+-- (8) Medida
+-- No tiene FK
+
+-- (9) Modelo
+-- No tiene FK
+
+-- (10) Sillon
 CREATE PROCEDURE LOS_POLLOS_HERMANOS.CrearConstraint_FK_Sillon AS
 BEGIN
     ALTER TABLE LOS_POLLOS_HERMANOS.Sillon
@@ -576,7 +582,7 @@ BEGIN
 END
 GO
 
--- (9) DetallePedido
+-- (11) DetallePedido
 CREATE PROCEDURE LOS_POLLOS_HERMANOS.CrearConstraint_FK_DetallePedido AS
 BEGIN
     ALTER TABLE LOS_POLLOS_HERMANOS.DetallePedido
@@ -585,13 +591,7 @@ BEGIN
 END
 GO
 
--- (10) TipoMaterial
--- No tiene FK
-
--- (11) Medida
--- No tiene FK
-
--- (12) Modelo
+-- (12) TipoMaterial
 -- No tiene FK
 
 -- (13) Material
@@ -672,13 +672,13 @@ GO
 CREATE PROCEDURE LOS_POLLOS_HERMANOS.CrearFKs AS
 BEGIN
     EXEC LOS_POLLOS_HERMANOS.CrearConstraint_FK_Cliente;
-    EXEC LOS_POLLOS_HERMANOS.CrearConstraint_FK_Factura;
     EXEC LOS_POLLOS_HERMANOS.CrearConstraint_FK_Sucursal;
     EXEC LOS_POLLOS_HERMANOS.CrearConstraint_FK_Proveedor;
+    EXEC LOS_POLLOS_HERMANOS.CrearConstraint_FK_Factura;
     EXEC LOS_POLLOS_HERMANOS.CrearConstraint_FK_Compra;
-    EXEC LOS_POLLOS_HERMANOS.CrearConstraint_FK_DetallePedido;
-    EXEC LOS_POLLOS_HERMANOS.CrearConstraint_FK_Sillon;
     EXEC LOS_POLLOS_HERMANOS.CrearConstraint_FK_Pedido;
+    EXEC LOS_POLLOS_HERMANOS.CrearConstraint_FK_Sillon;
+    EXEC LOS_POLLOS_HERMANOS.CrearConstraint_FK_DetallePedido;
     EXEC LOS_POLLOS_HERMANOS.CrearConstraint_FK_Material;
     EXEC LOS_POLLOS_HERMANOS.CrearConstraint_FK_Tela;
     EXEC LOS_POLLOS_HERMANOS.CrearConstraint_FK_Madera;
@@ -717,15 +717,8 @@ GO
                 Constraints check
 ----------------------------------------------
 */
--- (10) TipoMaterial
-CREATE PROCEDURE LOS_POLLOS_HERMANOS.CrearConstraint_CHK_TipoMaterial_Tipo AS
-BEGIN
-    ALTER TABLE LOS_POLLOS_HERMANOS.TipoMaterial
-    ADD CONSTRAINT CHK_TipoMaterial_Tipo CHECK (LOS_POLLOS_HERMANOS.validarTipoDeMaterial(TipoMaterial_Tipo) = 1);
-END
-GO
 
--- (11) Medida
+-- (8) Medida
 CREATE PROCEDURE LOS_POLLOS_HERMANOS.CrearConstraint_CHK_Medida_Valores AS
 BEGIN
     ALTER TABLE LOS_POLLOS_HERMANOS.Medida
@@ -733,7 +726,7 @@ BEGIN
 END
 GO
 
--- (12) Modelo
+-- (9) Modelo
 CREATE PROCEDURE LOS_POLLOS_HERMANOS.CrearConstraint_CHK_Modelo_PrecioBase AS
 BEGIN
     ALTER TABLE LOS_POLLOS_HERMANOS.Modelo
@@ -741,7 +734,7 @@ BEGIN
 END
 GO
 
--- (9) DetallePedido
+-- (11) DetallePedido
 CREATE PROCEDURE LOS_POLLOS_HERMANOS.CrearConstraint_CHK_DetallePedido_Valores AS
 BEGIN
     ALTER TABLE LOS_POLLOS_HERMANOS.DetallePedido
@@ -749,11 +742,11 @@ BEGIN
 END
 GO
 
--- (20) DetalleFactura
-CREATE PROCEDURE LOS_POLLOS_HERMANOS.CrearConstraint_CHK_DetalleFactura_Valores AS
+-- (12) TipoMaterial
+CREATE PROCEDURE LOS_POLLOS_HERMANOS.CrearConstraint_CHK_TipoMaterial_Tipo AS
 BEGIN
-    ALTER TABLE LOS_POLLOS_HERMANOS.DetalleFactura
-    ADD CONSTRAINT CHK_DetalleFactura_Valores CHECK (Detalle_Factura_Cantidad > 0 AND Detalle_Factura_Precio >= 0 AND Detalle_Factura_Subtotal >= 0);
+    ALTER TABLE LOS_POLLOS_HERMANOS.TipoMaterial
+    ADD CONSTRAINT CHK_TipoMaterial_Tipo CHECK (LOS_POLLOS_HERMANOS.validarTipoDeMaterial(TipoMaterial_Tipo) = 1);
 END
 GO
 
@@ -765,14 +758,22 @@ BEGIN
 END
 GO
 
+-- (20) DetalleFactura
+CREATE PROCEDURE LOS_POLLOS_HERMANOS.CrearConstraint_CHK_DetalleFactura_Valores AS
+BEGIN
+    ALTER TABLE LOS_POLLOS_HERMANOS.DetalleFactura
+    ADD CONSTRAINT CHK_DetalleFactura_Valores CHECK (Detalle_Factura_Cantidad > 0 AND Detalle_Factura_Precio >= 0 AND Detalle_Factura_Subtotal >= 0);
+END
+GO
+
 CREATE PROCEDURE LOS_POLLOS_HERMANOS.CrearChecks AS
 BEGIN
-    EXEC LOS_POLLOS_HERMANOS.CrearConstraint_CHK_TipoMaterial_Tipo;
     EXEC LOS_POLLOS_HERMANOS.CrearConstraint_CHK_Medida_Valores;
     EXEC LOS_POLLOS_HERMANOS.CrearConstraint_CHK_Modelo_PrecioBase;
     EXEC LOS_POLLOS_HERMANOS.CrearConstraint_CHK_DetallePedido_Valores;
-    EXEC LOS_POLLOS_HERMANOS.CrearConstraint_CHK_DetalleFactura_Valores;
+    EXEC LOS_POLLOS_HERMANOS.CrearConstraint_CHK_TipoMaterial_Tipo;
     EXEC LOS_POLLOS_HERMANOS.CrearConstraint_CHK_DetalleCompra_Valores;
+    EXEC LOS_POLLOS_HERMANOS.CrearConstraint_CHK_DetalleFactura_Valores;
 END
 GO
 
@@ -801,7 +802,7 @@ END
 GO
 
 -- (3) Sucursal
--- Buscamos por PK, entonces no le hacemos índice
+-- Buscamos por PK, entonces no le hacemos ï¿½ndice
 
 -- (4) Proveedor
 CREATE PROCEDURE LOS_POLLOS_HERMANOS.CrearIndice_Proveedor AS
@@ -812,34 +813,15 @@ END
 GO
 
 -- (5) Factura
--- Buscamos por PK, entonces no le hacemos índice
+-- Buscamos por PK, entonces no le hacemos ï¿½ndice
 
 -- (6) Compra
--- Buscamos por PK, entonces no le hacemos índice
+-- Buscamos por PK, entonces no le hacemos ï¿½ndice
 
 -- (7) Pedido
--- Buscamos por PK, entonces no le hacemos índice
+-- Buscamos por PK, entonces no le hacemos ï¿½ndice
 
--- (8) Sillon
--- Buscamos por PK, entonces no le hacemos índice
-
--- (9) DetallePedido
-CREATE PROCEDURE LOS_POLLOS_HERMANOS.CrearIndice_DetallePedido AS
-BEGIN
-    CREATE INDEX Index_DetallePedido
-    ON LOS_POLLOS_HERMANOS.DetallePedido (Detalle_Pedido_Sillon, Detalle_Pedido_Pedido);
-END
-GO
-
--- (10) TipoMaterial
-CREATE PROCEDURE LOS_POLLOS_HERMANOS.CrearIndice_TipoMaterial AS
-BEGIN
-    CREATE INDEX Index_TipoMaterial
-    ON LOS_POLLOS_HERMANOS.TipoMaterial (TipoMaterial_Tipo, TipoMaterial_Nombre, TipoMaterial_Descripcion);
-END
-GO
-
--- (11) Medida
+-- (8) Medida
 CREATE PROCEDURE LOS_POLLOS_HERMANOS.CrearIndice_Medida AS
 BEGIN
     CREATE INDEX Index_Medida
@@ -847,8 +829,27 @@ BEGIN
 END
 GO
 
--- (12) Modelo
--- Buscamos por PK, entonces no le hacemos índice
+-- (9) Modelo
+-- Buscamos por PK, entonces no le hacemos ï¿½ndice
+
+-- (10) Sillon
+-- Buscamos por PK, entonces no le hacemos ï¿½ndice
+
+-- (11) DetallePedido
+CREATE PROCEDURE LOS_POLLOS_HERMANOS.CrearIndice_DetallePedido AS
+BEGIN
+    CREATE INDEX Index_DetallePedido
+    ON LOS_POLLOS_HERMANOS.DetallePedido (Detalle_Pedido_Sillon, Detalle_Pedido_Pedido);
+END
+GO
+
+-- (12) TipoMaterial
+CREATE PROCEDURE LOS_POLLOS_HERMANOS.CrearIndice_TipoMaterial AS
+BEGIN
+    CREATE INDEX Index_TipoMaterial
+    ON LOS_POLLOS_HERMANOS.TipoMaterial (TipoMaterial_Tipo, TipoMaterial_Nombre, TipoMaterial_Descripcion);
+END
+GO
 
 -- (13) Material
 CREATE PROCEDURE LOS_POLLOS_HERMANOS.CrearIndice_Material AS
@@ -899,7 +900,7 @@ END
 GO
 
 -- (19) Envio
--- Buscamos por PK, entonces no le hacemos índice
+-- Buscamos por PK, entonces no le hacemos ï¿½ndice
 
 -- (20) DetalleFactura
 CREATE PROCEDURE LOS_POLLOS_HERMANOS.CrearIndice_DetalleFactura AS
@@ -922,9 +923,9 @@ BEGIN
     EXEC LOS_POLLOS_HERMANOS.CrearIndice_Ubicacion;
     EXEC LOS_POLLOS_HERMANOS.CrearIndice_Cliente;
     EXEC LOS_POLLOS_HERMANOS.CrearIndice_Proveedor;
+    EXEC LOS_POLLOS_HERMANOS.CrearIndice_Medida;
     EXEC LOS_POLLOS_HERMANOS.CrearIndice_DetallePedido;
     EXEC LOS_POLLOS_HERMANOS.CrearIndice_TipoMaterial;
-    EXEC LOS_POLLOS_HERMANOS.CrearIndice_Medida;
     EXEC LOS_POLLOS_HERMANOS.CrearIndice_Material;
     EXEC LOS_POLLOS_HERMANOS.CrearIndice_Tela;
     EXEC LOS_POLLOS_HERMANOS.CrearIndice_Madera;
@@ -941,9 +942,559 @@ GO
 
 /*
 ----------------------------------------------
+            Migracion de Ubicacion
+----------------------------------------------
+*/
+
+-- (1) Ubicacion
+CREATE PROCEDURE LOS_POLLOS_HERMANOS.Migrar_Ubicacion
+AS
+BEGIN
+    INSERT INTO LOS_POLLOS_HERMANOS.Ubicacion (Ubicacion_Provincia, Ubicacion_Localidad, Ubicacion_Direccion)
+    SELECT m.Sucursal_Provincia, m.Sucursal_Localidad, m.Sucursal_Direccion
+    FROM gd_esquema.Maestra m
+    WHERE m.Sucursal_Provincia IS NOT NULL
+    AND NOT EXISTS (    -- no lo vuelve a insertar si se ejecuta de vuelta el exec procedure y ya estï¿½ migrado
+        SELECT * FROM LOS_POLLOS_HERMANOS.Ubicacion u
+        WHERE u.Ubicacion_Provincia = m.Sucursal_Provincia AND u.Ubicacion_Localidad = m.Sucursal_Localidad AND u.Ubicacion_Direccion = m.Sucursal_Direccion
+    )
+    GROUP BY m.Sucursal_Provincia, m.Sucursal_Localidad, m.Sucursal_Direccion
+    UNION
+    SELECT m.Cliente_Provincia, m.Cliente_Localidad, m.Cliente_Direccion
+    FROM gd_esquema.Maestra m
+    WHERE m.Cliente_Provincia IS NOT NULL
+    AND NOT EXISTS (
+        SELECT * FROM LOS_POLLOS_HERMANOS.Ubicacion u
+        WHERE u.Ubicacion_Provincia = m.Cliente_Provincia AND u.Ubicacion_Localidad = m.Cliente_Localidad AND u.Ubicacion_Direccion = m.Cliente_Direccion
+    )
+    GROUP BY m.Cliente_Provincia, m.Cliente_Localidad, m.Cliente_Direccion
+    UNION
+    SELECT m.Proveedor_Provincia, m.Proveedor_Localidad, m.Proveedor_Direccion
+    FROM gd_esquema.Maestra m
+    WHERE m.Proveedor_Provincia IS NOT NULL
+    AND NOT EXISTS (
+        SELECT * FROM LOS_POLLOS_HERMANOS.Ubicacion u
+        WHERE u.Ubicacion_Provincia = m.Proveedor_Provincia AND u.Ubicacion_Localidad = m.Proveedor_Localidad AND u.Ubicacion_Direccion = m.Proveedor_Direccion
+    )
+    GROUP BY m.Proveedor_Provincia, m.Proveedor_Localidad, m.Proveedor_Direccion;
+END
+GO
+
+/*
+----------------------------------------------
+                Migracion de Cliente
+----------------------------------------------
+*/
+
+-- (2) Cliente
+GO
+CREATE PROCEDURE LOS_POLLOS_HERMANOS.Migrar_Cliente
+AS
+BEGIN
+    INSERT INTO LOS_POLLOS_HERMANOS.Cliente (Cliente_Ubicacion, Cliente_Dni, Cliente_Nombre, Cliente_Apellido, Cliente_Fecha_Nacimiento, Cliente_Mail, Cliente_Telefono)
+    SELECT
+        u.Ubicacion_Codigo, m.Cliente_Dni, m.Cliente_Nombre, m.Cliente_Apellido, m.Cliente_FechaNacimiento, m.Cliente_Mail, m.Cliente_Telefono
+    FROM gd_esquema.Maestra m
+    JOIN LOS_POLLOS_HERMANOS.Ubicacion u ON 
+        u.Ubicacion_Provincia = m.Cliente_Provincia  
+        AND u.Ubicacion_Localidad = m.Cliente_Localidad  
+        AND u.Ubicacion_Direccion = m.Cliente_Direccion
+    WHERE NOT EXISTS (
+        SELECT * FROM LOS_POLLOS_HERMANOS.Cliente c WHERE c.Cliente_Dni = m.Cliente_Dni
+    )
+    GROUP BY u.Ubicacion_Codigo, m.Cliente_Dni, m.Cliente_Nombre, m.Cliente_Apellido, m.Cliente_FechaNacimiento, m.Cliente_Mail, m.Cliente_Telefono;
+END
+GO
+
+/*
+----------------------------------------------
+            Migracion de Sucursal
+----------------------------------------------
+*/
+
+-- (3) Sucursal
+CREATE PROCEDURE LOS_POLLOS_HERMANOS.Migrar_Sucursal
+AS
+BEGIN
+    INSERT INTO LOS_POLLOS_HERMANOS.Sucursal (
+        Sucursal_Codigo, Sucursal_Ubicacion, Sucursal_Telefono, Sucursal_Mail
+    )
+    SELECT
+		m.Sucursal_NroSucursal,
+        u.Ubicacion_Codigo,
+        m.Sucursal_Telefono,
+        m.Sucursal_Mail
+    FROM gd_esquema.Maestra m
+    JOIN LOS_POLLOS_HERMANOS.Ubicacion u ON
+        u.Ubicacion_Provincia = m.Sucursal_Provincia
+        AND u.Ubicacion_Localidad = m.Sucursal_Localidad
+        AND u.Ubicacion_Direccion = m.Sucursal_Direccion
+    WHERE NOT EXISTS (
+        SELECT * FROM LOS_POLLOS_HERMANOS.Sucursal s
+        WHERE s.Sucursal_Codigo = m.Sucursal_NroSucursal
+    )
+	GROUP BY m.Sucursal_NroSucursal, u.Ubicacion_Codigo, m.Sucursal_Telefono, m.Sucursal_Mail
+	ORDER BY m.Sucursal_NroSucursal;
+END
+GO
+
+/*
+----------------------------------------------
+            Migracion de Proveedor
+----------------------------------------------
+*/
+
+-- (4) Proveedor
+CREATE PROCEDURE LOS_POLLOS_HERMANOS.Migrar_Proveedor
+AS
+BEGIN
+    INSERT INTO LOS_POLLOS_HERMANOS.Proveedor (Proveedor_Ubicacion, Proveedor_Cuit, Proveedor_RazonSocial, Proveedor_Telefono, Proveedor_Mail)
+    SELECT
+        u.Ubicacion_Codigo,
+        m.Proveedor_Cuit,
+        m.Proveedor_RazonSocial,
+        m.Proveedor_Telefono,
+        m.Proveedor_Mail
+    FROM gd_esquema.Maestra m
+    JOIN LOS_POLLOS_HERMANOS.Ubicacion u ON 
+        u.Ubicacion_Provincia = m.Proveedor_Provincia  
+        AND u.Ubicacion_Localidad = m.Proveedor_Localidad  
+        AND u.Ubicacion_Direccion = m.Proveedor_Direccion
+    WHERE NOT EXISTS (SELECT * FROM LOS_POLLOS_HERMANOS.Proveedor p WHERE p.Proveedor_Cuit = m.Proveedor_Cuit)
+    GROUP BY u.Ubicacion_Codigo, m.Proveedor_Cuit, m.Proveedor_RazonSocial, m.Proveedor_Telefono, m.Proveedor_Mail;
+END
+GO
+
+/*
+------------------------------------------------------
+                Migracion de Factura
+------------------------------------------------------
+*/
+
+-- (5) Factura
+CREATE PROCEDURE LOS_POLLOS_HERMANOS.Migrar_Factura
+AS
+BEGIN
+    INSERT INTO LOS_POLLOS_HERMANOS.Factura(Factura_Cliente, Factura_Sucursal, Factura_Fecha, Factura_Total)
+    SELECT c.Cliente_Codigo, s.Sucursal_Codigo, m.Factura_Fecha, m.Factura_Total
+    FROM gd_esquema.Maestra m
+    JOIN LOS_POLLOS_HERMANOS.Cliente c ON c.Cliente_Dni = m.Cliente_Dni AND c.Cliente_Apellido = m.Cliente_Apellido AND c.Cliente_Nombre = m.Cliente_Nombre
+    JOIN LOS_POLLOS_HERMANOS.Sucursal s ON s.Sucursal_Codigo = m.Sucursal_NroSucursal
+    WHERE m.Factura_Numero IS NOT NULL
+    AND NOT EXISTS (SELECT * FROM LOS_POLLOS_HERMANOS.Factura f WHERE f.Factura_Numero = m.Factura_Numero)
+    GROUP BY m.Factura_Numero, c.Cliente_Codigo, s.Sucursal_Codigo, m.Factura_Fecha, m.Factura_Total
+	ORDER BY m.Factura_Numero;
+END
+GO
+
+/*
+------------------------------------------------------
+                Migracion de Compra
+------------------------------------------------------
+*/
+
+-- (6) Compra
+CREATE PROCEDURE LOS_POLLOS_HERMANOS.Migrar_Compra
+AS
+BEGIN
+    INSERT INTO LOS_POLLOS_HERMANOS.Compra(Compra_Sucursal, Compra_Proveedor, Compra_Fecha, Compra_Total)
+    SELECT s.Sucursal_Codigo, p.Proveedor_Codigo, m.Compra_Fecha, m.Compra_Total
+    FROM gd_esquema.Maestra m
+    JOIN LOS_POLLOS_HERMANOS.Sucursal s ON s.Sucursal_Codigo = m.Sucursal_NroSucursal
+    JOIN LOS_POLLOS_HERMANOS.Proveedor p ON p.Proveedor_Cuit = m.Proveedor_Cuit AND p.Proveedor_RazonSocial = m.Proveedor_RazonSocial
+    WHERE NOT EXISTS (
+        SELECT * FROM LOS_POLLOS_HERMANOS.Compra c
+        WHERE c.Compra_Numero = m.Compra_Numero
+    )
+    GROUP BY m.Compra_Numero, s.Sucursal_Codigo, p.Proveedor_Codigo, m.Compra_Fecha, m.Compra_Total
+	ORDER BY m.Compra_Numero;
+END
+GO
+
+/*
+------------------------------------------------------
+                Migracion de Pedido
+------------------------------------------------------
+*/
+
+-- (7) Pedido
+CREATE PROCEDURE LOS_POLLOS_HERMANOS.Migrar_Pedido
+AS
+BEGIN
+    INSERT INTO LOS_POLLOS_HERMANOS.Pedido(Pedido_Cliente, Pedido_Sucursal, Pedido_Fecha, Pedido_Total, Pedido_Estado)
+    SELECT c.Cliente_Codigo, s.Sucursal_Codigo, m.Pedido_Fecha, m.Pedido_Total, m.Pedido_Estado
+    FROM gd_esquema.Maestra m
+    JOIN LOS_POLLOS_HERMANOS.Cliente c ON c.Cliente_Dni = m.Cliente_Dni and c.Cliente_Nombre = m.Cliente_Nombre and c.Cliente_Apellido = m.Cliente_Apellido
+    JOIN LOS_POLLOS_HERMANOS.Sucursal s ON s.Sucursal_Codigo = m.Sucursal_NroSucursal
+    WHERE m.Pedido_Numero IS NOT NULL
+    AND NOT EXISTS (SELECT * FROM LOS_POLLOS_HERMANOS.Pedido p WHERE p.Pedido_Numero = m.Pedido_Numero)
+    GROUP BY m.Pedido_Numero, c.Cliente_Codigo, s.Sucursal_Codigo, m.Pedido_Fecha, m.Pedido_Total, m.Pedido_Estado
+	ORDER BY m.Pedido_Numero;
+END
+GO
+
+/*
+------------------------------------------------------
+                Migracion de Medida    
+------------------------------------------------------
+*/
+
+-- (8) Medida
+CREATE PROCEDURE LOS_POLLOS_HERMANOS.Migrar_Medida
+AS
+BEGIN
+    INSERT INTO LOS_POLLOS_HERMANOS.Medida (Medida_Ancho, Medida_Alto, Medida_Profundidad, Medida_Precio)
+    SELECT m.Sillon_Medida_Ancho, m.Sillon_Medida_Alto, m.Sillon_Medida_Profundidad, m.Sillon_Medida_Precio
+    FROM gd_esquema.maestra m
+    WHERE m.Sillon_Medida_Alto IS NOT NULL
+    AND NOT EXISTS (
+        SELECT * FROM LOS_POLLOS_HERMANOS.Medida med
+        WHERE med.Medida_Ancho = m.Sillon_Medida_Ancho AND med.Medida_Alto = m.Sillon_Medida_Alto AND med.Medida_Profundidad = m.Sillon_Medida_Profundidad AND med.Medida_Precio = m.Sillon_Medida_Precio
+    )
+    GROUP BY m.Sillon_Medida_Ancho, m.Sillon_Medida_Alto, m.Sillon_Medida_Profundidad, m.Sillon_Medida_Precio;
+END
+GO
+
+/*
+------------------------------------------------------
+                Migracion de Modelo
+------------------------------------------------------
+*/
+
+-- (9) Modelo
+CREATE PROCEDURE LOS_POLLOS_HERMANOS.Migrar_Modelo
+AS
+BEGIN
+    INSERT INTO LOS_POLLOS_HERMANOS.Modelo (Modelo_Codigo, Modelo_Codigo_Numero, Modelo_Descripcion, Modelo_Precio_Base)
+    SELECT m.Sillon_Modelo_Codigo, m.Sillon_Modelo, m.Sillon_Modelo_Descripcion, m.Sillon_Modelo_Precio
+    FROM gd_esquema.Maestra m
+    WHERE m.Sillon_Modelo_Codigo IS NOT NULL
+    AND NOT EXISTS (
+        SELECT * FROM LOS_POLLOS_HERMANOS.Modelo mo
+        WHERE mo.Modelo_Codigo = m.Sillon_Modelo_Codigo AND mo.Modelo_Codigo_Numero = m.Sillon_Modelo
+    )
+    GROUP BY m.Sillon_Modelo_Codigo, m.Sillon_Modelo, m.Sillon_Modelo_Descripcion, m.Sillon_Modelo_Precio
+	ORDER BY m.Sillon_Modelo_Codigo;
+END
+GO
+
+/*
+------------------------------------------------------
+                Migracion de Sillon
+------------------------------------------------------
+*/
+
+-- (10) Sillon
+CREATE PROCEDURE LOS_POLLOS_HERMANOS.Migrar_Sillon
+AS
+BEGIN
+    INSERT INTO LOS_POLLOS_HERMANOS.Sillon(Sillon_Codigo, Sillon_Medida, Sillon_Modelo)
+    SELECT m.Sillon_Codigo, me.Medida_Codigo, mo.Modelo_Codigo
+    FROM gd_esquema.Maestra m
+    JOIN LOS_POLLOS_HERMANOS.Medida me ON
+        me.Medida_Alto = m.Sillon_Medida_Alto
+        AND me.Medida_Ancho = m.Sillon_Medida_Ancho
+        AND me.Medida_Profundidad = m.Sillon_Medida_Profundidad
+        AND me.Medida_Precio = m.Sillon_Medida_Precio
+    JOIN LOS_POLLOS_HERMANOS.Modelo mo ON
+        mo.Modelo_Codigo = m.Sillon_Modelo_Codigo                     
+    WHERE NOT EXISTS (
+        SELECT * FROM LOS_POLLOS_HERMANOS.Sillon s
+        WHERE s.Sillon_Codigo = m.Sillon_Codigo
+    )
+    GROUP BY m.Sillon_Codigo, me.Medida_Codigo, mo.modelo_codigo
+	ORDER BY m.Sillon_Codigo;
+END
+GO
+
+/*
+------------------------------------------------------
+                Migracion de DetallePedido
+------------------------------------------------------
+*/
+
+-- (11) DetallePedido
+CREATE PROCEDURE LOS_POLLOS_HERMANOS.Migrar_DetallePedido
+AS
+BEGIN
+    INSERT INTO LOS_POLLOS_HERMANOS.DetallePedido(Detalle_Pedido_Sillon, Detalle_Pedido_Pedido, Detalle_Pedido_Cantidad, Detalle_Pedido_Precio, Detalle_Pedido_Subtotal)
+    SELECT m.Sillon_Codigo, m.Pedido_Numero, m.Detalle_Pedido_Cantidad, m.Detalle_Pedido_Precio, m.Detalle_Pedido_Subtotal
+    FROM gd_esquema.Maestra m
+    WHERE m.Sillon_Codigo IS NOT NULL
+    AND NOT EXISTS (SELECT * FROM LOS_POLLOS_HERMANOS.DetallePedido dp WHERE dp.Detalle_Pedido_Sillon = m.Sillon_Codigo)
+    GROUP BY m.Sillon_Codigo, m.Pedido_Numero, m.Detalle_Pedido_Cantidad, m.Detalle_Pedido_Precio, m.Detalle_Pedido_Subtotal;
+END
+GO
+
+/*
+------------------------------------------------------
+                Migracion de TipoMaterial
+------------------------------------------------------
+*/
+
+-- (12) TipoMaterial
+CREATE PROCEDURE LOS_POLLOS_HERMANOS.Migrar_TipoMaterial
+AS
+BEGIN
+    INSERT INTO LOS_POLLOS_HERMANOS.TipoMaterial(TipoMaterial_Tipo, TipoMaterial_Nombre, TipoMaterial_Descripcion)
+    SELECT m.Material_Tipo, m.Material_Nombre, m.Material_Descripcion
+    FROM gd_esquema.Maestra m
+    WHERE m.material_tipo IS NOT NULL
+    AND NOT EXISTS (
+        SELECT * FROM LOS_POLLOS_HERMANOS.TipoMaterial tm WHERE tm.TipoMaterial_Tipo = m.Material_Tipo
+        AND tm.TipoMaterial_Nombre = m.Material_Nombre AND tm.TipoMaterial_Descripcion = m.Material_Descripcion
+      )
+    GROUP BY m.Material_Tipo, m.Material_Nombre, m.Material_Descripcion;
+END
+GO
+
+/*
+------------------------------------------------------
+                Migracion de Material
+------------------------------------------------------
+*/
+
+-- (13) Material
+CREATE PROCEDURE LOS_POLLOS_HERMANOS.Migrar_Material
+AS
+BEGIN
+    INSERT INTO LOS_POLLOS_HERMANOS.Material(Material_Tipo, Material_Precio)
+    SELECT t.TipoMaterial_Codigo, m.Material_Precio
+    FROM gd_esquema.Maestra m
+    JOIN LOS_POLLOS_HERMANOS.TipoMaterial t ON t.TipoMaterial_Tipo = m.Material_Tipo AND t.TipoMaterial_Nombre = m.Material_Nombre AND t.TipoMaterial_Descripcion = m.Material_Descripcion
+    WHERE NOT EXISTS (
+        SELECT * FROM LOS_POLLOS_HERMANOS.Material mat
+        WHERE mat.Material_Tipo = t.TipoMaterial_Codigo AND mat.Material_Precio = m.Material_Precio
+    )
+    GROUP BY t.TipoMaterial_Codigo, m.Material_Precio;
+END
+GO
+
+/*
+------------------------------------------------------
+                Migracion de Tela
+------------------------------------------------------
+*/
+
+-- (14) Tela
+CREATE PROCEDURE LOS_POLLOS_HERMANOS.Migrar_Tela
+AS
+BEGIN
+    INSERT INTO LOS_POLLOS_HERMANOS.Tela(Tela_Material, Tela_Color, Tela_Textura)
+    SELECT ma.Material_Codigo, m.Tela_Color, m.Tela_Textura
+    FROM gd_esquema.Maestra m
+    JOIN LOS_POLLOS_HERMANOS.TipoMaterial tm ON tm.TipoMaterial_Tipo = m.Material_Tipo AND tm.TipoMaterial_Nombre = m.Material_Nombre AND tm.TipoMaterial_Descripcion = m.Material_Descripcion
+    JOIN LOS_POLLOS_HERMANOS.Material ma ON ma.Material_Tipo = tm.TipoMaterial_Codigo
+    WHERE m.Tela_Color IS NOT NULL AND m.Tela_Textura IS NOT NULL
+    AND NOT EXISTS (
+        SELECT * FROM LOS_POLLOS_HERMANOS.Tela t
+        WHERE t.Tela_Material = ma.Material_Codigo AND t.Tela_Color = m.Tela_Color AND t.Tela_Textura = m.Tela_Textura
+    )
+    GROUP BY ma.Material_Codigo, m.Tela_Color, m.Tela_Textura;
+END
+GO
+
+/*
+------------------------------------------------------
+                Migracion de Madera
+------------------------------------------------------
+*/
+
+-- (15) Madera
+CREATE PROCEDURE LOS_POLLOS_HERMANOS.Migrar_Madera
+AS
+BEGIN
+    INSERT INTO LOS_POLLOS_HERMANOS.Madera(Madera_Material, Madera_Color, Madera_Dureza)
+    SELECT ma.Material_Codigo, m.Madera_Color, m.Madera_Dureza
+    FROM gd_esquema.Maestra m
+    JOIN LOS_POLLOS_HERMANOS.TipoMaterial tm ON tm.TipoMaterial_Tipo = m.Material_Tipo AND tm.TipoMaterial_Nombre = m.Material_Nombre AND tm.TipoMaterial_Descripcion = m.Material_Descripcion
+    JOIN LOS_POLLOS_HERMANOS.Material ma ON ma.Material_Tipo = tm.TipoMaterial_Codigo
+    WHERE m.madera_color IS NOT NULL AND m.Madera_Dureza IS NOT NULL
+    AND NOT EXISTS (
+        SELECT * FROM LOS_POLLOS_HERMANOS.Madera mad
+        WHERE mad.Madera_Material = ma.Material_Codigo AND mad.Madera_Color = m.Madera_Color AND mad.Madera_Dureza = m.Madera_Dureza
+    )
+    GROUP BY ma.Material_Codigo, m.Madera_Color, m.Madera_Dureza;
+END
+GO
+
+/*
+------------------------------------------------------
+                Migracion de Relleno
+------------------------------------------------------
+*/
+
+-- (16) Relleno
+CREATE PROCEDURE LOS_POLLOS_HERMANOS.Migrar_Relleno
+AS
+BEGIN
+    INSERT INTO LOS_POLLOS_HERMANOS.Relleno(Relleno_Material, Relleno_Densidad)
+    SELECT ma.Material_Codigo, m.Relleno_Densidad
+    FROM gd_esquema.Maestra m
+    JOIN LOS_POLLOS_HERMANOS.TipoMaterial tm ON tm.TipoMaterial_Tipo = m.Material_Tipo AND tm.TipoMaterial_Nombre = m.Material_Nombre AND tm.TipoMaterial_Descripcion = m.Material_Descripcion
+    JOIN LOS_POLLOS_HERMANOS.Material ma ON ma.Material_Tipo = tm.TipoMaterial_Codigo
+    WHERE m.Relleno_Densidad IS NOT NULL
+    AND NOT EXISTS (
+        SELECT * FROM LOS_POLLOS_HERMANOS.Relleno r
+        WHERE r.Relleno_Material = ma.Material_Codigo AND r.Relleno_Densidad = m.Relleno_Densidad
+    )
+    GROUP BY ma.Material_Codigo, m.Relleno_Densidad;
+END
+GO
+
+/*
+------------------------------------------------------
+                Migracion de DetalleCompra
+------------------------------------------------------
+*/
+
+-- (17) DetalleCompra
+CREATE PROCEDURE LOS_POLLOS_HERMANOS.Migrar_DetalleCompra
+AS
+BEGIN
+    INSERT INTO LOS_POLLOS_HERMANOS.DetalleCompra(Detalle_Compra_Compra, Detalle_Compra_Material, Detalle_Compra_Cantidad, Detalle_Compra_Precio, Detalle_Compra_Subtotal)
+    SELECT m.Compra_Numero, ma.Material_Codigo, m.Detalle_Compra_Cantidad, m.Detalle_Compra_Precio, m.Detalle_Compra_Subtotal
+    FROM gd_esquema.Maestra m
+    JOIN LOS_POLLOS_HERMANOS.TipoMaterial t ON t.TipoMaterial_Tipo = m.Material_Tipo AND t.TipoMaterial_Nombre = m.Material_Nombre AND t.TipoMaterial_Descripcion = m.Material_Descripcion
+    JOIN LOS_POLLOS_HERMANOS.Material ma ON ma.Material_Tipo = t.TipoMaterial_Codigo
+    WHERE m.Compra_Numero IS NOT NULL
+    AND NOT EXISTS (SELECT * FROM LOS_POLLOS_HERMANOS.DetalleCompra dc WHERE dc.Detalle_Compra_Compra = m.Compra_Numero)
+    GROUP BY m.Compra_Numero, ma.Material_Codigo, m.Detalle_Compra_Cantidad, m.Detalle_Compra_Precio, m.Detalle_Compra_Subtotal;
+END
+GO
+
+/*
+------------------------------------------------------
+                Migracion de PedidoCancelacion
+------------------------------------------------------
+*/
+
+-- (18) PedidoCancelacion
+CREATE PROCEDURE LOS_POLLOS_HERMANOS.Migrar_PedidoCancelacion
+AS
+BEGIN
+    INSERT INTO LOS_POLLOS_HERMANOS.PedidoCancelacion(Pedido_Cancelacion_Pedido, Pedido_Cancelacion_Fecha, Pedido_Cancelacion_Motivo)
+    SELECT m.Pedido_Numero, m.Pedido_Cancelacion_Fecha, m.Pedido_Cancelacion_Motivo
+    FROM gd_esquema.Maestra m
+    WHERE m.Pedido_Cancelacion_Fecha IS NOT NULL
+    AND NOT EXISTS (SELECT * FROM LOS_POLLOS_HERMANOS.PedidoCancelacion pc WHERE pc.Pedido_Cancelacion_Pedido = m.Pedido_Numero)
+    GROUP BY m.Pedido_Numero, m.Pedido_Cancelacion_Fecha, m.Pedido_Cancelacion_Motivo;
+END
+GO
+
+/*
+------------------------------------------------------
+                Migracion de Envio
+------------------------------------------------------
+*/
+
+-- (19) Envio
+CREATE PROCEDURE LOS_POLLOS_HERMANOS.Migrar_Envio
+AS
+BEGIN
+    INSERT INTO LOS_POLLOS_HERMANOS.Envio(Envio_Factura, Envio_Fecha_Programada, Envio_Fecha_Entrega, Envio_Importe_Traslado, Envio_Importe_Subida)
+    SELECT m.Factura_Numero, m.Envio_Fecha_Programada, m.Envio_Fecha, m.Envio_ImporteTraslado, m.Envio_ImporteSubida
+    FROM gd_esquema.Maestra m
+    WHERE m.Envio_Numero IS NOT NULL
+    AND NOT EXISTS (SELECT * FROM LOS_POLLOS_HERMANOS.Envio e WHERE e.Envio_Numero = m.Envio_Numero)
+    GROUP BY m.Envio_Numero, m.Factura_Numero, m.Envio_Fecha_Programada, m.Envio_Fecha, m.Envio_ImporteTraslado, m.Envio_ImporteSubida
+	ORDER BY m.Envio_Numero;
+END
+GO
+
+/*
+------------------------------------------------------
+                Migracion de DetalleFactura
+------------------------------------------------------
+*/
+
+-- (20) DetalleFactura
+CREATE PROCEDURE LOS_POLLOS_HERMANOS.Migrar_DetalleFactura
+AS
+BEGIN
+    INSERT INTO LOS_POLLOS_HERMANOS.DetalleFactura (Detalle_Factura_Factura, Detalle_Factura_Detalle_Pedido, Detalle_Factura_Cantidad, Detalle_Factura_Precio, Detalle_Factura_Subtotal)
+    SELECT m.Factura_Numero, dp.Detalle_Pedido_Numero, m.Detalle_Factura_Cantidad, m.Detalle_Factura_Precio, m.Detalle_Factura_Subtotal
+    FROM gd_esquema.Maestra m
+    JOIN LOS_POLLOS_HERMANOS.Factura f ON m.Factura_Numero = f.Factura_Numero
+    JOIN (SELECT MIN(Detalle_Pedido_Numero) AS Detalle_Pedido_Numero, Detalle_Pedido_Pedido, Detalle_Pedido_Cantidad, Detalle_Pedido_Precio, Detalle_Pedido_Subtotal
+    FROM LOS_POLLOS_HERMANOS.DetallePedido 
+    GROUP BY Detalle_Pedido_Pedido, Detalle_Pedido_Cantidad, Detalle_Pedido_Precio, Detalle_Pedido_Subtotal) dp -- uso subselect dentro del join porque hay filas con valores repetidos
+    ON dp.Detalle_Pedido_Pedido = m.Pedido_Numero
+    AND dp.Detalle_Pedido_Cantidad = m.Detalle_Factura_Cantidad
+    AND dp.Detalle_Pedido_Precio = m.Detalle_Factura_Precio
+    AND dp.Detalle_Pedido_Subtotal = m.Detalle_Factura_Subtotal
+    WHERE m.Detalle_Factura_Precio IS NOT NULL
+    AND m.Detalle_Factura_Cantidad IS NOT NULL
+    AND m.Detalle_Factura_Subtotal IS NOT NULL
+    AND m.Pedido_Numero IS NOT NULL
+    AND NOT EXISTS (SELECT * FROM LOS_POLLOS_HERMANOS.DetalleFactura df WHERE df.Detalle_Factura_Factura = m.Factura_Numero);
+END
+GO
+
+/*
+------------------------------------------------------
+                Migracion de MaterialPorSillon
+------------------------------------------------------
+*/
+
+-- (21) MaterialPorSillon
+CREATE PROCEDURE LOS_POLLOS_HERMANOS.Migrar_MaterialPorSillon
+AS
+BEGIN
+    INSERT INTO LOS_POLLOS_HERMANOS.MaterialPorSillon(MaterialPorSillon_Material, MaterialPorSillon_Sillon)
+    SELECT ma.Material_Codigo, m.Sillon_Codigo
+    FROM gd_esquema.Maestra m
+    JOIN LOS_POLLOS_HERMANOS.TipoMaterial t ON t.TipoMaterial_Tipo = m.Material_Tipo AND t.TipoMaterial_Nombre = m.Material_Nombre AND t.TipoMaterial_Descripcion = m.Material_Descripcion
+    JOIN LOS_POLLOS_HERMANOS.Material ma ON ma.Material_Tipo = t.TipoMaterial_Codigo
+    WHERE m.Sillon_Codigo IS NOT NULL
+    AND NOT EXISTS (
+        SELECT * FROM LOS_POLLOS_HERMANOS.MaterialPorSillon mps
+        WHERE mps.MaterialPorSillon_Material = ma.Material_Codigo AND mps.MaterialPorSillon_Sillon = m.Sillon_Codigo
+    );
+END
+GO
+
+/*
+------------------------------------------------------
+        Ejecuciï¿½n de la migraciï¿½n
+------------------------------------------------------
+*/
+CREATE PROCEDURE LOS_POLLOS_HERMANOS.Migrar_Datos AS
+BEGIN 
+    EXEC LOS_POLLOS_HERMANOS.Migrar_Ubicacion; -- (20528 rows affected)
+    EXEC LOS_POLLOS_HERMANOS.Migrar_Cliente; -- (20509 rows affected)
+    EXEC LOS_POLLOS_HERMANOS.Migrar_Sucursal; -- (9 rows affected)
+    EXEC LOS_POLLOS_HERMANOS.Migrar_Proveedor; -- (10 rows affected)
+    EXEC LOS_POLLOS_HERMANOS.Migrar_Factura; -- (17408 rows affected)
+    EXEC LOS_POLLOS_HERMANOS.Migrar_Compra; -- (79 rows affected)
+    EXEC LOS_POLLOS_HERMANOS.Migrar_Pedido; -- (20509 rows affected)
+    EXEC LOS_POLLOS_HERMANOS.Migrar_Medida; -- (4 rows affected)
+    EXEC LOS_POLLOS_HERMANOS.Migrar_Modelo; -- (7 rows affected)
+    EXEC LOS_POLLOS_HERMANOS.Migrar_Sillon; -- (72166 rows affected)
+    EXEC LOS_POLLOS_HERMANOS.Migrar_DetallePedido; -- (72166 rows affected)
+    EXEC LOS_POLLOS_HERMANOS.Migrar_TipoMaterial; -- (9 rows affected)
+    EXEC LOS_POLLOS_HERMANOS.Migrar_Material; -- (9 rows affected)
+    EXEC LOS_POLLOS_HERMANOS.Migrar_Tela; -- (3 rows affected)
+    EXEC LOS_POLLOS_HERMANOS.Migrar_Madera; -- (3 rows affected)
+    EXEC LOS_POLLOS_HERMANOS.Migrar_Relleno; -- (3 rows affected)
+    EXEC LOS_POLLOS_HERMANOS.Migrar_DetalleCompra; -- (711 rows affected)
+    EXEC LOS_POLLOS_HERMANOS.Migrar_PedidoCancelacion; -- (3101 rows affected)
+    EXEC LOS_POLLOS_HERMANOS.Migrar_Envio; -- (17408 rows affected)
+    EXEC LOS_POLLOS_HERMANOS.Migrar_DetalleFactura; -- (61092 rows affected)
+    EXEC LOS_POLLOS_HERMANOS.Migrar_MaterialPorSillon; -- (216498 rows affected)
+END
+GO
+
+EXEC LOS_POLLOS_HERMANOS.Migrar_Datos;
+GO
+
+/*
+----------------------------------------------
                 Triggers
 ----------------------------------------------
 */
+-- Creamos los triggers despuÃ©s de la migraciÃ³n para que no interfieran durante la misma
+
 -- trigger que actualiza el total factura cada vez que se updatea, inserta o deletea un detalle factura
 CREATE TRIGGER LOS_POLLOS_HERMANOS.ActualizarTotalDeFactura
 ON LOS_POLLOS_HERMANOS.DetalleFactura
@@ -1001,545 +1552,4 @@ AS
         UNION
         SELECT DISTINCT Detalle_Compra_Compra FROM deleted
     );
-GO
-
-/*
-----------------------------------------------
-            Migracion de Ubicacion
-----------------------------------------------
-*/
-
--- (1) Ubicacion
-CREATE PROCEDURE LOS_POLLOS_HERMANOS.Migrar_Ubicacion
-AS
-BEGIN
-    INSERT INTO LOS_POLLOS_HERMANOS.Ubicacion (Ubicacion_Provincia, Ubicacion_Localidad, Ubicacion_Direccion)
-    SELECT DISTINCT Sucursal_Provincia, Sucursal_Localidad, Sucursal_Direccion
-    FROM gd_esquema.Maestra
-    WHERE Sucursal_Provincia IS NOT NULL
-    AND NOT EXISTS (    -- no lo vuelve a insertar si se ejecuta de vuelta el exec procedure y ya está migrado
-        SELECT * FROM LOS_POLLOS_HERMANOS.Ubicacion u
-        WHERE u.Ubicacion_Provincia = Sucursal_Provincia AND u.Ubicacion_Localidad = Sucursal_Localidad AND u.Ubicacion_Direccion = Sucursal_Direccion
-    )
-    UNION
-    SELECT DISTINCT Cliente_Provincia, Cliente_Localidad, Cliente_Direccion
-    FROM gd_esquema.Maestra
-    WHERE Cliente_Provincia IS NOT NULL
-    AND NOT EXISTS (
-        SELECT * FROM LOS_POLLOS_HERMANOS.Ubicacion u
-        WHERE u.Ubicacion_Provincia = Cliente_Provincia AND u.Ubicacion_Localidad = Cliente_Localidad AND u.Ubicacion_Direccion = Cliente_Direccion
-    )
-    UNION
-    SELECT DISTINCT Proveedor_Provincia, Proveedor_Localidad, Proveedor_Direccion
-    FROM gd_esquema.Maestra
-    WHERE Proveedor_Provincia IS NOT NULL
-    AND NOT EXISTS (
-        SELECT * FROM LOS_POLLOS_HERMANOS.Ubicacion u
-        WHERE u.Ubicacion_Provincia = Proveedor_Provincia AND u.Ubicacion_Localidad = Proveedor_Localidad AND u.Ubicacion_Direccion = Proveedor_Direccion
-    );
-END
-GO
-
-/*
-----------------------------------------------
-                Migracion de Cliente
-----------------------------------------------
-*/
-
--- (2) Cliente
-GO
-CREATE PROCEDURE LOS_POLLOS_HERMANOS.Migrar_Cliente
-AS
-BEGIN
-    INSERT INTO LOS_POLLOS_HERMANOS.Cliente (Cliente_Ubicacion, Cliente_Dni, Cliente_Nombre, Cliente_Apellido, Cliente_Fecha_Nacimiento, Cliente_Mail, Cliente_Telefono)
-    SELECT DISTINCT
-        u.Ubicacion_Codigo, m.Cliente_Dni, m.Cliente_Nombre, m.Cliente_Apellido, m.Cliente_FechaNacimiento, m.Cliente_Mail, m.Cliente_Telefono
-    FROM gd_esquema.Maestra m
-    JOIN LOS_POLLOS_HERMANOS.Ubicacion u ON 
-        u.Ubicacion_Provincia = m.Cliente_Provincia  
-        AND u.Ubicacion_Localidad = m.Cliente_Localidad  
-        AND u.Ubicacion_Direccion = m.Cliente_Direccion
-    WHERE NOT EXISTS (
-        SELECT * FROM LOS_POLLOS_HERMANOS.Cliente C WHERE C.Cliente_Dni = M.Cliente_Dni
-    );
-END
-GO
-
-/*
-----------------------------------------------
-            Migracion de Sucursal
-----------------------------------------------
-*/
-
--- (3) Sucursal
-CREATE PROCEDURE LOS_POLLOS_HERMANOS.Migrar_Sucursal
-AS
-BEGIN
-	SET IDENTITY_INSERT LOS_POLLOS_HERMANOS.Sucursal ON;
-    INSERT INTO LOS_POLLOS_HERMANOS.Sucursal (
-        Sucursal_Codigo, Sucursal_Ubicacion, Sucursal_Telefono, Sucursal_Mail
-    )
-    SELECT DISTINCT
-		m.Sucursal_NroSucursal,
-        u.Ubicacion_Codigo,
-        m.Sucursal_Telefono,
-        m.Sucursal_Mail
-    FROM gd_esquema.Maestra m
-    JOIN LOS_POLLOS_HERMANOS.Ubicacion u ON
-        u.Ubicacion_Provincia = m.Sucursal_Provincia
-        AND u.Ubicacion_Localidad = m.Sucursal_Localidad
-        AND u.Ubicacion_Direccion = m.Sucursal_Direccion
-    WHERE NOT EXISTS (
-        SELECT * FROM LOS_POLLOS_HERMANOS.Sucursal s
-        WHERE s.Sucursal_Codigo = m.Sucursal_NroSucursal
-    )
-	ORDER BY m.Sucursal_NroSucursal;
-	SET IDENTITY_INSERT LOS_POLLOS_HERMANOS.Sucursal OFF;
-END
-GO
-
-/*
-----------------------------------------------
-            Migracion de Proveedor
-----------------------------------------------
-*/
-
--- (4) Proveedor
-CREATE PROCEDURE LOS_POLLOS_HERMANOS.Migrar_Proveedor
-AS
-BEGIN
-    INSERT INTO LOS_POLLOS_HERMANOS.Proveedor (Proveedor_Ubicacion, Proveedor_Cuit, Proveedor_RazonSocial, Proveedor_Telefono, Proveedor_Mail)
-    SELECT DISTINCT
-        u.Ubicacion_Codigo,
-        m.Proveedor_Cuit,
-        m.Proveedor_RazonSocial,
-        m.Proveedor_Telefono,
-        m.Proveedor_Mail
-    FROM gd_esquema.Maestra m
-    JOIN LOS_POLLOS_HERMANOS.Ubicacion u ON 
-        u.Ubicacion_Provincia = m.Proveedor_Provincia  
-        AND u.Ubicacion_Localidad = m.Proveedor_Localidad  
-        AND u.Ubicacion_Direccion = m.Proveedor_Direccion
-    WHERE NOT EXISTS (SELECT * FROM LOS_POLLOS_HERMANOS.Proveedor p WHERE p.Proveedor_Cuit = m.Proveedor_Cuit);
-END
-GO
-
-/*
-------------------------------------------------------
-                Migracion de Factura
-------------------------------------------------------
-*/
-
--- (5) Factura
-CREATE PROCEDURE LOS_POLLOS_HERMANOS.Migrar_Factura
-AS
-BEGIN
-	SET IDENTITY_INSERT LOS_POLLOS_HERMANOS.Factura ON;
-    INSERT INTO LOS_POLLOS_HERMANOS.Factura(Factura_Numero, Factura_Cliente, Factura_Sucursal, Factura_Fecha, Factura_Total)
-    SELECT DISTINCT m.Factura_Numero, c.Cliente_Codigo, s.Sucursal_Codigo, m.Factura_Fecha, m.Factura_Total
-    FROM gd_esquema.Maestra m
-    JOIN LOS_POLLOS_HERMANOS.Cliente c ON m.Cliente_Dni = c.Cliente_Dni AND m.Cliente_Apellido = c.Cliente_Apellido AND m.Cliente_Nombre = c.Cliente_Nombre
-    JOIN LOS_POLLOS_HERMANOS.Sucursal s ON m.Sucursal_NroSucursal = s.Sucursal_Codigo
-    WHERE m.Factura_Numero IS NOT NULL
-    AND NOT EXISTS (SELECT * FROM LOS_POLLOS_HERMANOS.Factura f WHERE f.Factura_Numero = m.Factura_Numero)
-	ORDER BY m.Factura_Numero;
-	SET IDENTITY_INSERT LOS_POLLOS_HERMANOS.Factura OFF;
-END
-GO
-
-/*
-------------------------------------------------------
-                Migracion de Compra
-------------------------------------------------------
-*/
-
--- (6) Compra
-CREATE PROCEDURE LOS_POLLOS_HERMANOS.Migrar_Compra
-AS
-BEGIN
-	SET IDENTITY_INSERT LOS_POLLOS_HERMANOS.Compra ON;
-    INSERT INTO LOS_POLLOS_HERMANOS.Compra(Compra_Numero, Compra_Sucursal, Compra_Proveedor, Compra_Fecha, Compra_Total)
-    SELECT DISTINCT m.Compra_Numero, s.Sucursal_Codigo, p.Proveedor_Codigo, m.Compra_Fecha, m.Compra_Total
-    FROM gd_esquema.Maestra m
-    JOIN LOS_POLLOS_HERMANOS.Sucursal s ON s.Sucursal_Codigo = m.Sucursal_NroSucursal
-    JOIN LOS_POLLOS_HERMANOS.Proveedor p ON p.Proveedor_Cuit = m.Proveedor_Cuit AND p.Proveedor_RazonSocial = m.Proveedor_RazonSocial
-    WHERE NOT EXISTS (
-        SELECT * FROM LOS_POLLOS_HERMANOS.Compra c
-        WHERE c.Compra_Numero = m.Compra_Numero
-    )
-	ORDER BY m.Compra_Numero;
-	SET IDENTITY_INSERT LOS_POLLOS_HERMANOS.Compra OFF;
-END
-GO
-
-/*
-------------------------------------------------------
-                Migracion de Pedido
-------------------------------------------------------
-*/
-
--- (7) Pedido
-CREATE PROCEDURE LOS_POLLOS_HERMANOS.Migrar_Pedido
-AS
-BEGIN
-	SET IDENTITY_INSERT LOS_POLLOS_HERMANOS.Pedido ON;
-    INSERT INTO LOS_POLLOS_HERMANOS.Pedido(Pedido_Numero, Pedido_Cliente, Pedido_Sucursal, Pedido_Fecha, Pedido_Total, Pedido_Estado)
-    SELECT DISTINCT m.Pedido_Numero, c.Cliente_Codigo, s.Sucursal_Codigo, m.Pedido_Fecha, m.Pedido_Total, m.Pedido_Estado
-    FROM gd_esquema.Maestra m
-    JOIN LOS_POLLOS_HERMANOS.Cliente c ON m.Cliente_Dni = c.Cliente_Dni and m.Cliente_Nombre = c.Cliente_Nombre and m.Cliente_Apellido = m.Cliente_Apellido
-    JOIN LOS_POLLOS_HERMANOS.Sucursal s ON m.Sucursal_NroSucursal = s.Sucursal_Codigo
-    WHERE m.Pedido_Numero IS NOT NULL
-    AND NOT EXISTS (SELECT * FROM LOS_POLLOS_HERMANOS.Pedido p WHERE p.Pedido_Numero = m.Pedido_Numero)
-	ORDER BY m.Pedido_Numero;
-	SET IDENTITY_INSERT LOS_POLLOS_HERMANOS.Pedido OFF;
-END
-GO
-
-/*
-------------------------------------------------------
-                Migracion de Sillon
-------------------------------------------------------
-*/
-
--- (8) Sillon
-CREATE PROCEDURE LOS_POLLOS_HERMANOS.Migrar_Sillon
-AS
-BEGIN
-	SET IDENTITY_INSERT LOS_POLLOS_HERMANOS.Sillon ON;
-    INSERT INTO LOS_POLLOS_HERMANOS.Sillon(Sillon_Codigo, Sillon_Medida, Sillon_Modelo)
-    SELECT DISTINCT m.Sillon_Codigo, u1.Medida_Codigo, u2.Modelo_Codigo
-    FROM gd_esquema.Maestra m
-    JOIN LOS_POLLOS_HERMANOS.Medida u1 ON
-        m.Sillon_Medida_Alto = u1.Medida_Alto 
-        AND m.Sillon_Medida_Ancho = u1.Medida_Ancho 
-        AND m.Sillon_Medida_Precio = u1.Medida_Precio 
-        AND m.Sillon_Medida_Profundidad = u1.Medida_Profundidad                          
-    JOIN LOS_POLLOS_HERMANOS.Modelo u2 ON 
-        u2.Modelo_Codigo = m.Sillon_Modelo_Codigo
-    WHERE NOT EXISTS (
-        SELECT * FROM LOS_POLLOS_HERMANOS.Sillon s
-        WHERE s.Sillon_Codigo = m.Sillon_Codigo
-    )
-	ORDER BY m.Sillon_Codigo;
-	SET IDENTITY_INSERT LOS_POLLOS_HERMANOS.Sillon OFF;
-END
-GO
-
-/*
-------------------------------------------------------
-                Migracion de DetallePedido
-------------------------------------------------------
-*/
-
--- (9) DetallePedido
-CREATE PROCEDURE LOS_POLLOS_HERMANOS.Migrar_DetallePedido
-AS
-BEGIN
-    INSERT INTO LOS_POLLOS_HERMANOS.DetallePedido(Detalle_Pedido_Sillon, Detalle_Pedido_Pedido, Detalle_Pedido_Cantidad, Detalle_Pedido_Precio, Detalle_Pedido_Subtotal)
-    SELECT DISTINCT m.Sillon_Codigo, m.Pedido_Numero, m.Detalle_Pedido_Cantidad, m.Detalle_Pedido_Precio, m.Detalle_Pedido_Subtotal
-    FROM gd_esquema.Maestra m
-    WHERE m.Sillon_Codigo IS NOT NULL
-    AND NOT EXISTS (SELECT * FROM LOS_POLLOS_HERMANOS.DetallePedido dp WHERE dp.Detalle_Pedido_Sillon = m.Sillon_Codigo);
-END
-GO
-
-/*
-------------------------------------------------------
-                Migracion de TipoMaterial
-------------------------------------------------------
-*/
-
--- (10) TipoMaterial
-CREATE PROCEDURE LOS_POLLOS_HERMANOS.Migrar_TipoMaterial
-AS
-BEGIN
-    INSERT INTO LOS_POLLOS_HERMANOS.TipoMaterial(TipoMaterial_Tipo, TipoMaterial_Nombre, TipoMaterial_Descripcion)
-    SELECT DISTINCT m.Material_Tipo, m.Material_Nombre, m.Material_Descripcion
-    FROM gd_esquema.Maestra m
-    WHERE m.material_tipo IS NOT NULL
-    AND NOT EXISTS (
-        SELECT * FROM LOS_POLLOS_HERMANOS.TipoMaterial tm WHERE tm.TipoMaterial_Tipo = m.Material_Tipo
-        AND tm.TipoMaterial_Nombre = m.Material_Nombre AND tm.TipoMaterial_Descripcion = m.Material_Descripcion
-      );
-END
-GO
-
-/*
-------------------------------------------------------
-                Migracion de Medida    
-------------------------------------------------------
-*/
-
--- (11) Medida
-CREATE PROCEDURE LOS_POLLOS_HERMANOS.Migrar_Medida
-AS
-BEGIN
-    INSERT INTO LOS_POLLOS_HERMANOS.Medida (Medida_Ancho, Medida_Alto, Medida_Profundidad, Medida_Precio)
-    SELECT DISTINCT m.Sillon_Medida_Ancho, m.Sillon_Medida_Alto, m.Sillon_Medida_Profundidad, m.Sillon_Medida_Precio
-    FROM gd_esquema.maestra m
-    WHERE m.Sillon_Medida_Alto IS NOT NULL
-    AND NOT EXISTS (
-        SELECT * FROM LOS_POLLOS_HERMANOS.Medida med
-        WHERE med.Medida_Ancho = m.Sillon_Medida_Ancho AND med.Medida_Alto = m.Sillon_Medida_Alto AND med.Medida_Profundidad = m.Sillon_Medida_Profundidad AND med.Medida_Precio = m.Sillon_Medida_Precio
-    );
-END
-GO
-
-/*
-------------------------------------------------------
-                Migracion de Modelo
-------------------------------------------------------
-*/
-
--- (12) Modelo
-CREATE PROCEDURE LOS_POLLOS_HERMANOS.Migrar_Modelo
-AS
-BEGIN
-	SET IDENTITY_INSERT LOS_POLLOS_HERMANOS.Modelo ON;
-    INSERT INTO LOS_POLLOS_HERMANOS.Modelo (Modelo_Codigo, Modelo_Codigo_Numero, Modelo_Descripcion, Modelo_Precio_Base)
-    SELECT DISTINCT m.Sillon_Modelo_Codigo, m.Sillon_Modelo, m.Sillon_Modelo_Descripcion, m.Sillon_Modelo_Precio
-    FROM gd_esquema.Maestra m
-    WHERE m.Sillon_Modelo_Codigo IS NOT NULL
-    AND NOT EXISTS (
-        SELECT * FROM LOS_POLLOS_HERMANOS.Modelo mo
-        WHERE mo.Modelo_Codigo = m.Sillon_Modelo_Codigo AND mo.Modelo_Codigo_Numero = m.Sillon_Modelo
-    )
-	ORDER BY m.Sillon_Modelo_Codigo;
-	SET IDENTITY_INSERT LOS_POLLOS_HERMANOS.Modelo OFF;
-END
-GO
-
-/*
-------------------------------------------------------
-                Migracion de Material
-------------------------------------------------------
-*/
-
--- (13) Material
-CREATE PROCEDURE LOS_POLLOS_HERMANOS.Migrar_Material
-AS
-BEGIN
-    INSERT INTO LOS_POLLOS_HERMANOS.Material(Material_Tipo, Material_Precio)
-    SELECT DISTINCT u.TipoMaterial_Codigo, m.Material_Precio
-    FROM gd_esquema.Maestra m
-    JOIN LOS_POLLOS_HERMANOS.TipoMaterial u ON u.TipoMaterial_Tipo = m.Material_Tipo AND u.TipoMaterial_Nombre = m.Material_Nombre AND u.TipoMaterial_Descripcion = m.Material_Descripcion
-    WHERE NOT EXISTS (
-        SELECT * FROM LOS_POLLOS_HERMANOS.Material mat
-        WHERE mat.Material_Tipo = u.TipoMaterial_Codigo AND mat.Material_Precio = m.Material_Precio
-    );
-END
-GO
-
-/*
-------------------------------------------------------
-                Migracion de Tela
-------------------------------------------------------
-*/
-
--- (14) Tela
-CREATE PROCEDURE LOS_POLLOS_HERMANOS.Migrar_Tela
-AS
-BEGIN
-    INSERT INTO LOS_POLLOS_HERMANOS.Tela(Tela_Material, Tela_Color, Tela_Textura)
-    SELECT DISTINCT u2.Material_Codigo, m.Tela_Color, m.Tela_Textura
-    FROM gd_esquema.Maestra m
-    JOIN LOS_POLLOS_HERMANOS.TipoMaterial u1 ON u1.TipoMaterial_Tipo = m.Material_Tipo AND u1.TipoMaterial_Nombre = m.Material_Nombre AND u1.TipoMaterial_Descripcion = m.Material_Descripcion
-    JOIN LOS_POLLOS_HERMANOS.Material u2 ON u2.Material_Tipo = u1.TipoMaterial_Codigo
-    WHERE m.Tela_Color IS NOT NULL AND m.Tela_Textura IS NOT NULL
-    AND NOT EXISTS (
-        SELECT * FROM LOS_POLLOS_HERMANOS.Tela t
-        WHERE t.Tela_Material = u2.Material_Codigo AND t.Tela_Color = m.Tela_Color AND t.Tela_Textura = m.Tela_Textura
-    );
-END
-GO
-
-/*
-------------------------------------------------------
-                Migracion de Madera
-------------------------------------------------------
-*/
-
--- (15) Madera
-CREATE PROCEDURE LOS_POLLOS_HERMANOS.Migrar_Madera
-AS
-BEGIN
-    INSERT INTO LOS_POLLOS_HERMANOS.Madera(Madera_Material, Madera_Color, Madera_Dureza)
-    SELECT DISTINCT u2.Material_Codigo, m.Madera_Color, m.Madera_Dureza
-    FROM gd_esquema.Maestra m
-    JOIN LOS_POLLOS_HERMANOS.TipoMaterial u1 ON u1.TipoMaterial_Tipo = m.Material_Tipo AND u1.TipoMaterial_Nombre = m.Material_Nombre AND u1.TipoMaterial_Descripcion = m.Material_Descripcion
-    JOIN LOS_POLLOS_HERMANOS.Material u2 ON u2.Material_Tipo = u1.TipoMaterial_Codigo
-    WHERE m.madera_color IS NOT NULL AND m.Madera_Dureza IS NOT NULL
-    AND NOT EXISTS (
-        SELECT * FROM LOS_POLLOS_HERMANOS.Madera t
-        WHERE t.Madera_Material = u2.Material_Codigo AND t.Madera_Color = m.Madera_Color AND t.Madera_Dureza = m.Madera_Dureza
-    );
-END
-GO
-
-/*
-------------------------------------------------------
-                Migracion de Relleno
-------------------------------------------------------
-*/
-
--- (16) Relleno
-CREATE PROCEDURE LOS_POLLOS_HERMANOS.Migrar_Relleno
-AS
-BEGIN
-    INSERT INTO LOS_POLLOS_HERMANOS.Relleno(Relleno_Material, Relleno_Densidad)
-    SELECT DISTINCT u2.Material_Codigo, m.Relleno_Densidad
-    FROM gd_esquema.Maestra m
-    JOIN LOS_POLLOS_HERMANOS.TipoMaterial u1 ON u1.TipoMaterial_Tipo = m.Material_Tipo AND u1.TipoMaterial_Nombre = m.Material_Nombre AND u1.TipoMaterial_Descripcion = m.Material_Descripcion
-    JOIN LOS_POLLOS_HERMANOS.Material u2 ON u2.Material_Tipo = u1.TipoMaterial_Codigo
-    WHERE m.Relleno_Densidad IS NOT NULL
-    AND NOT EXISTS (
-        SELECT * FROM LOS_POLLOS_HERMANOS.Relleno r
-        WHERE r.Relleno_Material = u2.Material_Codigo AND r.Relleno_Densidad = m.Relleno_Densidad
-    );
-END
-GO
-
-/*
-------------------------------------------------------
-                Migracion de DetalleCompra
-------------------------------------------------------
-*/
-
--- (17) DetalleCompra
-CREATE PROCEDURE LOS_POLLOS_HERMANOS.Migrar_DetalleCompra
-AS
-BEGIN
-    INSERT INTO LOS_POLLOS_HERMANOS.DetalleCompra(Detalle_Compra_Compra, Detalle_Compra_Material, Detalle_Compra_Cantidad, Detalle_Compra_Precio, Detalle_Compra_Subtotal)
-    SELECT DISTINCT m.Compra_Numero, u2.Material_Codigo, m.Detalle_Compra_Cantidad, m.Detalle_Compra_Precio, m.Detalle_Compra_Subtotal
-    FROM gd_esquema.Maestra m
-    JOIN LOS_POLLOS_HERMANOS.TipoMaterial u1 ON u1.TipoMaterial_Tipo = m.Material_Tipo AND u1.TipoMaterial_Nombre = m.Material_Nombre AND u1.TipoMaterial_Descripcion = m.Material_Descripcion
-    JOIN LOS_POLLOS_HERMANOS.Material u2 ON u2.Material_Tipo = u1.TipoMaterial_Codigo
-    WHERE m.Compra_Numero IS NOT NULL
-    AND NOT EXISTS (SELECT * FROM LOS_POLLOS_HERMANOS.DetalleCompra dc WHERE dc.Detalle_Compra_Compra = m.Compra_Numero);
-END
-GO
-
-/*
-------------------------------------------------------
-                Migracion de PedidoCancelacion
-------------------------------------------------------
-*/
-
--- (18) PedidoCancelacion
-CREATE PROCEDURE LOS_POLLOS_HERMANOS.Migrar_PedidoCancelacion
-AS
-BEGIN
-    INSERT INTO LOS_POLLOS_HERMANOS.PedidoCancelacion(Pedido_Cancelacion_Pedido, Pedido_Cancelacion_Fecha, Pedido_Cancelacion_Motivo)
-    SELECT DISTINCT m.Pedido_Numero, m.Pedido_Cancelacion_Fecha, m.Pedido_Cancelacion_Motivo
-    FROM gd_esquema.Maestra m
-    WHERE m.Pedido_Cancelacion_Fecha IS NOT NULL
-    AND NOT EXISTS (SELECT * FROM LOS_POLLOS_HERMANOS.PedidoCancelacion pc WHERE pc.Pedido_Cancelacion_Pedido = m.Pedido_Numero);
-END
-GO
-
-/*
-------------------------------------------------------
-                Migracion de Envio
-------------------------------------------------------
-*/
-
--- (19) Envio
-CREATE PROCEDURE LOS_POLLOS_HERMANOS.Migrar_Envio
-AS
-BEGIN
-	SET IDENTITY_INSERT LOS_POLLOS_HERMANOS.Envio ON;
-    INSERT INTO LOS_POLLOS_HERMANOS.Envio(Envio_Numero, Envio_Factura, Envio_Fecha_Programada, Envio_Fecha_Entrega, Envio_Importe_Traslado, Envio_Importe_Subida)
-    SELECT DISTINCT m.Envio_Numero, m.Factura_Numero, m.Envio_Fecha_Programada, m.Envio_Fecha, m.Envio_ImporteTraslado, m.Envio_ImporteSubida
-    FROM gd_esquema.Maestra m
-    WHERE m.Envio_Numero IS NOT NULL
-    AND NOT EXISTS (SELECT * FROM LOS_POLLOS_HERMANOS.Envio e WHERE e.Envio_Numero = m.Envio_Numero)
-	ORDER BY m.Envio_Numero;
-	SET IDENTITY_INSERT LOS_POLLOS_HERMANOS.Envio OFF;
-END
-GO
-
-/*
-------------------------------------------------------
-                Migracion de DetalleFactura
-------------------------------------------------------
-*/
-
--- (20) DetalleFactura
-CREATE PROCEDURE LOS_POLLOS_HERMANOS.Migrar_DetalleFactura
-AS
-BEGIN
-    INSERT INTO LOS_POLLOS_HERMANOS.DetalleFactura (Detalle_Factura_Factura, Detalle_Factura_Detalle_Pedido, Detalle_Factura_Cantidad, Detalle_Factura_Precio, Detalle_Factura_Subtotal)
-    SELECT m.Factura_Numero, dp.Detalle_Pedido_Numero, m.Detalle_Factura_Cantidad, m.Detalle_Factura_Precio, m.Detalle_Factura_Subtotal
-    FROM gd_esquema.Maestra m
-    JOIN LOS_POLLOS_HERMANOS.Factura f ON m.Factura_Numero = f.Factura_Numero
-    JOIN (SELECT MIN(Detalle_Pedido_Numero) AS Detalle_Pedido_Numero, Detalle_Pedido_Pedido, Detalle_Pedido_Cantidad, Detalle_Pedido_Precio, Detalle_Pedido_Subtotal
-    FROM LOS_POLLOS_HERMANOS.DetallePedido 
-    GROUP BY Detalle_Pedido_Pedido, Detalle_Pedido_Cantidad, Detalle_Pedido_Precio, Detalle_Pedido_Subtotal) dp -- uso subselect dentro del join porque hay filas con valores repetidos
-    ON dp.Detalle_Pedido_Pedido = m.Pedido_Numero
-    AND dp.Detalle_Pedido_Cantidad = m.Detalle_Factura_Cantidad
-    AND dp.Detalle_Pedido_Precio = m.Detalle_Factura_Precio
-    AND dp.Detalle_Pedido_Subtotal = m.Detalle_Factura_Subtotal
-    WHERE m.Detalle_Factura_Precio IS NOT NULL
-    AND m.Detalle_Factura_Cantidad IS NOT NULL
-    AND m.Detalle_Factura_Subtotal IS NOT NULL
-    AND m.Pedido_Numero IS NOT NULL
-    AND NOT EXISTS (SELECT * FROM LOS_POLLOS_HERMANOS.DetalleFactura df WHERE df.Detalle_Factura_Factura = m.Factura_Numero);
-END
-GO
-
-/*
-------------------------------------------------------
-                Migracion de MaterialPorSillon
-------------------------------------------------------
-*/
-
--- (21) MaterialPorSillon
-CREATE PROCEDURE LOS_POLLOS_HERMANOS.Migrar_MaterialPorSillon
-AS
-BEGIN
-    INSERT INTO LOS_POLLOS_HERMANOS.MaterialPorSillon(MaterialPorSillon_Material, MaterialPorSillon_Sillon)
-    SELECT u2.Material_Codigo, m.Sillon_Codigo
-    FROM gd_esquema.Maestra m
-    JOIN LOS_POLLOS_HERMANOS.TipoMaterial u1 ON u1.TipoMaterial_Tipo = m.Material_Tipo AND u1.TipoMaterial_Nombre = m.Material_Nombre AND u1.TipoMaterial_Descripcion = m.Material_Descripcion
-    JOIN LOS_POLLOS_HERMANOS.Material u2 ON u2.Material_Tipo = u1.TipoMaterial_Codigo
-    WHERE m.Sillon_Codigo IS NOT NULL
-    AND NOT EXISTS (
-        SELECT * FROM LOS_POLLOS_HERMANOS.MaterialPorSillon mps
-        WHERE mps.MaterialPorSillon_Material = u2.Material_Codigo AND mps.MaterialPorSillon_Sillon = m.Sillon_Codigo
-    );
-END
-GO
-
-/*
-------------------------------------------------------
-        Ejecución de la migración
-------------------------------------------------------
-*/
-CREATE PROCEDURE LOS_POLLOS_HERMANOS.Migrar_Datos AS
-BEGIN 
-    EXEC LOS_POLLOS_HERMANOS.Migrar_Ubicacion;
-    EXEC LOS_POLLOS_HERMANOS.Migrar_Cliente;
-    EXEC LOS_POLLOS_HERMANOS.Migrar_Sucursal;
-    EXEC LOS_POLLOS_HERMANOS.Migrar_Proveedor;
-    EXEC LOS_POLLOS_HERMANOS.Migrar_Medida;
-    EXEC LOS_POLLOS_HERMANOS.Migrar_Modelo;
-    EXEC LOS_POLLOS_HERMANOS.Migrar_Sillon;
-    EXEC LOS_POLLOS_HERMANOS.Migrar_Compra;
-    EXEC LOS_POLLOS_HERMANOS.Migrar_Factura;
-    EXEC LOS_POLLOS_HERMANOS.Migrar_Pedido;
-    EXEC LOS_POLLOS_HERMANOS.Migrar_DetallePedido;
-    EXEC LOS_POLLOS_HERMANOS.Migrar_PedidoCancelacion;
-    EXEC LOS_POLLOS_HERMANOS.Migrar_Envio;
-    EXEC LOS_POLLOS_HERMANOS.Migrar_DetalleFactura;
-    EXEC LOS_POLLOS_HERMANOS.Migrar_TipoMaterial;
-    EXEC LOS_POLLOS_HERMANOS.Migrar_Material;
-    EXEC LOS_POLLOS_HERMANOS.Migrar_MaterialPorSillon;
-    EXEC LOS_POLLOS_HERMANOS.Migrar_Tela;
-    EXEC LOS_POLLOS_HERMANOS.Migrar_Madera;
-    EXEC LOS_POLLOS_HERMANOS.Migrar_Relleno;
-    EXEC LOS_POLLOS_HERMANOS.Migrar_DetalleCompra;
-END
-GO
-
-EXEC LOS_POLLOS_HERMANOS.Migrar_Datos;
 GO
