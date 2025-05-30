@@ -297,7 +297,8 @@ BEGIN
         Envio_Fecha_Programada DATETIME2(6),
         Envio_Fecha_Entrega DATETIME2(6),
         Envio_Importe_Traslado DECIMAL(18,2),
-        Envio_Importe_Subida DECIMAL(18,2)
+        Envio_Importe_Subida DECIMAL(18,2),
+		Envio_Total DECIMAL(18,2)
     );
 END
 GO
@@ -368,250 +369,137 @@ GO
 EXEC LOS_POLLOS_HERMANOS.CrearTablas;
 GO
 
+
 /*
 ----------------------------------------------
             Constraints primary key
 ----------------------------------------------
 */
+-- (1) Ubicacion
+ALTER TABLE LOS_POLLOS_HERMANOS.Ubicacion
+ADD CONSTRAINT PK_Ubicacion 
+    PRIMARY KEY (Ubicacion_Codigo)
 
 
--- (1) Stored procedure de Creación de PK de Ubicacion
-CREATE PROCEDURE LOS_POLLOS_HERMANOS.CrearConstraint_PK_Ubicacion AS
-BEGIN
-    ALTER TABLE LOS_POLLOS_HERMANOS.Ubicacion
-    ADD CONSTRAINT PK_Ubicacion PRIMARY KEY (Ubicacion_Codigo)
-END
-GO
+-- (2) Cliente
+ALTER TABLE LOS_POLLOS_HERMANOS.Cliente
+ADD CONSTRAINT PK_Cliente 
+    PRIMARY KEY (Cliente_Codigo);
 
 
--- (2) Stored procedure de Creación de PK de Cliente
-CREATE PROCEDURE LOS_POLLOS_HERMANOS.CrearConstraint_PK_Cliente AS
-BEGIN
-    ALTER TABLE LOS_POLLOS_HERMANOS.Cliente
-    ADD CONSTRAINT PK_Cliente PRIMARY KEY (Cliente_Codigo);
-END
-GO
+-- (3) Sucursal
+ALTER TABLE LOS_POLLOS_HERMANOS.Sucursal
+ADD CONSTRAINT PK_Sucursal 
+    PRIMARY KEY (Sucursal_Codigo);
 
 
--- (3) Stored procedure de Creación de PK de Sucursal
-CREATE PROCEDURE LOS_POLLOS_HERMANOS.CrearConstraint_PK_Sucursal AS
-BEGIN
-    ALTER TABLE LOS_POLLOS_HERMANOS.Sucursal
-    ADD CONSTRAINT PK_Sucursal PRIMARY KEY (Sucursal_Codigo);
-END
-GO
+-- (4) Proveedor
+ALTER TABLE LOS_POLLOS_HERMANOS.Proveedor
+ADD CONSTRAINT PK_Proveedor 
+    PRIMARY KEY (Proveedor_Codigo);
 
 
--- (4) Stored procedure de Creación de PK de Proveedor
-CREATE PROCEDURE LOS_POLLOS_HERMANOS.CrearConstraint_PK_Proveedor AS
-BEGIN
-    ALTER TABLE LOS_POLLOS_HERMANOS.Proveedor
-    ADD CONSTRAINT PK_Proveedor
-        PRIMARY KEY (Proveedor_Codigo);
-END
-GO
+-- (5) Factura
+ALTER TABLE LOS_POLLOS_HERMANOS.Factura
+ADD CONSTRAINT PK_Factura 
+    PRIMARY KEY (Factura_Numero);
 
 
--- (5) Stored procedure de Creación de PK de Factura
-CREATE PROCEDURE LOS_POLLOS_HERMANOS.CrearConstraint_PK_Factura AS
-BEGIN
-    ALTER TABLE LOS_POLLOS_HERMANOS.Factura
-    ADD CONSTRAINT PK_Factura
-        PRIMARY KEY (Factura_Numero);
-END
-GO
+-- (6) Compra
+ALTER TABLE LOS_POLLOS_HERMANOS.Compra
+ADD CONSTRAINT PK_Compra 
+    PRIMARY KEY (Compra_Numero);
 
 
--- (6) Stored procedure de Creación de PK de Compra
-CREATE PROCEDURE LOS_POLLOS_HERMANOS.CrearConstraint_PK_Compra AS
-BEGIN
-    ALTER TABLE LOS_POLLOS_HERMANOS.Compra
-    ADD CONSTRAINT PK_Compra
-        PRIMARY KEY (Compra_Numero);
-END
-GO
+-- (7) Pedido
+ALTER TABLE LOS_POLLOS_HERMANOS.Pedido
+ADD CONSTRAINT PK_Pedido 
+    PRIMARY KEY (Pedido_Numero);
 
 
--- (7) Stored procedure de Creación de PK de Pedido
-CREATE PROCEDURE LOS_POLLOS_HERMANOS.CrearConstraint_PK_Pedido AS
-BEGIN
-    ALTER TABLE LOS_POLLOS_HERMANOS.Pedido
-    ADD CONSTRAINT PK_Pedido
-        PRIMARY KEY (Pedido_Numero);
-END
-GO
+-- (8) Medida
+ALTER TABLE LOS_POLLOS_HERMANOS.Medida
+ADD CONSTRAINT PK_Medida 
+    PRIMARY KEY (Medida_Codigo);
 
 
--- (8) Stored procedure de Creación de PK de Medida
-CREATE PROCEDURE LOS_POLLOS_HERMANOS.CrearConstraint_PK_Medida AS
-BEGIN
-    ALTER TABLE LOS_POLLOS_HERMANOS.Medida
-    ADD CONSTRAINT PK_Medida
-        PRIMARY KEY (Medida_Codigo);
-END
-GO
+-- (9) Modelo
+ALTER TABLE LOS_POLLOS_HERMANOS.Modelo
+ADD CONSTRAINT PK_Modelo 
+    PRIMARY KEY (Modelo_Codigo);
 
 
--- (9) Stored procedure de Creación de PK de Modelo
-CREATE PROCEDURE LOS_POLLOS_HERMANOS.CrearConstraint_PK_Modelo AS
-BEGIN
-    ALTER TABLE LOS_POLLOS_HERMANOS.Modelo
-    ADD CONSTRAINT PK_Modelo
-        PRIMARY KEY (Modelo_Codigo);
-END
-GO
+-- (10) Sillon
+ALTER TABLE LOS_POLLOS_HERMANOS.Sillon
+ADD CONSTRAINT PK_Sillon 
+    PRIMARY KEY (Sillon_Codigo);
 
 
--- (10) Stored procedure de Creación de PK de Sillon
-CREATE PROCEDURE LOS_POLLOS_HERMANOS.CrearConstraint_PK_Sillon AS
-BEGIN
-    ALTER TABLE LOS_POLLOS_HERMANOS.Sillon
-    ADD CONSTRAINT PK_Sillon
-        PRIMARY KEY (Sillon_Codigo);
-END
-GO
+-- (11) DetallePedido
+ALTER TABLE LOS_POLLOS_HERMANOS.DetallePedido
+ADD CONSTRAINT PK_DetallePedido 
+    PRIMARY KEY (Detalle_Pedido_Numero);
 
 
--- (11) Stored procedure de Creación de PK de DetallePedido
-CREATE PROCEDURE LOS_POLLOS_HERMANOS.CrearConstraint_PK_DetallePedido AS
-BEGIN
-    ALTER TABLE LOS_POLLOS_HERMANOS.DetallePedido
-    ADD CONSTRAINT PK_DetallePedido
-        PRIMARY KEY (Detalle_Pedido_Numero);
-END
-GO
+-- (12) TipoMaterial
+ALTER TABLE LOS_POLLOS_HERMANOS.TipoMaterial
+ADD CONSTRAINT PK_TipoMaterial 
+    PRIMARY KEY (TipoMaterial_Codigo);
 
 
--- (12) Stored procedure de Creación de PK de TipoMaterial
-CREATE PROCEDURE LOS_POLLOS_HERMANOS.CrearConstraint_PK_TipoMaterial AS
-BEGIN
-    ALTER TABLE LOS_POLLOS_HERMANOS.TipoMaterial
-    ADD CONSTRAINT PK_TipoMaterial
-        PRIMARY KEY (TipoMaterial_Codigo);
-END
-GO
+-- (13) Material
+ALTER TABLE LOS_POLLOS_HERMANOS.Material
+ADD CONSTRAINT PK_Material 
+    PRIMARY KEY (Material_Codigo);
 
 
--- (13) Stored procedure de Creación de PK de Material
-CREATE PROCEDURE LOS_POLLOS_HERMANOS.CrearConstraint_PK_Material AS
-BEGIN
-    ALTER TABLE LOS_POLLOS_HERMANOS.Material
-    ADD CONSTRAINT PK_Material
-        PRIMARY KEY (Material_Codigo);
-END
-GO
+-- (14) Tela
+ALTER TABLE LOS_POLLOS_HERMANOS.Tela
+ADD CONSTRAINT PK_Tela 
+    PRIMARY KEY (Tela_Codigo);
 
 
--- (14) Stored procedure de Creación de PK de Tela
-CREATE PROCEDURE LOS_POLLOS_HERMANOS.CrearConstraint_PK_Tela AS
-BEGIN
-    ALTER TABLE LOS_POLLOS_HERMANOS.Tela
-    ADD CONSTRAINT PK_Tela
-        PRIMARY KEY (Tela_Codigo);
-END
-GO
+-- (15) Madera
+ALTER TABLE LOS_POLLOS_HERMANOS.Madera
+ADD CONSTRAINT PK_Madera 
+    PRIMARY KEY (Madera_Codigo);
 
 
--- (15) Stored procedure de Creación de PK de Madera
-CREATE PROCEDURE LOS_POLLOS_HERMANOS.CrearConstraint_PK_Madera AS
-BEGIN
-    ALTER TABLE LOS_POLLOS_HERMANOS.Madera
-    ADD CONSTRAINT PK_Madera
-        PRIMARY KEY (Madera_Codigo);
-END
-GO
+-- (16) Relleno
+ALTER TABLE LOS_POLLOS_HERMANOS.Relleno
+ADD CONSTRAINT PK_Relleno 
+    PRIMARY KEY (Relleno_Codigo);
 
 
--- (16) Stored procedure de Creación de PK de Relleno
-CREATE PROCEDURE LOS_POLLOS_HERMANOS.CrearConstraint_PK_Relleno AS
-BEGIN
-    ALTER TABLE LOS_POLLOS_HERMANOS.Relleno
-    ADD CONSTRAINT PK_Relleno
-        PRIMARY KEY (Relleno_Codigo);
-END
-GO
+-- (17) DetalleCompra
+ALTER TABLE LOS_POLLOS_HERMANOS.DetalleCompra
+ADD CONSTRAINT PK_DetalleCompra 
+    PRIMARY KEY (Detalle_Compra_Numero);
 
 
--- (17) Stored procedure de Creación de PK de DetalleCompra
-CREATE PROCEDURE LOS_POLLOS_HERMANOS.CrearConstraint_PK_DetalleCompra AS
-BEGIN
-    ALTER TABLE LOS_POLLOS_HERMANOS.DetalleCompra
-    ADD CONSTRAINT PK_DetalleCompra
-        PRIMARY KEY (Detalle_Compra_Numero);
-END
-GO
+-- (18) PedidoCancelacion
+ALTER TABLE LOS_POLLOS_HERMANOS.PedidoCancelacion
+ADD CONSTRAINT PK_PedidoCancelacion 
+    PRIMARY KEY (Pedido_Cancelacion_Numero);
 
 
--- (18) Stored procedure de Creación de PK de PedidoCancelacion
-CREATE PROCEDURE LOS_POLLOS_HERMANOS.CrearConstraint_PK_PedidoCancelacion AS
-BEGIN
-    ALTER TABLE LOS_POLLOS_HERMANOS.PedidoCancelacion
-    ADD CONSTRAINT PK_PedidoCancelacion
-        PRIMARY KEY (Pedido_Cancelacion_Numero);
-END
-GO
+-- (19) Envio
+ALTER TABLE LOS_POLLOS_HERMANOS.Envio
+ADD CONSTRAINT PK_Envio 
+    PRIMARY KEY (Envio_Numero);
 
 
--- (19) Stored procedure de Creación de PK de Envio
-CREATE PROCEDURE LOS_POLLOS_HERMANOS.CrearConstraint_PK_Envio AS
-BEGIN
-    ALTER TABLE LOS_POLLOS_HERMANOS.Envio
-    ADD CONSTRAINT PK_Envio
-        PRIMARY KEY (Envio_Numero);
-END
-GO
+-- (20) DetalleFactura
+ALTER TABLE LOS_POLLOS_HERMANOS.DetalleFactura
+ADD CONSTRAINT PK_DetalleFactura 
+    PRIMARY KEY (Detalle_Factura_Numero);
 
 
--- (20) Stored procedure de Creación de PK de DetalleFactura
-CREATE PROCEDURE LOS_POLLOS_HERMANOS.CrearConstraint_PK_DetalleFactura AS
-BEGIN
-    ALTER TABLE LOS_POLLOS_HERMANOS.DetalleFactura
-    ADD CONSTRAINT PK_DetalleFactura 
-        PRIMARY KEY (Detalle_Factura_Numero);
-END
-GO
+-- (21) MaterialPorSillon
+ALTER TABLE LOS_POLLOS_HERMANOS.MaterialPorSillon
+ADD CONSTRAINT PK_MaterialPorSillon 
+    PRIMARY KEY (MaterialPorSillon_Codigo);
 
-
--- (21) Stored procedure de Creación de PK de MaterialPorSillon
-CREATE PROCEDURE LOS_POLLOS_HERMANOS.CrearConstraint_PK_MaterialPorSillon AS
-BEGIN
-    ALTER TABLE LOS_POLLOS_HERMANOS.MaterialPorSillon
-    ADD CONSTRAINT PK_MaterialPorSillon 
-        PRIMARY KEY (MaterialPorSillon_Codigo);
-END
-GO
-
-
--- Stored procedure que engloba todas las creaciones de PKs
-CREATE PROCEDURE LOS_POLLOS_HERMANOS.CrearPKs AS
-BEGIN
-    EXEC LOS_POLLOS_HERMANOS.CrearConstraint_PK_Ubicacion;
-    EXEC LOS_POLLOS_HERMANOS.CrearConstraint_PK_Cliente;
-    EXEC LOS_POLLOS_HERMANOS.CrearConstraint_PK_Sucursal;
-    EXEC LOS_POLLOS_HERMANOS.CrearConstraint_PK_Proveedor;
-    EXEC LOS_POLLOS_HERMANOS.CrearConstraint_PK_Factura;
-    EXEC LOS_POLLOS_HERMANOS.CrearConstraint_PK_Compra;
-    EXEC LOS_POLLOS_HERMANOS.CrearConstraint_PK_Pedido;
-    EXEC LOS_POLLOS_HERMANOS.CrearConstraint_PK_Medida;
-    EXEC LOS_POLLOS_HERMANOS.CrearConstraint_PK_Modelo;
-    EXEC LOS_POLLOS_HERMANOS.CrearConstraint_PK_Sillon;
-    EXEC LOS_POLLOS_HERMANOS.CrearConstraint_PK_DetallePedido;
-    EXEC LOS_POLLOS_HERMANOS.CrearConstraint_PK_TipoMaterial;
-    EXEC LOS_POLLOS_HERMANOS.CrearConstraint_PK_Material;
-    EXEC LOS_POLLOS_HERMANOS.CrearConstraint_PK_Tela;
-    EXEC LOS_POLLOS_HERMANOS.CrearConstraint_PK_Madera;
-    EXEC LOS_POLLOS_HERMANOS.CrearConstraint_PK_Relleno;
-    EXEC LOS_POLLOS_HERMANOS.CrearConstraint_PK_DetalleCompra;
-    EXEC LOS_POLLOS_HERMANOS.CrearConstraint_PK_PedidoCancelacion;
-    EXEC LOS_POLLOS_HERMANOS.CrearConstraint_PK_Envio;
-    EXEC LOS_POLLOS_HERMANOS.CrearConstraint_PK_DetalleFactura;
-    EXEC LOS_POLLOS_HERMANOS.CrearConstraint_PK_MaterialPorSillon;
-END
-GO
-
--- Ejecución de Stored procedure de creación de PKs
-EXEC LOS_POLLOS_HERMANOS.CrearPKs;
-GO
 
 /*
 ----------------------------------------------
@@ -624,83 +512,59 @@ GO
 
 
 -- (2) Cliente
-CREATE PROCEDURE LOS_POLLOS_HERMANOS.CrearConstraint_FK_Cliente AS
-BEGIN
-    ALTER TABLE LOS_POLLOS_HERMANOS.Cliente
-    ADD CONSTRAINT FK_Cliente_Ubicacion 
-        FOREIGN KEY (Cliente_Ubicacion)
-        REFERENCES LOS_POLLOS_HERMANOS.Ubicacion(Ubicacion_Codigo);
-END
-GO
+ALTER TABLE LOS_POLLOS_HERMANOS.Cliente
+ADD CONSTRAINT FK_Cliente_Ubicacion 
+    FOREIGN KEY (Cliente_Ubicacion) 
+    REFERENCES LOS_POLLOS_HERMANOS.Ubicacion(Ubicacion_Codigo);
 -- Relación con Ubicacion
 
 
 -- (3) Sucursal
-CREATE PROCEDURE LOS_POLLOS_HERMANOS.CrearConstraint_FK_Sucursal AS
-BEGIN
-    ALTER TABLE LOS_POLLOS_HERMANOS.Sucursal
-    ADD CONSTRAINT FK_Sucursal_Ubicacion 
-        FOREIGN KEY (Sucursal_Ubicacion) 
-        REFERENCES LOS_POLLOS_HERMANOS.Ubicacion(Ubicacion_Codigo);
-END
-GO
+ALTER TABLE LOS_POLLOS_HERMANOS.Sucursal
+ADD CONSTRAINT FK_Sucursal_Ubicacion 
+    FOREIGN KEY (Sucursal_Ubicacion) 
+    REFERENCES LOS_POLLOS_HERMANOS.Ubicacion(Ubicacion_Codigo);
 -- Relación con Ubicacion
 
 
 -- (4) Proveedor
-CREATE PROCEDURE LOS_POLLOS_HERMANOS.CrearConstraint_FK_Proveedor AS
-BEGIN
-    ALTER TABLE LOS_POLLOS_HERMANOS.Proveedor
-    ADD CONSTRAINT FK_Proveedor_Ubicacion 
-        FOREIGN KEY (Proveedor_Ubicacion) 
-        REFERENCES LOS_POLLOS_HERMANOS.Ubicacion(Ubicacion_Codigo);
-END
-GO
+ALTER TABLE LOS_POLLOS_HERMANOS.Proveedor
+ADD CONSTRAINT FK_Proveedor_Ubicacion 
+    FOREIGN KEY (Proveedor_Ubicacion) 
+    REFERENCES LOS_POLLOS_HERMANOS.Ubicacion(Ubicacion_Codigo);
 -- Relación con Ubicacion
 
 
 -- (5) Factura
-CREATE PROCEDURE LOS_POLLOS_HERMANOS.CrearConstraint_FK_Factura AS
-BEGIN
-    ALTER TABLE LOS_POLLOS_HERMANOS.Factura
-    ADD CONSTRAINT FK_Factura_Cliente 
-        FOREIGN KEY (Factura_Cliente) 
-        REFERENCES LOS_POLLOS_HERMANOS.Cliente(Cliente_Codigo),
-    CONSTRAINT FK_Factura_Sucursal
-        FOREIGN KEY (Factura_Sucursal)
-        REFERENCES LOS_POLLOS_HERMANOS.Sucursal(Sucursal_Codigo);
-END
-GO
+ALTER TABLE LOS_POLLOS_HERMANOS.Factura
+ADD CONSTRAINT FK_Factura_Cliente 
+    FOREIGN KEY (Factura_Cliente) 
+    REFERENCES LOS_POLLOS_HERMANOS.Cliente(Cliente_Codigo),
+CONSTRAINT FK_Factura_SucursalFOREIGN 
+    FOREIGN KEY (Factura_Sucursal) 
+    REFERENCES LOS_POLLOS_HERMANOS.Sucursal(Sucursal_Codigo);
 -- Relación con Cliente y Sucursal
 
 
 -- (6) Compra
-CREATE PROCEDURE LOS_POLLOS_HERMANOS.CrearConstraint_FK_Compra AS
-BEGIN
-    ALTER TABLE LOS_POLLOS_HERMANOS.Compra
-    ADD CONSTRAINT FK_Compra_Sucursal 
-        FOREIGN KEY (Compra_Sucursal) 
-        REFERENCES LOS_POLLOS_HERMANOS.Sucursal(Sucursal_Codigo),
-    CONSTRAINT FK_Compra_Proveedor 
-        FOREIGN KEY (Compra_Proveedor) 
-        REFERENCES LOS_POLLOS_HERMANOS.Proveedor(Proveedor_Codigo);
-END
-GO
+ALTER TABLE LOS_POLLOS_HERMANOS.Compra
+ADD CONSTRAINT FK_Compra_Sucursal 
+    FOREIGN KEY (Compra_Sucursal) 
+    REFERENCES LOS_POLLOS_HERMANOS.Sucursal(Sucursal_Codigo),
+CONSTRAINT FK_Compra_Proveedor 
+    FOREIGN KEY (Compra_Proveedor) 
+    REFERENCES LOS_POLLOS_HERMANOS.Proveedor(Proveedor_Codigo);
 -- Relación con Sucursal y Proveedor
 
 
 -- (7) Pedido
-CREATE PROCEDURE LOS_POLLOS_HERMANOS.CrearConstraint_FK_Pedido AS
-BEGIN
-    ALTER TABLE LOS_POLLOS_HERMANOS.Pedido
-    ADD CONSTRAINT FK_Pedido_Cliente 
-        FOREIGN KEY (Pedido_Cliente) 
-        REFERENCES LOS_POLLOS_HERMANOS.Cliente(Cliente_Codigo),
-    CONSTRAINT FK_Pedido_Sucursal 
-        FOREIGN KEY (Pedido_Sucursal) 
-        REFERENCES LOS_POLLOS_HERMANOS.Sucursal(Sucursal_Codigo);
-END
-GO
+ALTER TABLE LOS_POLLOS_HERMANOS.Pedido
+ADD CONSTRAINT FK_Pedido_Cliente 
+    FOREIGN KEY (Pedido_Cliente) 
+    REFERENCES LOS_POLLOS_HERMANOS.Cliente(Cliente_Codigo),
+CONSTRAINT FK_Pedido_Sucursal 
+    FOREIGN KEY (Pedido_Sucursal) 
+    REFERENCES LOS_POLLOS_HERMANOS.Sucursal(Sucursal_Codigo);
 -- Relación con Cliente y Sucursal
 
 -- (8) Medida
@@ -712,32 +576,24 @@ GO
 
 
 -- (10) Sillon
-CREATE PROCEDURE LOS_POLLOS_HERMANOS.CrearConstraint_FK_Sillon AS
-BEGIN
-    ALTER TABLE LOS_POLLOS_HERMANOS.Sillon
-    ADD CONSTRAINT FK_Sillon_Medida 
-        FOREIGN KEY (Sillon_Medida) 
-        REFERENCES LOS_POLLOS_HERMANOS.Medida(Medida_Codigo),
-    CONSTRAINT FK_Sillon_Modelo 
-        FOREIGN KEY (Sillon_Modelo) 
-        REFERENCES LOS_POLLOS_HERMANOS.Modelo(Modelo_Codigo);
-END
-GO
+ALTER TABLE LOS_POLLOS_HERMANOS.Sillon
+ADD CONSTRAINT FK_Sillon_Medida 
+    FOREIGN KEY (Sillon_Medida) 
+    REFERENCES LOS_POLLOS_HERMANOS.Medida(Medida_Codigo),
+CONSTRAINT FK_Sillon_Modelo 
+    FOREIGN KEY (Sillon_Modelo) 
+    REFERENCES LOS_POLLOS_HERMANOS.Modelo(Modelo_Codigo);
 -- Relación con Medida y Modelo
 
 
 -- (11) DetallePedido
-CREATE PROCEDURE LOS_POLLOS_HERMANOS.CrearConstraint_FK_DetallePedido AS
-BEGIN
-    ALTER TABLE LOS_POLLOS_HERMANOS.DetallePedido
-    ADD CONSTRAINT FK_DetallePedido_Sillon 
-        FOREIGN KEY (Detalle_Pedido_Sillon) 
-        REFERENCES LOS_POLLOS_HERMANOS.Sillon(Sillon_Codigo),
-    CONSTRAINT FK_DetallePedido_Pedido 
-        FOREIGN KEY (Detalle_Pedido_Pedido) 
-        REFERENCES LOS_POLLOS_HERMANOS.Pedido(Pedido_Numero);
-END
-GO
+ALTER TABLE LOS_POLLOS_HERMANOS.DetallePedido
+ADD CONSTRAINT FK_DetallePedido_Sillon 
+    FOREIGN KEY (Detalle_Pedido_Sillon) 
+    REFERENCES LOS_POLLOS_HERMANOS.Sillon(Sillon_Codigo),
+CONSTRAINT FK_DetallePedido_Pedido 
+    FOREIGN KEY (Detalle_Pedido_Pedido) 
+    REFERENCES LOS_POLLOS_HERMANOS.Pedido(Pedido_Numero);
 -- Relación con Sillon y Pedido
 
 -- (12) TipoMaterial
@@ -745,149 +601,84 @@ GO
 
 
 -- (13) Material
-CREATE PROCEDURE LOS_POLLOS_HERMANOS.CrearConstraint_FK_Material AS
-BEGIN
-    ALTER TABLE LOS_POLLOS_HERMANOS.Material
-    ADD CONSTRAINT FK_Material_TipoMaterial 
-        FOREIGN KEY (Material_Tipo) 
-        REFERENCES LOS_POLLOS_HERMANOS.TipoMaterial(TipoMaterial_Codigo);
-END
-GO
+ALTER TABLE LOS_POLLOS_HERMANOS.Material
+ADD CONSTRAINT FK_Material_TipoMaterial 
+    FOREIGN KEY (Material_Tipo) 
+    REFERENCES LOS_POLLOS_HERMANOS.TipoMaterial(TipoMaterial_Codigo);
 -- Relación con TipoMaterial
 
 
 -- (14) Tela
-CREATE PROCEDURE LOS_POLLOS_HERMANOS.CrearConstraint_FK_Tela AS
-BEGIN
-    ALTER TABLE LOS_POLLOS_HERMANOS.Tela
-    ADD CONSTRAINT FK_Tela_Material 
-        FOREIGN KEY (Tela_Material) 
-        REFERENCES LOS_POLLOS_HERMANOS.Material(Material_Codigo);
-END
-GO
+ALTER TABLE LOS_POLLOS_HERMANOS.Tela
+ADD CONSTRAINT FK_Tela_Material 
+    FOREIGN KEY (Tela_Material) 
+    REFERENCES LOS_POLLOS_HERMANOS.Material(Material_Codigo);
 -- Relación con Material
 
 
 -- (15) Madera
-CREATE PROCEDURE LOS_POLLOS_HERMANOS.CrearConstraint_FK_Madera AS
-BEGIN
-    ALTER TABLE LOS_POLLOS_HERMANOS.Madera
-    ADD CONSTRAINT FK_Madera_Material 
-        FOREIGN KEY (Madera_Material) 
-        REFERENCES LOS_POLLOS_HERMANOS.Material(Material_Codigo);
-END
-GO
+ALTER TABLE LOS_POLLOS_HERMANOS.Madera
+ADD CONSTRAINT FK_Madera_Material 
+    FOREIGN KEY (Madera_Material) 
+    REFERENCES LOS_POLLOS_HERMANOS.Material(Material_Codigo);
 -- Relación con Material
 
 
 -- (16) Relleno
-CREATE PROCEDURE LOS_POLLOS_HERMANOS.CrearConstraint_FK_Relleno AS
-BEGIN
-    ALTER TABLE LOS_POLLOS_HERMANOS.Relleno
-    ADD CONSTRAINT FK_Relleno_Material 
-        FOREIGN KEY (Relleno_Material) 
-        REFERENCES LOS_POLLOS_HERMANOS.Material(Material_Codigo);
-END
-GO
+ALTER TABLE LOS_POLLOS_HERMANOS.Relleno
+ADD CONSTRAINT FK_Relleno_Material 
+    FOREIGN KEY (Relleno_Material) 
+    REFERENCES LOS_POLLOS_HERMANOS.Material(Material_Codigo);
 -- Relación con Material
 
 
 -- (17) DetalleCompra
-CREATE PROCEDURE LOS_POLLOS_HERMANOS.CrearConstraint_FK_DetalleCompra AS
-BEGIN
-    ALTER TABLE LOS_POLLOS_HERMANOS.DetalleCompra
-    ADD CONSTRAINT FK_DetalleCompra_Compra 
-        FOREIGN KEY (Detalle_Compra_Compra) 
-        REFERENCES LOS_POLLOS_HERMANOS.Compra(Compra_Numero),
-    CONSTRAINT FK_DetalleCompra_Material 
-        FOREIGN KEY (Detalle_Compra_Material) 
-        REFERENCES LOS_POLLOS_HERMANOS.Material(Material_Codigo);
-END
-GO
+ALTER TABLE LOS_POLLOS_HERMANOS.DetalleCompra
+ADD CONSTRAINT FK_DetalleCompra_Compra 
+    FOREIGN KEY (Detalle_Compra_Compra) 
+    REFERENCES LOS_POLLOS_HERMANOS.Compra(Compra_Numero),
+CONSTRAINT FK_DetalleCompra_Material 
+    FOREIGN KEY (Detalle_Compra_Material) 
+    REFERENCES LOS_POLLOS_HERMANOS.Material(Material_Codigo);
 -- Relación con Compra y Material
 
 
 -- (18) PedidoCancelacion
-CREATE PROCEDURE LOS_POLLOS_HERMANOS.CrearConstraint_FK_PedidoCancelacion AS
-BEGIN
-    ALTER TABLE LOS_POLLOS_HERMANOS.PedidoCancelacion
-    ADD CONSTRAINT FK_PedidoCancelacion_Pedido 
-        FOREIGN KEY (Pedido_Cancelacion_Pedido) 
-        REFERENCES LOS_POLLOS_HERMANOS.Pedido(Pedido_Numero);
-END
-GO
+ALTER TABLE LOS_POLLOS_HERMANOS.PedidoCancelacion
+ADD CONSTRAINT FK_PedidoCancelacion_Pedido 
+    FOREIGN KEY (Pedido_Cancelacion_Pedido) 
+    REFERENCES LOS_POLLOS_HERMANOS.Pedido(Pedido_Numero);
 -- Relación con Pedido
 
 
 -- (19) Envio
-CREATE PROCEDURE LOS_POLLOS_HERMANOS.CrearConstraint_FK_Envio AS
-BEGIN
-    ALTER TABLE LOS_POLLOS_HERMANOS.Envio
-    ADD CONSTRAINT FK_Envio_Factura 
-        FOREIGN KEY (Envio_Factura) 
-        REFERENCES LOS_POLLOS_HERMANOS.Factura(Factura_Numero);
-END
-GO
+ALTER TABLE LOS_POLLOS_HERMANOS.Envio
+ADD CONSTRAINT FK_Envio_Factura 
+    FOREIGN KEY (Envio_Factura) 
+    REFERENCES LOS_POLLOS_HERMANOS.Factura(Factura_Numero);
 -- Relación con Factura
 
 
 -- (20) DetalleFactura
-CREATE PROCEDURE LOS_POLLOS_HERMANOS.CrearConstraint_FK_DetalleFactura AS
-BEGIN
-    ALTER TABLE LOS_POLLOS_HERMANOS.DetalleFactura
-    ADD CONSTRAINT FK_DetalleFactura_Factura 
-        FOREIGN KEY (Detalle_Factura_Factura) 
-        REFERENCES LOS_POLLOS_HERMANOS.Factura(Factura_Numero),
-    CONSTRAINT FK_DetalleFactura_DetallePedido 
-        FOREIGN KEY (Detalle_Factura_Detalle_Pedido)
-        REFERENCES LOS_POLLOS_HERMANOS.DetallePedido(Detalle_Pedido_Numero);
-END
-GO
+ALTER TABLE LOS_POLLOS_HERMANOS.DetalleFactura
+ADD CONSTRAINT FK_DetalleFactura_Factura 
+    FOREIGN KEY (Detalle_Factura_Factura) 
+    REFERENCES LOS_POLLOS_HERMANOS.Factura(Factura_Numero),
+CONSTRAINT FK_DetalleFactura_DetallePedido 
+    FOREIGN KEY (Detalle_Factura_Detalle_Pedido) 
+    REFERENCES LOS_POLLOS_HERMANOS.DetallePedido(Detalle_Pedido_Numero);
 -- Relación con Factura y DetallePedido
 
 
 -- (21) MaterialPorSillon
-CREATE PROCEDURE LOS_POLLOS_HERMANOS.CrearConstraint_FK_MaterialPorSillon AS
-BEGIN
-    ALTER TABLE LOS_POLLOS_HERMANOS.MaterialPorSillon
-    ADD CONSTRAINT FK_MaterialPorSillon_Material 
-        FOREIGN KEY (MaterialPorSillon_Material) 
-        REFERENCES LOS_POLLOS_HERMANOS.Material(Material_Codigo),
-    CONSTRAINT FK_MaterialPorSillon_Sillon 
-        FOREIGN KEY (MaterialPorSillon_Sillon) 
-        REFERENCES LOS_POLLOS_HERMANOS.Sillon(Sillon_Codigo);
-END
-GO
+ALTER TABLE LOS_POLLOS_HERMANOS.MaterialPorSillon
+ADD CONSTRAINT FK_MaterialPorSillon_Material 
+    FOREIGN KEY (MaterialPorSillon_Material) 
+    REFERENCES LOS_POLLOS_HERMANOS.Material(Material_Codigo),
+CONSTRAINT FK_MaterialPorSillon_Sillon 
+    FOREIGN KEY (MaterialPorSillon_Sillon) 
+    REFERENCES LOS_POLLOS_HERMANOS.Sillon(Sillon_Codigo);
 -- Relación con Material y Sillon
-
-
--- Stored procedure que engloba todas las creaciones de FKs
-CREATE PROCEDURE LOS_POLLOS_HERMANOS.CrearFKs AS
-BEGIN
-    EXEC LOS_POLLOS_HERMANOS.CrearConstraint_FK_Cliente;
-    EXEC LOS_POLLOS_HERMANOS.CrearConstraint_FK_Sucursal;
-    EXEC LOS_POLLOS_HERMANOS.CrearConstraint_FK_Proveedor;
-    EXEC LOS_POLLOS_HERMANOS.CrearConstraint_FK_Factura;
-    EXEC LOS_POLLOS_HERMANOS.CrearConstraint_FK_Compra;
-    EXEC LOS_POLLOS_HERMANOS.CrearConstraint_FK_Pedido;
-    EXEC LOS_POLLOS_HERMANOS.CrearConstraint_FK_Sillon;
-    EXEC LOS_POLLOS_HERMANOS.CrearConstraint_FK_DetallePedido;
-    EXEC LOS_POLLOS_HERMANOS.CrearConstraint_FK_Material;
-    EXEC LOS_POLLOS_HERMANOS.CrearConstraint_FK_Tela;
-    EXEC LOS_POLLOS_HERMANOS.CrearConstraint_FK_Madera;
-    EXEC LOS_POLLOS_HERMANOS.CrearConstraint_FK_Relleno;
-    EXEC LOS_POLLOS_HERMANOS.CrearConstraint_FK_DetalleCompra;
-    EXEC LOS_POLLOS_HERMANOS.CrearConstraint_FK_PedidoCancelacion;
-    EXEC LOS_POLLOS_HERMANOS.CrearConstraint_FK_Envio;
-    EXEC LOS_POLLOS_HERMANOS.CrearConstraint_FK_DetalleFactura;
-    EXEC LOS_POLLOS_HERMANOS.CrearConstraint_FK_MaterialPorSillon;
-END
-GO
-
-
--- Ejecución de Stored procedure de creación de FKs
-EXEC LOS_POLLOS_HERMANOS.CrearFKs;
-GO
 
 
 /*
@@ -895,11 +686,12 @@ GO
                 Funciones
 ----------------------------------------------
 */
+GO
 CREATE FUNCTION LOS_POLLOS_HERMANOS.validarTipoDeMaterial(@tipo NVARCHAR(255))
 RETURNS BIT
 BEGIN
-    DECLARE @tiposDeMateriales TABLE (material NVARCHAR(255));
-    INSERT INTO @tiposDeMateriales VALUES ('Madera'), ('Tela'), ('Relleno');
+    DECLARE @tiposDeMateriales TABLE (material NVARCHAR(255))
+    INSERT INTO @tiposDeMateriales VALUES ('Madera'), ('Tela'), ('Relleno')
     IF EXISTS(
         SELECT 1 FROM @tiposDeMateriales WHERE material = @tipo
     )
@@ -917,107 +709,65 @@ GO
 */
 
 -- (8) Medida
-CREATE PROCEDURE LOS_POLLOS_HERMANOS.CrearConstraint_CHK_Medida_Valores AS
-BEGIN
-    ALTER TABLE LOS_POLLOS_HERMANOS.Medida
-    ADD CONSTRAINT CHK_Medida_Valores 
-        CHECK (
-            Medida_Ancho > 0
-            AND Medida_Alto > 0
-            AND Medida_Profundidad > 0
-            AND Medida_Precio >= 0
-        );
-END
-GO
+ALTER TABLE LOS_POLLOS_HERMANOS.Medida
+ADD CONSTRAINT CHK_Medida_Valores 
+CHECK (
+        Medida_Ancho > 0
+        AND Medida_Alto > 0
+        AND Medida_Profundidad > 0
+        AND Medida_Precio >= 0
+    );
 -- Validamos que las medidas físicas (alto, ancho, profundidad) sean estrictamente positivas
 -- y que el precio asociado a la medida no sea negativo
 
 
 -- (9) Modelo
-CREATE PROCEDURE LOS_POLLOS_HERMANOS.CrearConstraint_CHK_Modelo_PrecioBase AS
-BEGIN
-    ALTER TABLE LOS_POLLOS_HERMANOS.Modelo
-    ADD CONSTRAINT CHK_Modelo_PrecioBase 
-        CHECK (Modelo_Precio_Base >= 0);
-END
-GO
+ALTER TABLE LOS_POLLOS_HERMANOS.Modelo
+ADD CONSTRAINT CHK_Modelo_PrecioBase 
+    CHECK (Modelo_Precio_Base >= 0);
 -- Nos aseguramos de que ningún modelo tenga un precio base negativo
 
 
 -- (11) DetallePedido
-CREATE PROCEDURE LOS_POLLOS_HERMANOS.CrearConstraint_CHK_DetallePedido_Valores AS
-BEGIN
-    ALTER TABLE LOS_POLLOS_HERMANOS.DetallePedido
-    ADD CONSTRAINT CHK_DetallePedido_Valores 
-        CHECK (
-            Detalle_Pedido_Cantidad > 0
-            AND Detalle_Pedido_Precio >= 0 
-            AND Detalle_Pedido_Subtotal >= 0
-        );
-END
-GO
+ALTER TABLE LOS_POLLOS_HERMANOS.DetallePedido
+ADD CONSTRAINT CHK_DetallePedido_Valores 
+    CHECK (
+        Detalle_Pedido_Cantidad > 0
+        AND Detalle_Pedido_Precio >= 0 
+        AND Detalle_Pedido_Subtotal >= 0
+    );
 -- Validamos la integridad de los valores de cada ítem de pedido: 
 -- cantidad debe ser positiva, precio y subtotal no pueden ser negativos
 
 
 -- (12) TipoMaterial
-CREATE PROCEDURE LOS_POLLOS_HERMANOS.CrearConstraint_CHK_TipoMaterial_Tipo AS
-BEGIN
-    ALTER TABLE LOS_POLLOS_HERMANOS.TipoMaterial
-    ADD CONSTRAINT CHK_TipoMaterial_Tipo 
-        CHECK (LOS_POLLOS_HERMANOS.validarTipoDeMaterial(TipoMaterial_Tipo) = 1);
-END
-GO
+ALTER TABLE LOS_POLLOS_HERMANOS.TipoMaterial
+ADD CONSTRAINT CHK_TipoMaterial_Tipo 
+    CHECK (LOS_POLLOS_HERMANOS.validarTipoDeMaterial(TipoMaterial_Tipo) = 1);
 -- Utilizamos la función validarTipoDeMaterial para asegurarnos de que los tipos de materiales estén restringidos a los permitidos:
 -- 'Tela', 'Madera' y 'Relleno'
 
 
 -- (17) DetalleCompra
-CREATE PROCEDURE LOS_POLLOS_HERMANOS.CrearConstraint_CHK_DetalleCompra_Valores AS
-BEGIN
-    ALTER TABLE LOS_POLLOS_HERMANOS.DetalleCompra
-    ADD CONSTRAINT CHK_DetalleCompra_Valores 
-        CHECK (
-            Detalle_Compra_Cantidad > 0
-            AND Detalle_Compra_Precio >= 0
-            AND Detalle_Compra_Subtotal >= 0
-        );
-END
-GO
+ALTER TABLE LOS_POLLOS_HERMANOS.DetalleCompra
+ADD CONSTRAINT CHK_DetalleCompra_Valores 
+    CHECK (
+        Detalle_Compra_Cantidad > 0
+        AND Detalle_Compra_Precio >= 0
+        AND Detalle_Compra_Subtotal >= 0
+    );
 -- Nos aseguramos de que la cantidad de materiales comprados sea positiva y que el precio y subtotal no sean negativos
 
 
 -- (20) DetalleFactura
-CREATE PROCEDURE LOS_POLLOS_HERMANOS.CrearConstraint_CHK_DetalleFactura_Valores AS
-BEGIN
-    ALTER TABLE LOS_POLLOS_HERMANOS.DetalleFactura
-    ADD CONSTRAINT CHK_DetalleFactura_Valores 
-        CHECK (
-            Detalle_Factura_Cantidad > 0 
-            AND Detalle_Factura_Precio >= 0 
-            AND Detalle_Factura_Subtotal >= 0
-        );
-END
-GO
+ALTER TABLE LOS_POLLOS_HERMANOS.DetalleFactura
+ADD CONSTRAINT CHK_DetalleFactura_Valores 
+    CHECK (
+        Detalle_Factura_Cantidad > 0 
+        AND Detalle_Factura_Precio >= 0 
+        AND Detalle_Factura_Subtotal >= 0
+    );
 -- Nos aseguramos de la integridad de los valores para cantidades, precios y subtotales facturados de la misma manera que con DetallePedido
-
-
--- Stored procedure que engloba todas las creaciones de CHKs
-CREATE PROCEDURE LOS_POLLOS_HERMANOS.CrearChecks AS
-BEGIN
-    EXEC LOS_POLLOS_HERMANOS.CrearConstraint_CHK_Medida_Valores;
-    EXEC LOS_POLLOS_HERMANOS.CrearConstraint_CHK_Modelo_PrecioBase;
-    EXEC LOS_POLLOS_HERMANOS.CrearConstraint_CHK_DetallePedido_Valores;
-    EXEC LOS_POLLOS_HERMANOS.CrearConstraint_CHK_TipoMaterial_Tipo;
-    EXEC LOS_POLLOS_HERMANOS.CrearConstraint_CHK_DetalleCompra_Valores;
-    EXEC LOS_POLLOS_HERMANOS.CrearConstraint_CHK_DetalleFactura_Valores;
-END
-GO
-
-
--- Ejecución de Stored procedure de creación de CHKs
-EXEC LOS_POLLOS_HERMANOS.CrearChecks;
-GO
 
 
 /*
@@ -1027,31 +777,23 @@ GO
 */
 
 --(1) Ubicacion
-CREATE PROCEDURE LOS_POLLOS_HERMANOS.CrearIndice_Ubicacion AS
-BEGIN
-    CREATE INDEX Index_Ubicacion
-    ON LOS_POLLOS_HERMANOS.Ubicacion (
-        Ubicacion_Provincia,
-        Ubicacion_Localidad,
-        Ubicacion_Direccion
-    );
-END
-GO
+CREATE INDEX Index_Ubicacion
+ON LOS_POLLOS_HERMANOS.Ubicacion (
+    Ubicacion_Provincia,
+    Ubicacion_Localidad,
+    Ubicacion_Direccion
+);
 -- Creamos un índice compuesto sobre Provincia, Localidad y Dirección para optimizar
 -- búsquedas por ubicación completa, utilizadas en Cliente, Proveedor y Sucursal
 
 
 -- (2) Cliente
-CREATE PROCEDURE LOS_POLLOS_HERMANOS.CrearIndice_Cliente AS
-BEGIN
-    CREATE INDEX Index_Cliente
-    ON LOS_POLLOS_HERMANOS.Cliente (
-        Cliente_Dni,
-        Cliente_Nombre,
-        Cliente_Apellido
-    );
-END
-GO
+CREATE INDEX Index_Cliente
+ON LOS_POLLOS_HERMANOS.Cliente (
+    Cliente_Dni,
+    Cliente_Nombre,
+    Cliente_Apellido
+);
 -- Índice sobre DNI, Nombre y Apellido para agilizar búsquedas de clientes tanto por documento como por nombre
 
 
@@ -1060,15 +802,11 @@ GO
 
 
 -- (4) Proveedor
-CREATE PROCEDURE LOS_POLLOS_HERMANOS.CrearIndice_Proveedor AS
-BEGIN
-    CREATE INDEX Index_Proveedor
-    ON LOS_POLLOS_HERMANOS.Proveedor (
-        Proveedor_Cuit,
-        Proveedor_RazonSocial
-    );
-END
-GO
+CREATE INDEX Index_Proveedor
+ON LOS_POLLOS_HERMANOS.Proveedor (
+    Proveedor_Cuit,
+    Proveedor_RazonSocial
+);
 -- Índice sobre CUIT y Razón Social para facilitar búsquedas de proveedores
 
 
@@ -1085,17 +823,13 @@ GO
 
 
 -- (8) Medida
-CREATE PROCEDURE LOS_POLLOS_HERMANOS.CrearIndice_Medida AS
-BEGIN
-    CREATE INDEX Index_Medida
-    ON LOS_POLLOS_HERMANOS.Medida (
-        Medida_Ancho,
-        Medida_Alto,
-        Medida_Profundidad,
-        Medida_Precio
-    );
-END
-GO
+CREATE INDEX Index_Medida
+ON LOS_POLLOS_HERMANOS.Medida (
+    Medida_Ancho,
+    Medida_Alto,
+    Medida_Profundidad,
+    Medida_Precio
+);
 -- Índice para búsquedas por dimensiones y precio
 
 
@@ -1108,99 +842,67 @@ GO
 
 
 -- (11) DetallePedido
-CREATE PROCEDURE LOS_POLLOS_HERMANOS.CrearIndice_DetallePedido AS
-BEGIN
-    CREATE INDEX Index_DetallePedido
-    ON LOS_POLLOS_HERMANOS.DetallePedido (
-        Detalle_Pedido_Sillon,
-        Detalle_Pedido_Pedido
-    );
-END
-GO
+CREATE INDEX Index_DetallePedido
+ON LOS_POLLOS_HERMANOS.DetallePedido (
+    Detalle_Pedido_Sillon,
+    Detalle_Pedido_Pedido
+);
 -- Índice para optimizar búsquedas de detalles por Sillón y Pedido, agilizando consultas frecuentes sobre el contenido de un pedido
 
 
 -- (12) TipoMaterial
-CREATE PROCEDURE LOS_POLLOS_HERMANOS.CrearIndice_TipoMaterial AS
-BEGIN
-    CREATE INDEX Index_TipoMaterial
-    ON LOS_POLLOS_HERMANOS.TipoMaterial (
-        TipoMaterial_Tipo,
-        TipoMaterial_Nombre,
-        TipoMaterial_Descripcion
-    );
-END
-GO
+CREATE INDEX Index_TipoMaterial
+ON LOS_POLLOS_HERMANOS.TipoMaterial (
+    TipoMaterial_Tipo,
+    TipoMaterial_Nombre,
+    TipoMaterial_Descripcion
+);
 -- Índice para facilitar búsquedas por tipo de material válido ('Madera', 'Tela', 'Relleno')
 
 
 -- (13) Material
-CREATE PROCEDURE LOS_POLLOS_HERMANOS.CrearIndice_Material AS
-BEGIN
-    CREATE INDEX Index_Material
-    ON LOS_POLLOS_HERMANOS.Material (Material_Tipo);
-END
-GO
+CREATE INDEX Index_Material
+ON LOS_POLLOS_HERMANOS.Material (Material_Tipo);
 -- Índice para poder acceder rapidamente a un material, agilizando consultas de pedidos y compras
 
 
 -- (14) Tela
-CREATE PROCEDURE LOS_POLLOS_HERMANOS.CrearIndice_Tela AS
-BEGIN
-    CREATE INDEX Index_Tela
-    ON LOS_POLLOS_HERMANOS.Tela (Tela_Color, Tela_Textura);
-END
-GO
+CREATE INDEX Index_Tela
+ON LOS_POLLOS_HERMANOS.Tela (Tela_Color, Tela_Textura);
 -- Índice para agilizar búsquedas por color y textura de tela a la hora de personalizar un sillón
 
 
 -- (15) Madera
-CREATE PROCEDURE LOS_POLLOS_HERMANOS.CrearIndice_Madera AS
-BEGIN
-    CREATE INDEX Index_Madera
-    ON LOS_POLLOS_HERMANOS.Madera (
-        Madera_Color,
-        Madera_Dureza
-    );
-END
-GO
+CREATE INDEX Index_Madera
+ON LOS_POLLOS_HERMANOS.Madera (
+    Madera_Color,
+    Madera_Dureza
+);
 -- Índice para agilizar búsquedas por color y dureza de madera a la hora de personalizar un sillón
 
 
 -- (16) Relleno
-CREATE PROCEDURE LOS_POLLOS_HERMANOS.CrearIndice_Relleno AS
-BEGIN
-    CREATE INDEX Index_Relleno
-    ON LOS_POLLOS_HERMANOS.Relleno (Relleno_Densidad);
-END
-GO
+CREATE INDEX Index_Relleno
+ON LOS_POLLOS_HERMANOS.Relleno (Relleno_Densidad);
 -- Índice para agilizar búsquedas por densidad del relleno a la hora de personalizar un sillón
 
 
 -- (17) DetalleCompra
-CREATE PROCEDURE LOS_POLLOS_HERMANOS.CrearIndice_DetalleCompra AS
-BEGIN
-    CREATE INDEX Index_DetalleCompra
-    ON LOS_POLLOS_HERMANOS.DetalleCompra (
-        Detalle_Compra_Compra,
-        Detalle_Compra_Material
-    );
-END
-GO
+CREATE INDEX Index_DetalleCompra
+ON LOS_POLLOS_HERMANOS.DetalleCompra (
+    Detalle_Compra_Compra,
+    Detalle_Compra_Material
+);
 -- Índice sobre número de compra y material para agilizar 
 -- búsquedas del material de una compra específica o de las compras que incluyan cierto material
 
 
 -- (18) PedidoCancelacion
-CREATE PROCEDURE LOS_POLLOS_HERMANOS.CrearIndice_PedidoCancelacion AS
-BEGIN
-    CREATE INDEX Index_PedidoCancelacion
-    ON LOS_POLLOS_HERMANOS.PedidoCancelacion (
-        Pedido_Cancelacion_Pedido,
-        Pedido_Cancelacion_Fecha
-    );
-END
-GO
+CREATE INDEX Index_PedidoCancelacion
+ON LOS_POLLOS_HERMANOS.PedidoCancelacion (
+    Pedido_Cancelacion_Pedido,
+    Pedido_Cancelacion_Fecha
+);
 -- Índice para buscar cancelaciones por pedido o por fecha de cancelación
 
 
@@ -1209,56 +911,24 @@ GO
 
 
 -- (20) DetalleFactura
-CREATE PROCEDURE LOS_POLLOS_HERMANOS.CrearIndice_DetalleFactura AS
-BEGIN
-    CREATE INDEX Index_DetalleFactura
-    ON LOS_POLLOS_HERMANOS.DetalleFactura (
-        Detalle_Factura_Factura,
-        Detalle_Factura_Detalle_Pedido
-    );
-END
-GO
+CREATE INDEX Index_DetalleFactura
+ON LOS_POLLOS_HERMANOS.DetalleFactura (
+    Detalle_Factura_Factura,
+    Detalle_Factura_Detalle_Pedido
+);
 -- Índice para búsquedas por número de factura o por detalle de pedido
 
 
 -- (21) MaterialPorSillon
-CREATE PROCEDURE LOS_POLLOS_HERMANOS.CrearIndice_MaterialPorSillon AS
-BEGIN
-    CREATE INDEX Index_MaterialPorSillon
-    ON LOS_POLLOS_HERMANOS.MaterialPorSillon (
-        MaterialPorSillon_Material,
-        MaterialPorSillon_Sillon
-    );
-END
-GO
+CREATE INDEX Index_MaterialPorSillon
+ON LOS_POLLOS_HERMANOS.MaterialPorSillon (
+    MaterialPorSillon_Material,
+    MaterialPorSillon_Sillon
+);
 -- Índice para consultar todos los materiales de un sillón, o todos los sillones
 -- que contienen cierto material. Útil en el armado del producto.
-
-
--- Stored procedure que engloba todas las creaciones de CHKs
-CREATE PROCEDURE LOS_POLLOS_HERMANOS.CrearIndices AS
-BEGIN
-    EXEC LOS_POLLOS_HERMANOS.CrearIndice_Ubicacion;
-    EXEC LOS_POLLOS_HERMANOS.CrearIndice_Cliente;
-    EXEC LOS_POLLOS_HERMANOS.CrearIndice_Proveedor;
-    EXEC LOS_POLLOS_HERMANOS.CrearIndice_Medida;
-    EXEC LOS_POLLOS_HERMANOS.CrearIndice_DetallePedido;
-    EXEC LOS_POLLOS_HERMANOS.CrearIndice_TipoMaterial;
-    EXEC LOS_POLLOS_HERMANOS.CrearIndice_Material;
-    EXEC LOS_POLLOS_HERMANOS.CrearIndice_Tela;
-    EXEC LOS_POLLOS_HERMANOS.CrearIndice_Madera;
-    EXEC LOS_POLLOS_HERMANOS.CrearIndice_Relleno;
-    EXEC LOS_POLLOS_HERMANOS.CrearIndice_DetalleCompra;
-    EXEC LOS_POLLOS_HERMANOS.CrearIndice_PedidoCancelacion;
-    EXEC LOS_POLLOS_HERMANOS.CrearIndice_DetalleFactura;
-    EXEC LOS_POLLOS_HERMANOS.CrearIndice_MaterialPorSillon;
-END
 GO
 
-
--- Ejecución de Stored procedure de creación de CHKs
-EXEC LOS_POLLOS_HERMANOS.CrearIndices;
-GO
 /*
 ----------------------------------------------
 				Migraciones
@@ -2175,14 +1845,16 @@ BEGIN
         Envio_Fecha_Programada,
         Envio_Fecha_Entrega,
         Envio_Importe_Traslado,
-        Envio_Importe_Subida
+        Envio_Importe_Subida,
+		Envio_Total
     )
     SELECT 
         m.Factura_Numero,
         m.Envio_Fecha_Programada,
         m.Envio_Fecha,
         m.Envio_ImporteTraslado,
-        m.Envio_ImporteSubida
+        m.Envio_ImporteSubida,
+		m.Envio_Total
     FROM gd_esquema.Maestra m
     WHERE
         m.Envio_Numero IS NOT NULL
@@ -2197,7 +1869,8 @@ BEGIN
         m.Envio_Fecha_Programada, 
         m.Envio_Fecha, 
         m.Envio_ImporteTraslado, 
-        m.Envio_ImporteSubida
+        m.Envio_ImporteSubida,
+		m.Envio_Total
 	ORDER BY m.Envio_Numero;
 END
 GO
@@ -2348,7 +2021,7 @@ BEGIN
 END
 GO
 
--- Ejecución de Stored procedure de migracion de datos
+-- Ejecución de Stored Procedure de migración de datos
 EXEC LOS_POLLOS_HERMANOS.Migrar_Datos;
 GO
 
@@ -2407,6 +2080,31 @@ GO
 -- se ejecuta luego de insertar, modificar o borrar sobre DetalleCompra
 -- recalcula el total de la compra como la suma de los subtotales de sus ítems
 -- se aplica solo a las compras afectadas, identificadas mediante inserted y deleted
+
+
+-- (19) Envio
+CREATE TRIGGER LOS_POLLOS_HERMANOS.ActualizarTotalDeEnvio
+ON LOS_POLLOS_HERMANOS.Envio
+AFTER UPDATE
+AS
+	UPDATE e
+	SET e.Envio_Total = (
+		-- El total del envío es la suma del importe de traslado más el importe de subida del mismo
+        SELECT e2.Envio_Importe_Traslado + e2.Envio_Importe_Subida
+        FROM LOS_POLLOS_HERMANOS.Envio e2
+        WHERE e2.Envio_Numero = e.Envio_Numero
+    )
+    FROM LOS_POLLOS_HERMANOS.Envio e
+    WHERE e.Envio_Numero IN (
+        SELECT DISTINCT Envio_Numero FROM inserted
+        UNION
+        SELECT DISTINCT Envio_Numero FROM deleted
+    );
+GO
+-- Trigger que actualiza el total de cada envío tras cambios en Envio
+-- se ejecuta luego de modificar sobre Envio
+-- recalcula el total del envío como la suma del importe de traslado más el importe de subida
+-- se aplica solo a los envíos afectados, identificados mediante inserted y deleted
 
 
 -- (20) DetalleFactura
