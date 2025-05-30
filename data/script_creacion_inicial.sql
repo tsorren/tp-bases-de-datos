@@ -116,6 +116,7 @@ GO
 -- Corresponde a cada pedido que realiza un cliente
 -- Puede tener un PedidoCancelacion y tiene uno o muchos DetallePedido (uno por sillón)
 
+
 -- (8) Stored Procedure para crear la tabla Medida
 CREATE PROCEDURE LOS_POLLOS_HERMANOS.CrearTabla_Medida AS
 BEGIN
@@ -159,8 +160,7 @@ END
 GO
 -- Esta entidad representa a cada sillón
 -- El cliente es quien elige las medidas, modelo, y materiales que tendrá el mismo
--- Creamos una entidad intermedia MaterialPorSillon para modelar la relacion de muchos a muchos
--- Entre las entidades Sillon y Material
+-- Creamos una entidad intermedia MaterialPorSillon para modelar la relacion de muchos a muchos entre las entidades Sillon y Material
 
 
 -- (11) Stored Procedure para crear la tabla DetallePedido
@@ -176,7 +176,7 @@ BEGIN
     );
 END
 GO
--- Cada pedido puede tener varios sillones distintos, por lo que por cada sillón distinto a fabricar
+-- Cada pedido puede tener varios sillones distintos, por lo que por cada sillón distinto a fabricar 
 -- se registra la información contenida en esta entidad
 
 
@@ -210,6 +210,7 @@ GO
 -- Cada uno de los materiales tiene un precio y características
 -- Usa la entidad intermedia MaterialPorSillon para relacionarse correctamente con Sillon
 
+
 -- (14) Stored Procedure para crear la tabla Tela
 CREATE PROCEDURE LOS_POLLOS_HERMANOS.CrearTabla_Tela AS
 BEGIN
@@ -223,6 +224,7 @@ END
 GO
 -- Esta entidad representa a cada una de las telas con la que se fabrican los sillones
 -- Contiene el color y la textura de las mismas
+
 
 -- (15) Stored Procedure para crear la tabla Madera
 CREATE PROCEDURE LOS_POLLOS_HERMANOS.CrearTabla_Madera AS
@@ -267,8 +269,9 @@ BEGIN
 END
 GO
 -- Esta entidad representa el detalle de compra de cada material que se compra al proveedor
--- Esuna entidad intermedia entre las entidades Compra y Material
+-- Es una entidad intermedia entre las entidades Compra y Material
 -- Permite representar la relación de muchos a muchos entre ellas
+
 
 -- (18) Stored Procedure para crear la tabla PedidoCancelacion
 CREATE PROCEDURE LOS_POLLOS_HERMANOS.CrearTabla_PedidoCancelacion AS
@@ -283,6 +286,7 @@ END
 GO
 -- Esta entidad representa la información de cada pedido cancelado
 -- Debido a esto es obligatorio que se relacione con un Pedido existente
+
 
 -- (19) Stored Procedure para crear la tabla Envio
 CREATE PROCEDURE LOS_POLLOS_HERMANOS.CrearTabla_Envio AS
@@ -329,7 +333,7 @@ BEGIN
 END
 GO
 -- Esta entidad intermedia permite modelar correctamente la relacion entre las entidades Sillon y Material
--- ya que esta se trata de una relacion de muchos a muchos
+-- ya que esta se trata de una relación de muchos a muchos
 
 
 -- Stored procedure que ejecuta los stored procedures para crear todas las tablas
@@ -628,7 +632,7 @@ BEGIN
         REFERENCES LOS_POLLOS_HERMANOS.Ubicacion(Ubicacion_Codigo);
 END
 GO
--- Relacion con Ubicacion
+-- Relación con Ubicacion
 
 
 -- (3) Sucursal
@@ -640,7 +644,7 @@ BEGIN
         REFERENCES LOS_POLLOS_HERMANOS.Ubicacion(Ubicacion_Codigo);
 END
 GO
--- Relacion con Ubicacion
+-- Relación con Ubicacion
 
 
 -- (4) Proveedor
@@ -652,7 +656,7 @@ BEGIN
         REFERENCES LOS_POLLOS_HERMANOS.Ubicacion(Ubicacion_Codigo);
 END
 GO
--- Relacion con Ubicacion
+-- Relación con Ubicacion
 
 
 -- (5) Factura
@@ -667,7 +671,7 @@ BEGIN
         REFERENCES LOS_POLLOS_HERMANOS.Sucursal(Sucursal_Codigo);
 END
 GO
--- Relacion con Cliente y Sucursal
+-- Relación con Cliente y Sucursal
 
 
 -- (6) Compra
@@ -682,7 +686,7 @@ BEGIN
         REFERENCES LOS_POLLOS_HERMANOS.Proveedor(Proveedor_Codigo);
 END
 GO
--- Relacion con Sucursal y Proveedor
+-- Relación con Sucursal y Proveedor
 
 
 -- (7) Pedido
@@ -697,7 +701,7 @@ BEGIN
         REFERENCES LOS_POLLOS_HERMANOS.Sucursal(Sucursal_Codigo);
 END
 GO
--- Relacion con Cliente y Sucursal
+-- Relación con Cliente y Sucursal
 
 -- (8) Medida
 -- No tiene FK
@@ -719,7 +723,7 @@ BEGIN
         REFERENCES LOS_POLLOS_HERMANOS.Modelo(Modelo_Codigo);
 END
 GO
--- Relacion con Medida y Modelo
+-- Relación con Medida y Modelo
 
 
 -- (11) DetallePedido
@@ -734,7 +738,7 @@ BEGIN
         REFERENCES LOS_POLLOS_HERMANOS.Pedido(Pedido_Numero);
 END
 GO
--- Relacion con Sillon y Pedido
+-- Relación con Sillon y Pedido
 
 -- (12) TipoMaterial
 -- No tiene FK
@@ -749,7 +753,7 @@ BEGIN
         REFERENCES LOS_POLLOS_HERMANOS.TipoMaterial(TipoMaterial_Codigo);
 END
 GO
--- Relacion con TipoMaterial
+-- Relación con TipoMaterial
 
 
 -- (14) Tela
@@ -761,7 +765,7 @@ BEGIN
         REFERENCES LOS_POLLOS_HERMANOS.Material(Material_Codigo);
 END
 GO
--- Relacion con Material
+-- Relación con Material
 
 
 -- (15) Madera
@@ -773,7 +777,7 @@ BEGIN
         REFERENCES LOS_POLLOS_HERMANOS.Material(Material_Codigo);
 END
 GO
--- Relacion con Material
+-- Relación con Material
 
 
 -- (16) Relleno
@@ -785,7 +789,7 @@ BEGIN
         REFERENCES LOS_POLLOS_HERMANOS.Material(Material_Codigo);
 END
 GO
--- Relacion con Material
+-- Relación con Material
 
 
 -- (17) DetalleCompra
@@ -800,7 +804,7 @@ BEGIN
         REFERENCES LOS_POLLOS_HERMANOS.Material(Material_Codigo);
 END
 GO
--- Relacion con Compra y Material
+-- Relación con Compra y Material
 
 
 -- (18) PedidoCancelacion
@@ -812,7 +816,7 @@ BEGIN
         REFERENCES LOS_POLLOS_HERMANOS.Pedido(Pedido_Numero);
 END
 GO
--- Relacion con Pedido
+-- Relación con Pedido
 
 
 -- (19) Envio
@@ -824,7 +828,7 @@ BEGIN
         REFERENCES LOS_POLLOS_HERMANOS.Factura(Factura_Numero);
 END
 GO
--- Relacion con Factura
+-- Relación con Factura
 
 
 -- (20) DetalleFactura
@@ -839,7 +843,7 @@ BEGIN
         REFERENCES LOS_POLLOS_HERMANOS.DetallePedido(Detalle_Pedido_Numero);
 END
 GO
--- Relacion con Factura y DetallePedido
+-- Relación con Factura y DetallePedido
 
 
 -- (21) MaterialPorSillon
@@ -854,7 +858,7 @@ BEGIN
         REFERENCES LOS_POLLOS_HERMANOS.Sillon(Sillon_Codigo);
 END
 GO
--- Relacion con Material y Sillon
+-- Relación con Material y Sillon
 
 
 -- Stored procedure que engloba todas las creaciones de FKs
@@ -903,6 +907,8 @@ BEGIN
     RETURN 0;
 END
 GO
+-- Esta función verifica que el tipo pasado por parámetro sea uno de 'Madera', 'Tela' o 'Relleno'
+-- Permite escalabilidad a futuro agregando otro tipo de material en VALUES
 
 /*
 ----------------------------------------------
@@ -926,6 +932,7 @@ GO
 -- Validamos que las medidas físicas (alto, ancho, profundidad) sean estrictamente positivas
 -- y que el precio asociado a la medida no sea negativo
 
+
 -- (9) Modelo
 CREATE PROCEDURE LOS_POLLOS_HERMANOS.CrearConstraint_CHK_Modelo_PrecioBase AS
 BEGIN
@@ -935,6 +942,7 @@ BEGIN
 END
 GO
 -- Nos aseguramos de que ningún modelo tenga un precio base negativo
+
 
 -- (11) DetallePedido
 CREATE PROCEDURE LOS_POLLOS_HERMANOS.CrearConstraint_CHK_DetallePedido_Valores AS
@@ -950,6 +958,7 @@ END
 GO
 -- Validamos la integridad de los valores de cada ítem de pedido: 
 -- cantidad debe ser positiva, precio y subtotal no pueden ser negativos
+
 
 -- (12) TipoMaterial
 CREATE PROCEDURE LOS_POLLOS_HERMANOS.CrearConstraint_CHK_TipoMaterial_Tipo AS
@@ -1013,7 +1022,7 @@ GO
 
 /*
 ----------------------------------------------
-                Indices
+                Índices
 ----------------------------------------------
 */
 
@@ -1060,7 +1069,7 @@ BEGIN
     );
 END
 GO
--- Índice sobre CUIT y Razón Social para facilitar búsquedas
+-- Índice sobre CUIT y Razón Social para facilitar búsquedas de proveedores
 
 
 -- (5) Factura
@@ -1179,7 +1188,7 @@ BEGIN
 END
 GO
 -- Índice sobre número de compra y material para agilizar 
--- busquedas del material de una compra específica o de las compras que incluyan cierto material
+-- búsquedas del material de una compra específica o de las compras que incluyan cierto material
 
 
 -- (18) PedidoCancelacion
@@ -1250,11 +1259,18 @@ GO
 -- Ejecución de Stored procedure de creación de CHKs
 EXEC LOS_POLLOS_HERMANOS.CrearIndices;
 GO
-
+/*
+----------------------------------------------
+				Migraciones
+----------------------------------------------
+*/
+-- En cada migración incluimos una cláusula WHERE NOT EXISTS, la cual nos asegura que sólo migremos los datos una vez
+-- Lo que implica que si intentamos correr el script por segunda vez, y los datos ya fueron migrados previamente, entonces
+-- no se migra nada, de este modo evitamos un posible error de ejecutar el script dos veces y migrar todo de manera duplicada
 
 /*
 ----------------------------------------------
-            Migracion de Ubicacion
+            Migración de Ubicacion
 ----------------------------------------------
 */
 
@@ -1329,14 +1345,14 @@ END
 GO
 -- Migramos los datos de ubicación desde la tabla Maestra a la tabla Ubicacion
 -- Extrayendo las combinaciones únicas de provincia, localidad y dirección de sucursales, clientes y proveedores
--- Excluimos filtran los registros nulos para evitar cargar datos incompletos
+-- Excluimos los registros nulos para evitar cargar datos incompletos
 -- Utilizamos NOT EXISTS junto con GROUP BY para evitar duplicados, incluso si se ejecuta el procedimiento múltiples veces
 -- Combinamos en un único INSERT la carga de ubicaciones de sucursales, clientes y proveedores mediante el uso de UNION
 
 
 /*
 ----------------------------------------------
-                Migracion de Cliente
+                Migración de Cliente
 ----------------------------------------------
 */
 
@@ -1391,7 +1407,7 @@ GO
 
 /*
 ----------------------------------------------
-            Migracion de Sucursal
+            Migración de Sucursal
 ----------------------------------------------
 */
 
@@ -1437,7 +1453,7 @@ GO
 
 /*
 ----------------------------------------------
-            Migracion de Proveedor
+            Migración de Proveedor
 ----------------------------------------------
 */
 
@@ -1485,7 +1501,7 @@ GO
 
 /*
 ------------------------------------------------------
-                Migracion de Factura
+                Migración de Factura
 ------------------------------------------------------
 */
 
@@ -1536,7 +1552,7 @@ GO
 
 /*
 ------------------------------------------------------
-                Migracion de Compra
+                Migración de Compra
 ------------------------------------------------------
 */
 
@@ -1583,7 +1599,7 @@ GO
 
 /*
 ------------------------------------------------------
-                Migracion de Pedido
+                Migración de Pedido
 ------------------------------------------------------
 */
 
@@ -1637,7 +1653,7 @@ GO
 
 /*
 ------------------------------------------------------
-                Migracion de Medida    
+                Migración de Medida    
 ------------------------------------------------------
 */
 
@@ -1683,7 +1699,7 @@ GO
 
 /*
 ------------------------------------------------------
-                Migracion de Modelo
+                Migración de Modelo
 ------------------------------------------------------
 */
 
@@ -1728,7 +1744,7 @@ GO
 
 /*
 ------------------------------------------------------
-                Migracion de Sillon
+                Migración de Sillon
 ------------------------------------------------------
 */
 
@@ -1774,7 +1790,7 @@ GO
 
 /*
 ------------------------------------------------------
-                Migracion de DetallePedido
+                Migración de DetallePedido
 ------------------------------------------------------
 */
 
@@ -1820,7 +1836,7 @@ GO
 
 /*
 ------------------------------------------------------
-                Migracion de TipoMaterial
+                Migración de TipoMaterial
 ------------------------------------------------------
 */
 
@@ -1862,7 +1878,7 @@ GO
 
 /*
 ------------------------------------------------------
-                Migracion de Material
+                Migración de Material
 ------------------------------------------------------
 */
 
@@ -1902,7 +1918,7 @@ GO
 
 /*
 ------------------------------------------------------
-                Migracion de Tela
+                Migración de Tela
 ------------------------------------------------------
 */
 
@@ -1953,7 +1969,7 @@ GO
 
 /*
 ------------------------------------------------------
-                Migracion de Madera
+                Migración de Madera
 ------------------------------------------------------
 */
 
@@ -2005,7 +2021,7 @@ GO
 
 /*
 ------------------------------------------------------
-                Migracion de Relleno
+                Migración de Relleno
 ------------------------------------------------------
 */
 
@@ -2052,7 +2068,7 @@ GO
 
 /*
 ------------------------------------------------------
-                Migracion de DetalleCompra
+                Migración de DetalleCompra
 ------------------------------------------------------
 */
 
@@ -2106,7 +2122,7 @@ GO
 
 /*
 ------------------------------------------------------
-                Migracion de PedidoCancelacion
+                Migración de PedidoCancelacion
 ------------------------------------------------------
 */
 
@@ -2146,7 +2162,7 @@ GO
 
 /*
 ------------------------------------------------------
-                Migracion de Envio
+                Migración de Envio
 ------------------------------------------------------
 */
 
@@ -2195,7 +2211,7 @@ GO
 
 /*
 ------------------------------------------------------
-                Migracion de DetalleFactura
+                Migración de DetalleFactura
 ------------------------------------------------------
 */
 
@@ -2260,7 +2276,7 @@ GO
 
 /*
 ------------------------------------------------------
-                Migracion de MaterialPorSillon
+                Migración de MaterialPorSillon
 ------------------------------------------------------
 */
 
@@ -2350,6 +2366,7 @@ AFTER INSERT, UPDATE, DELETE
 AS
     UPDATE f
     SET f.Pedido_Total = (
+		-- El total del pedido es la suma de los subtotales de los detalles de pedido asociados
         SELECT SUM(d.Detalle_Pedido_Subtotal)
         FROM LOS_POLLOS_HERMANOS.DetallePedido d
         WHERE d.Detalle_Pedido_Pedido = f.Pedido_Numero
@@ -2374,6 +2391,7 @@ AFTER INSERT, UPDATE, DELETE
 AS
     UPDATE f
     SET f.Compra_Total = (
+		-- El total de la compra es la suma de los subtotales de los detalles de compra asociados
         SELECT SUM(d.Detalle_Compra_Subtotal)
         FROM LOS_POLLOS_HERMANOS.DetalleCompra d
         WHERE d.Detalle_Compra_Compra = f.Compra_Numero
@@ -2398,6 +2416,7 @@ AFTER INSERT, UPDATE, DELETE
 AS
     UPDATE f
     SET f.Factura_Total = (
+        -- El total de la factura es la suma de los subtotales de los detalles de factura asociados, más el costo del envío
         SELECT SUM(d.Detalle_Factura_Subtotal) + ISNULL((e.Envio_Importe_Traslado + e.Envio_Importe_Subida),0)
         FROM LOS_POLLOS_HERMANOS.DetalleFactura d
         JOIN LOS_POLLOS_HERMANOS.Envio e ON e.Envio_Factura = f.Factura_Numero
