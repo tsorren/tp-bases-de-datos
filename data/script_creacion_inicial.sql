@@ -360,7 +360,7 @@ END
 GO
 
 
--- Ejecuci�n del stored procedure que crea todas las tablas
+-- Ejecución del stored procedure que crea todas las tablas
 EXEC LOS_POLLOS_HERMANOS.CrearTablas;
 GO
 
@@ -371,7 +371,7 @@ GO
 */
 
 
--- (1) Stored procedure de Creaci�n de PK de Ubicacion
+-- (1) Stored procedure de Creación de PK de Ubicacion
 CREATE PROCEDURE LOS_POLLOS_HERMANOS.CrearConstraint_PK_Ubicacion AS
 BEGIN
     ALTER TABLE LOS_POLLOS_HERMANOS.Ubicacion
@@ -380,7 +380,7 @@ END
 GO
 
 
--- (2) Stored procedure de Creaci�n de PK de Cliente
+-- (2) Stored procedure de Creación de PK de Cliente
 CREATE PROCEDURE LOS_POLLOS_HERMANOS.CrearConstraint_PK_Cliente AS
 BEGIN
     ALTER TABLE LOS_POLLOS_HERMANOS.Cliente
@@ -389,7 +389,7 @@ END
 GO
 
 
--- (3) Stored procedure de Creaci�n de PK de Sucursal
+-- (3) Stored procedure de Creación de PK de Sucursal
 CREATE PROCEDURE LOS_POLLOS_HERMANOS.CrearConstraint_PK_Sucursal AS
 BEGIN
     ALTER TABLE LOS_POLLOS_HERMANOS.Sucursal
@@ -398,7 +398,7 @@ END
 GO
 
 
--- (4) Stored procedure de Creaci�n de PK de Proveedor
+-- (4) Stored procedure de Creación de PK de Proveedor
 CREATE PROCEDURE LOS_POLLOS_HERMANOS.CrearConstraint_PK_Proveedor AS
 BEGIN
     ALTER TABLE LOS_POLLOS_HERMANOS.Proveedor
@@ -408,7 +408,7 @@ END
 GO
 
 
--- (5) Stored procedure de Creaci�n de PK de Factura
+-- (5) Stored procedure de Creación de PK de Factura
 CREATE PROCEDURE LOS_POLLOS_HERMANOS.CrearConstraint_PK_Factura AS
 BEGIN
     ALTER TABLE LOS_POLLOS_HERMANOS.Factura
@@ -418,7 +418,7 @@ END
 GO
 
 
--- (6) Stored procedure de Creaci�n de PK de Compra
+-- (6) Stored procedure de Creación de PK de Compra
 CREATE PROCEDURE LOS_POLLOS_HERMANOS.CrearConstraint_PK_Compra AS
 BEGIN
     ALTER TABLE LOS_POLLOS_HERMANOS.Compra
@@ -428,7 +428,7 @@ END
 GO
 
 
--- (7) Stored procedure de Creaci�n de PK de Pedido
+-- (7) Stored procedure de Creación de PK de Pedido
 CREATE PROCEDURE LOS_POLLOS_HERMANOS.CrearConstraint_PK_Pedido AS
 BEGIN
     ALTER TABLE LOS_POLLOS_HERMANOS.Pedido
@@ -438,7 +438,7 @@ END
 GO
 
 
--- (8) Stored procedure de Creaci�n de PK de Medida
+-- (8) Stored procedure de Creación de PK de Medida
 CREATE PROCEDURE LOS_POLLOS_HERMANOS.CrearConstraint_PK_Medida AS
 BEGIN
     ALTER TABLE LOS_POLLOS_HERMANOS.Medida
@@ -448,7 +448,7 @@ END
 GO
 
 
--- (9) Stored procedure de Creaci�n de PK de Modelo
+-- (9) Stored procedure de Creación de PK de Modelo
 CREATE PROCEDURE LOS_POLLOS_HERMANOS.CrearConstraint_PK_Modelo AS
 BEGIN
     ALTER TABLE LOS_POLLOS_HERMANOS.Modelo
@@ -458,7 +458,7 @@ END
 GO
 
 
--- (10) Stored procedure de Creaci�n de PK de Sillon
+-- (10) Stored procedure de Creación de PK de Sillon
 CREATE PROCEDURE LOS_POLLOS_HERMANOS.CrearConstraint_PK_Sillon AS
 BEGIN
     ALTER TABLE LOS_POLLOS_HERMANOS.Sillon
@@ -468,7 +468,7 @@ END
 GO
 
 
--- (11) Stored procedure de Creaci�n de PK de DetallePedido
+-- (11) Stored procedure de Creación de PK de DetallePedido
 CREATE PROCEDURE LOS_POLLOS_HERMANOS.CrearConstraint_PK_DetallePedido AS
 BEGIN
     ALTER TABLE LOS_POLLOS_HERMANOS.DetallePedido
@@ -478,7 +478,7 @@ END
 GO
 
 
--- (12) Stored procedure de Creaci�n de PK de TipoMaterial
+-- (12) Stored procedure de Creación de PK de TipoMaterial
 CREATE PROCEDURE LOS_POLLOS_HERMANOS.CrearConstraint_PK_TipoMaterial AS
 BEGIN
     ALTER TABLE LOS_POLLOS_HERMANOS.TipoMaterial
@@ -488,7 +488,7 @@ END
 GO
 
 
--- (13) Stored procedure de Creaci�n de PK de Material
+-- (13) Stored procedure de Creación de PK de Material
 CREATE PROCEDURE LOS_POLLOS_HERMANOS.CrearConstraint_PK_Material AS
 BEGIN
     ALTER TABLE LOS_POLLOS_HERMANOS.Material
@@ -498,7 +498,7 @@ END
 GO
 
 
--- (14) Stored procedure de Creaci�n de PK de Tela
+-- (14) Stored procedure de Creación de PK de Tela
 CREATE PROCEDURE LOS_POLLOS_HERMANOS.CrearConstraint_PK_Tela AS
 BEGIN
     ALTER TABLE LOS_POLLOS_HERMANOS.Tela
@@ -508,7 +508,7 @@ END
 GO
 
 
--- (15) Stored procedure de Creaci�n de PK de Madera
+-- (15) Stored procedure de Creación de PK de Madera
 CREATE PROCEDURE LOS_POLLOS_HERMANOS.CrearConstraint_PK_Madera AS
 BEGIN
     ALTER TABLE LOS_POLLOS_HERMANOS.Madera
@@ -518,7 +518,7 @@ END
 GO
 
 
--- (16) Stored procedure de Creaci�n de PK de Relleno
+-- (16) Stored procedure de Creación de PK de Relleno
 CREATE PROCEDURE LOS_POLLOS_HERMANOS.CrearConstraint_PK_Relleno AS
 BEGIN
     ALTER TABLE LOS_POLLOS_HERMANOS.Relleno
@@ -528,7 +528,7 @@ END
 GO
 
 
--- (17) Stored procedure de Creaci�n de PK de DetalleCompra
+-- (17) Stored procedure de Creación de PK de DetalleCompra
 CREATE PROCEDURE LOS_POLLOS_HERMANOS.CrearConstraint_PK_DetalleCompra AS
 BEGIN
     ALTER TABLE LOS_POLLOS_HERMANOS.DetalleCompra
@@ -538,7 +538,7 @@ END
 GO
 
 
--- (18) Stored procedure de Creaci�n de PK de PedidoCancelacion
+-- (18) Stored procedure de Creación de PK de PedidoCancelacion
 CREATE PROCEDURE LOS_POLLOS_HERMANOS.CrearConstraint_PK_PedidoCancelacion AS
 BEGIN
     ALTER TABLE LOS_POLLOS_HERMANOS.PedidoCancelacion
@@ -548,7 +548,7 @@ END
 GO
 
 
--- (19) Stored procedure de Creaci�n de PK de Envio
+-- (19) Stored procedure de Creación de PK de Envio
 CREATE PROCEDURE LOS_POLLOS_HERMANOS.CrearConstraint_PK_Envio AS
 BEGIN
     ALTER TABLE LOS_POLLOS_HERMANOS.Envio
@@ -558,7 +558,7 @@ END
 GO
 
 
--- (20) Stored procedure de Creaci�n de PK de DetalleFactura
+-- (20) Stored procedure de Creación de PK de DetalleFactura
 CREATE PROCEDURE LOS_POLLOS_HERMANOS.CrearConstraint_PK_DetalleFactura AS
 BEGIN
     ALTER TABLE LOS_POLLOS_HERMANOS.DetalleFactura
@@ -568,7 +568,7 @@ END
 GO
 
 
--- (21) Stored procedure de Creaci�n de PK de MaterialPorSillon
+-- (21) Stored procedure de Creación de PK de MaterialPorSillon
 CREATE PROCEDURE LOS_POLLOS_HERMANOS.CrearConstraint_PK_MaterialPorSillon AS
 BEGIN
     ALTER TABLE LOS_POLLOS_HERMANOS.MaterialPorSillon
@@ -605,7 +605,7 @@ BEGIN
 END
 GO
 
--- Ejecuci�n de Stored procedure de creaci�n de PKs
+-- Ejecución de Stored procedure de creación de PKs
 EXEC LOS_POLLOS_HERMANOS.CrearPKs;
 GO
 
@@ -1274,7 +1274,7 @@ BEGIN
         m.Sucursal_Direccion
     FROM gd_esquema.Maestra m
     WHERE m.Sucursal_Provincia IS NOT NULL
-    AND NOT EXISTS (    -- no lo vuelve a insertar si se ejecuta de vuelta el exec procedure y ya est� migrado
+    AND NOT EXISTS (    -- no lo vuelve a insertar si se ejecuta de vuelta el exec procedure y ya está migrado
         SELECT * 
         FROM LOS_POLLOS_HERMANOS.Ubicacion u
         WHERE
@@ -1311,21 +1311,27 @@ BEGIN
         m.Proveedor_Localidad,
         m.Proveedor_Direccion
     FROM gd_esquema.Maestra m
-    WHERE m.Proveedor_Provincia IS NOT NULL
-    AND NOT EXISTS (
-        SELECT *
-        FROM LOS_POLLOS_HERMANOS.Ubicacion u
-        WHERE 
-            u.Ubicacion_Provincia = m.Proveedor_Provincia
-            AND u.Ubicacion_Localidad = m.Proveedor_Localidad
-            AND u.Ubicacion_Direccion = m.Proveedor_Direccion
-    )
+    WHERE
+        m.Proveedor_Provincia IS NOT NULL
+        AND NOT EXISTS (
+            SELECT *
+            FROM LOS_POLLOS_HERMANOS.Ubicacion u
+            WHERE 
+                u.Ubicacion_Provincia = m.Proveedor_Provincia
+                AND u.Ubicacion_Localidad = m.Proveedor_Localidad
+                AND u.Ubicacion_Direccion = m.Proveedor_Direccion
+        )
     GROUP BY
         m.Proveedor_Provincia,
         m.Proveedor_Localidad,
         m.Proveedor_Direccion;
 END
 GO
+-- Migramos los datos de ubicación desde la tabla Maestra a la tabla Ubicacion
+-- Extrayendo las combinaciones únicas de provincia, localidad y dirección de sucursales, clientes y proveedores
+-- Excluimos filtran los registros nulos para evitar cargar datos incompletos
+-- Utilizamos NOT EXISTS junto con GROUP BY para evitar duplicados, incluso si se ejecuta el procedimiento múltiples veces
+-- Combinamos en un único INSERT la carga de ubicaciones de sucursales, clientes y proveedores mediante el uso de UNION
 
 
 /*
@@ -1376,6 +1382,12 @@ BEGIN
         m.Cliente_Telefono;
 END
 GO
+-- Migramos los datos de los clientes desde la tabla Maestra a la tabla Cliente
+-- relacionando cada cliente con su ubicación correspondiente mediante un JOIN con la tabla Ubicacion
+-- Excluimos los registros ya existentes utilizando NOT EXISTS para evitar duplicados basados en el DNI
+-- Aplicamos GROUP BY para asegurar que no se inserten múltiples veces los mismos datos por cliente
+-- Insertamos en la tabla Cliente únicamente aquellos registros con una ubicación válida previamente migrada
+
 
 /*
 ----------------------------------------------
@@ -1416,6 +1428,12 @@ BEGIN
 	ORDER BY m.Sucursal_NroSucursal;
 END
 GO
+-- Migramos los datos de sucursal desde la tabla Maestra a la tabla Sucursal
+-- asociando cada sucursal con su ubicación correspondiente mediante un JOIN con Ubicacion
+-- evitamos duplicados comprobando con NOT EXISTS sobre el código de sucursal
+-- usamos GROUP BY para consolidar registros idénticos y ORDER BY para mantener el orden por número de sucursal
+-- insertamos el número original de sucursal junto con teléfono y mail obtenidos de la tabla Maestra
+
 
 /*
 ----------------------------------------------
@@ -1458,6 +1476,12 @@ BEGIN
         m.Proveedor_Mail;
 END
 GO
+-- Migramos los datos de proveedor desde la tabla Maestra a la tabla Proveedor
+-- asociando cada proveedor con su ubicación correspondiente mediante un JOIN con Ubicacion
+-- evitamos duplicados comprobando con NOT EXISTS sobre el CUIT del proveedor
+-- usamos GROUP BY para consolidar registros idénticos y asegurar inserción única
+-- insertamos la razón social, teléfono y mail tal como aparecen en la tabla Maestra
+
 
 /*
 ------------------------------------------------------
@@ -1487,12 +1511,13 @@ BEGIN
         AND c.Cliente_Nombre = m.Cliente_Nombre
     JOIN LOS_POLLOS_HERMANOS.Sucursal s ON
         s.Sucursal_Codigo = m.Sucursal_NroSucursal
-    WHERE m.Factura_Numero IS NOT NULL
-    AND NOT EXISTS (
-        SELECT *
-        FROM LOS_POLLOS_HERMANOS.Factura f
-        WHERE f.Factura_Numero = m.Factura_Numero
-    )
+    WHERE 
+        m.Factura_Numero IS NOT NULL
+        AND NOT EXISTS (
+            SELECT *
+            FROM LOS_POLLOS_HERMANOS.Factura f
+            WHERE f.Factura_Numero = m.Factura_Numero
+        )
     GROUP BY 
         m.Factura_Numero,
         c.Cliente_Codigo,
@@ -1502,6 +1527,12 @@ BEGIN
 	ORDER BY m.Factura_Numero;
 END
 GO
+-- Migramos las facturas de la tabla Maestra a la tabla Factura
+-- asociando cada factura con su cliente y su sucursal mediante JOIN con Cliente y Sucursal
+-- excluimos filas sin número de factura para no insertar facturas incompletas
+-- evitamos duplicados comprobando con NOT EXISTS sobre el número de factura
+-- usamos GROUP BY para consolidar registros y ORDER BY para mantener el orden por número de factura
+
 
 /*
 ------------------------------------------------------
@@ -1544,6 +1575,11 @@ BEGIN
 	ORDER BY m.Compra_Numero;
 END
 GO
+-- Migramos las compras de materiales de la tabla Maestra a la tabla Compra
+-- asociando cada compra con su sucursal y su proveedor mediante JOIN con Sucursal y Proveedor
+-- evitamos duplicados comprobando con NOT EXISTS sobre el número de compra
+-- usamos GROUP BY para consolidar registros y ORDER BY para mantener el orden por número de compra
+
 
 /*
 ------------------------------------------------------
@@ -1575,12 +1611,13 @@ BEGIN
         AND c.Cliente_Apellido = m.Cliente_Apellido
     JOIN LOS_POLLOS_HERMANOS.Sucursal s ON
         s.Sucursal_Codigo = m.Sucursal_NroSucursal
-    WHERE m.Pedido_Numero IS NOT NULL
-    AND NOT EXISTS (
-        SELECT *
-        FROM LOS_POLLOS_HERMANOS.Pedido p
-        WHERE p.Pedido_Numero = m.Pedido_Numero
-    )
+    WHERE 
+        m.Pedido_Numero IS NOT NULL
+        AND NOT EXISTS (
+            SELECT *
+            FROM LOS_POLLOS_HERMANOS.Pedido p
+            WHERE p.Pedido_Numero = m.Pedido_Numero
+        )
     GROUP BY 
         m.Pedido_Numero,
         c.Cliente_Codigo,
@@ -1591,6 +1628,12 @@ BEGIN
 	ORDER BY m.Pedido_Numero;
 END
 GO
+-- Migramos los pedidos de la tabla Maestra a la tabla Pedido
+-- asociando cada pedido con su cliente usando JOIN sobre DNI, nombre y apellido
+-- y asociando cada pedido con su sucursal usando JOIN sobre el número de sucursal
+-- excluimos filas sin número de pedido para no insertar pedidos incompletos
+-- evitamos duplicados comprobando con NOT EXISTS sobre el número de pedido
+-- usamos GROUP BY para consolidar registros y ORDER BY para mantener el orden por número de pedido
 
 /*
 ------------------------------------------------------
@@ -1614,16 +1657,17 @@ BEGIN
         m.Sillon_Medida_Profundidad,
         m.Sillon_Medida_Precio
     FROM gd_esquema.maestra m
-    WHERE m.Sillon_Medida_Alto IS NOT NULL
-    AND NOT EXISTS (
-        SELECT *
-        FROM LOS_POLLOS_HERMANOS.Medida med
-        WHERE
-            med.Medida_Ancho = m.Sillon_Medida_Ancho
-            AND med.Medida_Alto = m.Sillon_Medida_Alto
-            AND med.Medida_Profundidad = m.Sillon_Medida_Profundidad
-            AND med.Medida_Precio = m.Sillon_Medida_Precio
-    )
+    WHERE 
+        m.Sillon_Medida_Alto IS NOT NULL
+        AND NOT EXISTS (
+            SELECT *
+            FROM LOS_POLLOS_HERMANOS.Medida med
+            WHERE
+                med.Medida_Ancho = m.Sillon_Medida_Ancho
+                AND med.Medida_Alto = m.Sillon_Medida_Alto
+                AND med.Medida_Profundidad = m.Sillon_Medida_Profundidad
+                AND med.Medida_Precio = m.Sillon_Medida_Precio
+        )
     GROUP BY
         m.Sillon_Medida_Ancho,
         m.Sillon_Medida_Alto,
@@ -1631,6 +1675,11 @@ BEGIN
         m.Sillon_Medida_Precio;
 END
 GO
+-- Migramos las medidas desde la tabla Maestra a la tabla Medida
+-- extraemos ancho, alto, profundidad y precio de Sillon_Medida desde la tabla Maestra
+-- excluimos registros sin altura para evitar cargar medidas incompletas
+-- utilizamos NOT EXISTS junto con GROUP BY para evitar duplicados y asegurar inserción única de cada combinación de medida
+
 
 /*
 ------------------------------------------------------
@@ -1670,6 +1719,12 @@ BEGIN
 	ORDER BY m.Sillon_Modelo_Codigo;
 END
 GO
+-- Migramos los modelos desde la tabla Maestra a la tabla Modelo
+-- extraemos código de modelo, número de modelo, descripción y precio base de Sillon_Modelo
+-- excluimos registros sin código de modelo para evitar cargar datos incompletos
+-- usamos NOT EXISTS junto con GROUP BY para evitar duplicados y asegurar inserción única de cada modelo
+-- mantenemos el orden de carga por código de modelo usando ORDER BY
+
 
 /*
 ------------------------------------------------------
@@ -1710,6 +1765,12 @@ BEGIN
 	ORDER BY m.Sillon_Codigo;
 END
 GO
+-- Migramos los sillones desde la tabla Maestra a la tabla Sillon
+-- extraemos el código de sillón y asociamos la medida usando JOIN sobre alto, ancho, profundidad y precio de Medida
+-- asociamos el modelo usando JOIN sobre el código de modelo en Modelo
+-- evitamos duplicados comprobando con NOT EXISTS sobre el código de sillón
+-- usamos GROUP BY para consolidar registros y ORDER BY para mantener el orden por código de sillón
+
 
 /*
 ------------------------------------------------------
@@ -1735,12 +1796,13 @@ BEGIN
         m.Detalle_Pedido_Precio,
         m.Detalle_Pedido_Subtotal
     FROM gd_esquema.Maestra m
-    WHERE m.Sillon_Codigo IS NOT NULL
-    AND NOT EXISTS (
-        SELECT *
-        FROM LOS_POLLOS_HERMANOS.DetallePedido dp
-        WHERE dp.Detalle_Pedido_Sillon = m.Sillon_Codigo
-    )
+    WHERE
+        m.Sillon_Codigo IS NOT NULL
+        AND NOT EXISTS (
+            SELECT *
+            FROM LOS_POLLOS_HERMANOS.DetallePedido dp
+            WHERE dp.Detalle_Pedido_Sillon = m.Sillon_Codigo
+        )
     GROUP BY 
         m.Sillon_Codigo,
         m.Pedido_Numero,
@@ -1749,6 +1811,12 @@ BEGIN
         m.Detalle_Pedido_Subtotal;
 END
 GO
+-- Migramos los detalles de pedido desde la tabla Maestra a la tabla DetallePedido
+-- extraemos código de sillón, número de pedido, cantidad, precio y subtotal tal como aparecen en Maestra
+-- excluimos registros sin código de sillón para evitar procesar registros irrelevantes
+-- utilizamos NOT EXISTS sobre el código de sillón para evitar duplicados por sillón
+-- aplicamos GROUP BY para consolidar registros únicos antes de la inserción
+
 
 /*
 ------------------------------------------------------
@@ -1785,6 +1853,12 @@ BEGIN
         m.Material_Descripcion;
 END
 GO
+-- Migramos los tipos de material desde la tabla Maestra a la tabla TipoMaterial
+-- extraemos tipo de material, nombre y descripción tal como aparecen en Maestra
+-- excluimos registros sin tipo de material para evitar procesar registros incompletos
+-- utilizamos NOT EXISTS con tipo, nombre y descripción para evitar duplicados
+-- aplicamos GROUP BY para consolidar registros únicos antes de la inserción
+
 
 /*
 ------------------------------------------------------
@@ -1819,6 +1893,12 @@ BEGIN
         m.Material_Precio;
 END
 GO
+-- Migramos los materiales desde la tabla Maestra a la tabla Material
+-- asociando cada material con su tipo mediante JOIN con TipoMaterial usando tipo, nombre y descripción
+-- extraemos el código de tipo de material y el precio tal como aparecen en Maestra
+-- utilizamos NOT EXISTS con tipo de material y precio para evitar duplicados
+-- aplicamos GROUP BY para consolidar registros únicos antes de la inserción
+
 
 /*
 ------------------------------------------------------
@@ -1862,6 +1942,14 @@ BEGIN
         m.Tela_Textura;
 END
 GO
+-- Migramos las telas desde la tabla Maestra a la tabla Tela
+-- asociamos cada registro con su tipo de material usando JOIN con TipoMaterial sobre tipo, nombre y descripción
+-- luego vinculamos con Material usando JOIN con Material sobre el código de tipo de material
+-- extraemos el código de material, color y textura tal como aparecen en Maestra
+-- excluimos registros con color o textura nulos para evitar cargar datos incompletos
+-- utilizamos NOT EXISTS con material, color y textura para evitar duplicados
+-- aplicamos GROUP BY para consolidar registros únicos antes de la inserción
+
 
 /*
 ------------------------------------------------------
@@ -1906,6 +1994,14 @@ BEGIN
         m.Madera_Dureza;
 END
 GO
+-- Migramos las maderas desde la tabla Maestra a la tabla Madera
+-- asociamos cada registro con su tipo de material usando JOIN con TipoMaterial sobre tipo, nombre y descripción
+-- luego vinculamos con Material usando JOIN con Material sobre el código de tipo de material
+-- extraemos el código de material, color y dureza tal como aparecen en Maestra
+-- excluimos registros con color o dureza nulos para evitar cargar datos incompletos
+-- utilizamos NOT EXISTS con material, color y dureza para evitar duplicados
+-- aplicamos GROUP BY para consolidar registros únicos antes de la inserción
+
 
 /*
 ------------------------------------------------------
@@ -1945,6 +2041,14 @@ BEGIN
         m.Relleno_Densidad;
 END
 GO
+-- Migramos los rellenos desde la tabla Maestra a la tabla Relleno
+-- asociamos cada registro con su tipo de material usando JOIN con TipoMaterial sobre tipo, nombre y descripción
+-- luego vinculamos con Material usando JOIN con Material sobre el código de tipo de material
+-- extraemos el código de material y la densidad tal como aparecen en Maestra
+-- excluimos registros con densidad nula para evitar cargar datos incompletos
+-- utilizamos NOT EXISTS con material y densidad para evitar duplicados
+-- aplicamos GROUP BY para consolidar registros únicos antes de la inserción
+
 
 /*
 ------------------------------------------------------
@@ -1991,6 +2095,14 @@ BEGIN
         m.Detalle_Compra_Subtotal;
 END
 GO
+-- Migramos los detalles de compra desde la tabla Maestra a la tabla DetalleCompra
+-- asociamos cada detalle con su tipo de material usando JOIN con TipoMaterial sobre tipo, nombre y descripción
+-- luego vinculamos con Material usando JOIN sobre el código de tipo de material
+-- extraemos número de compra, código de material, cantidad, precio y subtotal tal como aparecen en Maestra
+-- excluimos registros sin número de compra para evitar procesar registros irrelevantes
+-- utilizamos NOT EXISTS sobre el número de compra para evitar duplicados
+-- aplicamos GROUP BY para consolidar registros únicos antes de la inserción
+
 
 /*
 ------------------------------------------------------
@@ -2025,6 +2137,12 @@ BEGIN
         m.Pedido_Cancelacion_Motivo;
 END
 GO
+-- Migramos las cancelaciones de pedido desde la tabla Maestra a la tabla PedidoCancelacion
+-- extraemos número de pedido, fecha de cancelación y motivo tal como aparecen en Maestra
+-- excluimos registros sin fecha de cancelación para evitar procesar entradas incompletas
+-- utilizamos NOT EXISTS sobre el número de pedido para evitar duplicados
+-- aplicamos GROUP BY para consolidar registros únicos antes de la inserción
+
 
 /*
 ------------------------------------------------------
@@ -2067,6 +2185,13 @@ BEGIN
 	ORDER BY m.Envio_Numero;
 END
 GO
+-- Migramos los envíos desde la tabla Maestra a la tabla Envio
+-- extraemos número de factura como referencia, fecha programada, fecha de entrega,
+-- importe de traslado e importe de subida tal como aparecen en Maestra
+-- excluimos registros sin número de envío para evitar procesar entradas irrelevantes
+-- utilizamos NOT EXISTS sobre el número de envío para evitar duplicados
+-- aplicamos GROUP BY para consolidar registros únicos antes de la inserción y ORDER BY para mantener el orden por número de envío
+
 
 /*
 ------------------------------------------------------
@@ -2124,6 +2249,14 @@ BEGIN
             );
 END
 GO
+-- Migramos los detalles de factura desde la tabla Maestra a la tabla DetalleFactura
+-- extraemos número de factura y número de detalle de pedido junto con cantidad,
+-- precio y subtotal tal como aparecen en Maestra
+-- asociamos cada registro al detalle de pedido mediante JOIN con un subselect que agrupa por pedido,
+-- cantidad, precio y subtotal, eligiendo el primer Detalle_Pedido_Numero para evitar filas repetidas
+-- filtramos valores nulos de cantidad, precio, subtotal y número de pedido para evitar procesar datos incompletos
+-- utilizamos NOT EXISTS sobre número de factura para evitar duplicados  
+
 
 /*
 ------------------------------------------------------
@@ -2158,12 +2291,21 @@ BEGIN
         );
 END
 GO
+-- Migramos la relación MaterialPorSillon desde la tabla Maestra a la tabla MaterialPorSillon
+-- asociando cada material con su sillón usando JOIN con TipoMaterial sobre tipo, nombre y descripción y luego JOIN con Material sobre el código de tipo de material
+-- extraemos el código de material y el código de sillón tal como aparecen en Maestra
+-- excluimos registros sin código de sillón para evitar procesar relaciones inválidas
+-- utilizamos NOT EXISTS sobre material y sillón para evitar duplicados  
+
 
 /*
 ------------------------------------------------------
-        Ejecuci�n de la migraci�n
+        Ejecución de la migración
 ------------------------------------------------------
 */
+
+
+-- Stored procedure que engloba todas las migraciones
 CREATE PROCEDURE LOS_POLLOS_HERMANOS.Migrar_Datos AS
 BEGIN 
     EXEC LOS_POLLOS_HERMANOS.Migrar_Ubicacion; -- (20528 rows affected)
@@ -2190,6 +2332,7 @@ BEGIN
 END
 GO
 
+-- Ejecución de Stored procedure de migracion de datos
 EXEC LOS_POLLOS_HERMANOS.Migrar_Datos;
 GO
 
@@ -2200,7 +2343,55 @@ GO
 */
 -- Creamos los triggers después de la migración para que no interfieran durante la misma
 
--- trigger que actualiza el total factura cada vez que se updatea, inserta o deletea un detalle factura
+-- (11) DetallePedido
+CREATE TRIGGER LOS_POLLOS_HERMANOS.ActualizarTotalDePedido
+ON LOS_POLLOS_HERMANOS.DetallePedido
+AFTER INSERT, UPDATE, DELETE
+AS
+    UPDATE f
+    SET f.Pedido_Total = (
+        SELECT SUM(d.Detalle_Pedido_Subtotal)
+        FROM LOS_POLLOS_HERMANOS.DetallePedido d
+        WHERE d.Detalle_Pedido_Pedido = f.Pedido_Numero
+    )
+    FROM LOS_POLLOS_HERMANOS.Pedido f
+    WHERE f.Pedido_Numero IN (
+        SELECT DISTINCT Detalle_Pedido_Pedido FROM inserted
+        UNION
+        SELECT DISTINCT Detalle_Pedido_Pedido FROM deleted
+    );
+GO
+-- Trigger que actualiza el total de cada pedido tras cambios en DetallePedido
+-- se ejecuta luego de insertar, modificar o borrar sobre DetallePedido
+-- recalcula el total del pedido como la suma de los subtotales de sus ítems
+-- se aplica solo a los pedidos afectados, identificados mediante inserted y deleted
+
+
+-- (17) DetalleCompra
+CREATE TRIGGER LOS_POLLOS_HERMANOS.ActualizarTotalDeCompra
+ON LOS_POLLOS_HERMANOS.DetalleCompra
+AFTER INSERT, UPDATE, DELETE
+AS
+    UPDATE f
+    SET f.Compra_Total = (
+        SELECT SUM(d.Detalle_Compra_Subtotal)
+        FROM LOS_POLLOS_HERMANOS.DetalleCompra d
+        WHERE d.Detalle_Compra_Compra = f.Compra_Numero
+    )
+    FROM LOS_POLLOS_HERMANOS.Compra f
+    WHERE f.Compra_Numero IN (
+        SELECT DISTINCT Detalle_Compra_Compra FROM inserted
+        UNION
+        SELECT DISTINCT Detalle_Compra_Compra FROM deleted
+    );
+GO
+-- Trigger que actualiza el total de cada compra tras cambios en DetalleCompra
+-- se ejecuta luego de insertar, modificar o borrar sobre DetalleCompra
+-- recalcula el total de la compra como la suma de los subtotales de sus ítems
+-- se aplica solo a las compras afectadas, identificadas mediante inserted y deleted
+
+
+-- (20) DetalleFactura
 CREATE TRIGGER LOS_POLLOS_HERMANOS.ActualizarTotalDeFactura
 ON LOS_POLLOS_HERMANOS.DetalleFactura
 AFTER INSERT, UPDATE, DELETE
@@ -2222,41 +2413,8 @@ AS
         SELECT DISTINCT Detalle_Factura_Factura FROM deleted
     );
 GO
-
--- trigger que actualiza el total pedido cada vez que se updatea, inserta o deletea un detalle pedido
-CREATE TRIGGER LOS_POLLOS_HERMANOS.ActualizarTotalDePedido
-ON LOS_POLLOS_HERMANOS.DetallePedido
-AFTER INSERT, UPDATE, DELETE
-AS
-    UPDATE f
-    SET f.Pedido_Total = (
-        SELECT SUM(d.Detalle_Pedido_Subtotal)
-        FROM LOS_POLLOS_HERMANOS.DetallePedido d
-        WHERE d.Detalle_Pedido_Pedido = f.Pedido_Numero
-    )
-    FROM LOS_POLLOS_HERMANOS.Pedido f
-    WHERE f.Pedido_Numero IN (
-        SELECT DISTINCT Detalle_Pedido_Pedido FROM inserted
-        UNION
-        SELECT DISTINCT Detalle_Pedido_Pedido FROM deleted
-    );
-GO
-
--- trigger que actualiza el total compra cada vez que se updatea, inserta o deletea un detalle compra
-CREATE TRIGGER LOS_POLLOS_HERMANOS.ActualizarTotalDeCompra
-ON LOS_POLLOS_HERMANOS.DetalleCompra
-AFTER INSERT, UPDATE, DELETE
-AS
-    UPDATE f
-    SET f.Compra_Total = (
-        SELECT SUM(d.Detalle_Compra_Subtotal)
-        FROM LOS_POLLOS_HERMANOS.DetalleCompra d
-        WHERE d.Detalle_Compra_Compra = f.Compra_Numero
-    )
-    FROM LOS_POLLOS_HERMANOS.Compra f
-    WHERE f.Compra_Numero IN (
-        SELECT DISTINCT Detalle_Compra_Compra FROM inserted
-        UNION
-        SELECT DISTINCT Detalle_Compra_Compra FROM deleted
-    );
-GO
+-- Trigger que actualiza el total de cada factura tras cambios en DetalleFactura
+-- se ejecuta luego de insertar, modificar o borrar sobre DetalleFactura
+-- realiza un JOIN con Envio para sumar subtotales de detalle y costos de envío
+-- agrupa por importes de traslado y subida para calcular el nuevo total de la factura
+-- se aplica solo a las facturas afectadas, usando inserted y deleted para identificar los cambios
