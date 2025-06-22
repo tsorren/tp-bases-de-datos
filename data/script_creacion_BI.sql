@@ -557,7 +557,7 @@ SELECT
     t.Tiempo_Id,
     u.Ubicacion_Id,
     COUNT(e.Envio_Numero),
-    COUNT(CASE WHEN e.Envio_Fecha_Entrega <= e.Envio_Fecha_Programada THEN 1 END),
+    SUM(CASE WHEN e.Envio_Fecha_Entrega <= e.Envio_Fecha_Programada THEN 1 ELSE 0 END),
     SUM(e.Envio_Total)
 FROM LOS_POLLOS_HERMANOS.Envio e
 JOIN LOS_POLLOS_HERMANOS.Factura f ON f.Factura_Numero = e.Envio_Factura
