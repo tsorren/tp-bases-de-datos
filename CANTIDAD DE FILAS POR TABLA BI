@@ -1,0 +1,16 @@
+CANTIDAD DE FILAS POR TABLA BI
+DIMENSIONES:
+(1) Dimensión Tiempo: 19 rows
+(2) Dimensión Cliente: 20509 rows
+(3) Dimensión Ubicacion: 12628 rows
+(4) Dimensión Sucursal: 9 rows
+(5) Dimensión Modelo_Sillon: 7 rows
+(6) Dimensión Tipo_Material: 9 rows
+(7) Dimensión Estado_Pedido: 2 rows 
+(8) Dimensión Turno_Venta: 2 rows 
+
+HECHOS:
+(1) Hechos Ventas: 49863 rows
+(2) Hechos Compras: 612 rows
+(3) Hechos Pedidos: 681 rows
+(4) Hechos Envios: 16752 rows
