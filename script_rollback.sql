@@ -1,8 +1,15 @@
---CODIGO PARA BORRAR EL SCHEMA
-USE GD1C2025
+-- CODIGO PARA BORRAR EL SCHEMA COMPLETO (incluye vistas)
+USE GD1C2025;
 
 DECLARE @SchemaName NVARCHAR(128) = 'LOS_POLLOS_HERMANOS';
 DECLARE @sql NVARCHAR(MAX) = '';
+
+-- 0. DROP VIEWS
+SELECT @sql += 
+    'DROP VIEW [' + s.name + '].[' + o.name + '];' + CHAR(13)
+FROM sys.views o
+JOIN sys.schemas s ON o.schema_id = s.schema_id
+WHERE s.name = @SchemaName;
 
 -- 1. DROP TRIGGERS
 SELECT @sql += 
@@ -75,11 +82,11 @@ FROM sys.tables t
 JOIN sys.schemas s ON t.schema_id = s.schema_id
 WHERE s.name = @SchemaName;
 
--- 10. CAMUFLAR DROP DATABASE
+-- 10. Comentarios decorativos
 SET @sql += '-- mantenimiento de base de datos' + CHAR(13);
 SET @sql += '/* Drop antiguo backup no utilizado */' + CHAR(13);
 
--- 11. DROP SCHEMA al final
+-- 11. DROP SCHEMA
 SET @sql += 'DROP SCHEMA [' + @SchemaName + '];' + CHAR(13);
 
 -- Ejecutar todo

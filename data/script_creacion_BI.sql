@@ -5,7 +5,44 @@ GO
 -- RESET DE MODELO BI
 -- ==================
 
--- Hechos
+USE GD1C2025
+GO
+
+-- ===========================
+-- RESET DE MODELO BI COMPLETO
+-- ===========================
+
+-- 1. Eliminar vistas si existen
+IF OBJECT_ID('LOS_POLLOS_HERMANOS.BI_Vista_Ganancias', 'V') IS NOT NULL
+    DROP VIEW LOS_POLLOS_HERMANOS.BI_Vista_Ganancias;
+IF OBJECT_ID('LOS_POLLOS_HERMANOS.BI_Vista_Factura_Promedio_Mensual', 'V') IS NOT NULL
+    DROP VIEW LOS_POLLOS_HERMANOS.BI_Vista_Factura_Promedio_Mensual;
+IF OBJECT_ID('LOS_POLLOS_HERMANOS.BI_Vista_Rendimiento_Modelos', 'V') IS NOT NULL
+    DROP VIEW LOS_POLLOS_HERMANOS.BI_Vista_Rendimiento_Modelos;
+IF OBJECT_ID('LOS_POLLOS_HERMANOS.BI_Vista_Volumen_Pedidos', 'V') IS NOT NULL
+    DROP VIEW LOS_POLLOS_HERMANOS.BI_Vista_Volumen_Pedidos;
+IF OBJECT_ID('LOS_POLLOS_HERMANOS.BI_Vista_Conversion_Pedidos', 'V') IS NOT NULL
+    DROP VIEW LOS_POLLOS_HERMANOS.BI_Vista_Conversion_Pedidos;
+IF OBJECT_ID('LOS_POLLOS_HERMANOS.BI_Vista_Tiempo_Promedio_Fabricacion', 'V') IS NOT NULL
+    DROP VIEW LOS_POLLOS_HERMANOS.BI_Vista_Tiempo_Promedio_Fabricacion;
+IF OBJECT_ID('LOS_POLLOS_HERMANOS.BI_Vista_Promedio_Compras', 'V') IS NOT NULL
+    DROP VIEW LOS_POLLOS_HERMANOS.BI_Vista_Promedio_Compras;
+IF OBJECT_ID('LOS_POLLOS_HERMANOS.BI_Vista_Compras_Tipo_Material', 'V') IS NOT NULL
+    DROP VIEW LOS_POLLOS_HERMANOS.BI_Vista_Compras_Tipo_Material;
+IF OBJECT_ID('LOS_POLLOS_HERMANOS.BI_Vista_Porcentaje_Cumplimiento_Envios', 'V') IS NOT NULL
+    DROP VIEW LOS_POLLOS_HERMANOS.BI_Vista_Porcentaje_Cumplimiento_Envios;
+IF OBJECT_ID('LOS_POLLOS_HERMANOS.BI_Vista_Localidades_Mayor_Costo_Envio', 'V') IS NOT NULL
+    DROP VIEW LOS_POLLOS_HERMANOS.BI_Vista_Localidades_Mayor_Costo_Envio;
+
+-- 2. Eliminar funciones si existen
+IF OBJECT_ID('LOS_POLLOS_HERMANOS.calcularRangoEtario', 'FN') IS NOT NULL
+    DROP FUNCTION LOS_POLLOS_HERMANOS.calcularRangoEtario;
+IF OBJECT_ID('LOS_POLLOS_HERMANOS.calcularFranjaHoraria', 'FN') IS NOT NULL
+    DROP FUNCTION LOS_POLLOS_HERMANOS.calcularFranjaHoraria;
+IF OBJECT_ID('LOS_POLLOS_HERMANOS.diferenciaDiasEntreTiempos', 'FN') IS NOT NULL
+    DROP FUNCTION LOS_POLLOS_HERMANOS.diferenciaDiasEntreTiempos;
+
+-- 3. Eliminar tablas de hechos
 IF OBJECT_ID('LOS_POLLOS_HERMANOS.BI_Hechos_Envios', 'U') IS NOT NULL
     DROP TABLE LOS_POLLOS_HERMANOS.BI_Hechos_Envios;
 IF OBJECT_ID('LOS_POLLOS_HERMANOS.BI_Hechos_Pedidos', 'U') IS NOT NULL
@@ -14,7 +51,8 @@ IF OBJECT_ID('LOS_POLLOS_HERMANOS.BI_Hechos_Compras', 'U') IS NOT NULL
     DROP TABLE LOS_POLLOS_HERMANOS.BI_Hechos_Compras;
 IF OBJECT_ID('LOS_POLLOS_HERMANOS.BI_Hechos_Ventas', 'U') IS NOT NULL
     DROP TABLE LOS_POLLOS_HERMANOS.BI_Hechos_Ventas;
--- Dimensiones 
+
+-- 4. Eliminar tablas de dimensiones
 IF OBJECT_ID('LOS_POLLOS_HERMANOS.BI_Dimension_Turno_Venta', 'U') IS NOT NULL 
     DROP TABLE LOS_POLLOS_HERMANOS.BI_Dimension_Turno_Venta;
 IF OBJECT_ID('LOS_POLLOS_HERMANOS.BI_Dimension_Estado_Pedido', 'U') IS NOT NULL 
@@ -31,6 +69,7 @@ IF OBJECT_ID('LOS_POLLOS_HERMANOS.BI_Dimension_Cliente', 'U') IS NOT NULL
     DROP TABLE LOS_POLLOS_HERMANOS.BI_Dimension_Cliente;
 IF OBJECT_ID('LOS_POLLOS_HERMANOS.BI_Dimension_Tiempo', 'U') IS NOT NULL 
     DROP TABLE LOS_POLLOS_HERMANOS.BI_Dimension_Tiempo;
+GO
 
 
 -- ===================================
@@ -66,15 +105,13 @@ CREATE TABLE LOS_POLLOS_HERMANOS.BI_Dimension_Sucursal (
 -- (5) Dimensión Modelo_Sillon
 CREATE TABLE LOS_POLLOS_HERMANOS.BI_Dimension_Modelo_Sillon (
     Modelo_Sillon_Id BIGINT NOT NULL,
-    Modelo_Sillon_Descripcion NVARCHAR(255),
-    Modelo_Sillon_Precio_Base DECIMAL(18,2)
+    Modelo_Sillon_Descripcion NVARCHAR(255)
 );
 
 -- (6) Dimensión Tipo_Material
 CREATE TABLE LOS_POLLOS_HERMANOS.BI_Dimension_Tipo_Material (
     Tipo_Material_Id BIGINT NOT NULL,
-    Tipo_Material_Tipo NVARCHAR(255),
-    Tipo_Material_Precio DECIMAL(38,2)
+    Tipo_Material_Tipo NVARCHAR(255)
 );
 
 -- (7) Dimensión Estado_Pedido
@@ -100,7 +137,8 @@ CREATE TABLE LOS_POLLOS_HERMANOS.BI_Hechos_Ventas (
     Ubicacion_Id BIGINT NOT NULL,
     Cliente_Id BIGINT NOT NULL,
     Modelo_Sillon_Id BIGINT NOT NULL,
-    Ventas_Monto DECIMAL(28,2)
+    Ventas_Monto DECIMAL(28,2),
+    Tiempo_Fabricacion TINYINT
 );
 
 -- (2) Hechos Compras
@@ -318,6 +356,7 @@ BEGIN
 END
 GO
 
+
 -- =====================
 -- MIGRACIÓN DIMENSIONES
 -- =====================
@@ -403,25 +442,21 @@ FROM LOS_POLLOS_HERMANOS.Sucursal;
 -- (5) Dimensión Modelo_Sillon (7 rows)
 INSERT INTO LOS_POLLOS_HERMANOS.BI_Dimension_Modelo_Sillon(
     Modelo_Sillon_Id,
-    Modelo_Sillon_Descripcion,
-    Modelo_Sillon_Precio_Base
+    Modelo_Sillon_Descripcion
 )
 SELECT 
     Modelo_Codigo,
-    Modelo_Descripcion,
-    Modelo_Precio_Base
+    Modelo_Descripcion
 FROM LOS_POLLOS_HERMANOS.Modelo;
 
 -- (6) Dimensión Tipo_Material (9 rows)
 INSERT INTO LOS_POLLOS_HERMANOS.BI_Dimension_Tipo_Material(
     Tipo_Material_Id,
-    Tipo_Material_Tipo,
-    Tipo_Material_Precio
+    Tipo_Material_Tipo
 )
 SELECT 
     TipoMaterial_Codigo,
-    TipoMaterial_Tipo,
-    Material_Precio
+    TipoMaterial_Tipo
 FROM LOS_POLLOS_HERMANOS.TipoMaterial
 JOIN LOS_POLLOS_HERMANOS.Material ON Material_Tipo = TipoMaterial_Codigo;
 
@@ -455,7 +490,8 @@ INSERT INTO LOS_POLLOS_HERMANOS.BI_Hechos_Ventas(
     Ubicacion_Id,
     Cliente_Id,
     Modelo_Sillon_Id,
-    Ventas_Monto
+    Ventas_Monto,
+    Tiempo_Fabricacion
 )
 SELECT 
     t.Tiempo_Id,
@@ -463,10 +499,12 @@ SELECT
     u.Ubicacion_Id,
     c.Cliente_Id,
     m.Modelo_Sillon_Id,
-    SUM(df.Detalle_Factura_Precio) as ventas_monto
+    SUM(df.Detalle_Factura_Precio) as ventas_monto,
+    AVG(DATEDIFF(DAY, p.Pedido_fecha, f.Factura_Fecha)) as tiempo_promedio
 FROM LOS_POLLOS_HERMANOS.DetalleFactura df
 JOIN LOS_POLLOS_HERMANOS.Factura f on f.Factura_Numero = df.Detalle_Factura_Factura
 JOIN LOS_POLLOS_HERMANOS.DetallePedido dp ON df.Detalle_Factura_Detalle_Pedido = dp.Detalle_Pedido_Numero
+JOIN LOS_POLLOS_HERMANOS.Pedido p ON p.Pedido_Numero = dp.Detalle_Pedido_Pedido
 JOIN LOS_POLLOS_HERMANOS.Sillon si ON si.Sillon_Codigo = dp.Detalle_Pedido_Sillon
 JOIN LOS_POLLOS_HERMANOS.BI_Dimension_Modelo_Sillon m ON m.Modelo_Sillon_Id = si.Sillon_Modelo
 JOIN LOS_POLLOS_HERMANOS.BI_Dimension_Tiempo t ON 
@@ -544,7 +582,6 @@ GROUP BY
     tv.Turno_Venta_Id;
 
 
--- TODO: Arreglar warning 
 -- (4) Hechos Envios -> Vistas 9 y 10 (16752 rows) 
 INSERT INTO LOS_POLLOS_HERMANOS.BI_Hechos_Envios(
     Tiempo_Id,
@@ -573,52 +610,29 @@ JOIN LOS_POLLOS_HERMANOS.BI_Dimension_Tiempo t
 GROUP BY
     t.Tiempo_Id,
     u.Ubicacion_Id;
+GO
 
-/*
-Ver si esto resuelve la warning
-INSERT INTO LOS_POLLOS_HERMANOS.BI_Hechos_Envios(
-    Tiempo_Id,
-    Ubicacion_Id,
-    Envios_Cantidad_Total,
-    Envios_Cantidad_En_Fecha,
-    Envios_Monto
-)
+-- ===============
+-- CREACIÓN VISTAS
+-- ===============
+
+-- (1) Ganancias (59 rows)
+CREATE VIEW LOS_POLLOS_HERMANOS.BI_Vista_Ganancias AS
 SELECT
-    t.Tiempo_Id,
-    u.Ubicacion_Id,
-    COUNT(ISNULL(e.Envio_Numero, 0)),
-    COUNT(CASE WHEN e.Envio_Fecha_Entrega IS NOT NULL AND e.Envio_Fecha_Programada IS NOT NULL AND e.Envio_Fecha_Entrega <= e.Envio_Fecha_Programada THEN 1 END),
-    SUM(ISNULL(e.Envio_Total, 0))
-FROM LOS_POLLOS_HERMANOS.Envio e
-JOIN LOS_POLLOS_HERMANOS.Factura f ON f.Factura_Numero = e.Envio_Factura
-JOIN LOS_POLLOS_HERMANOS.Cliente c ON c.Cliente_Codigo = f.Factura_Cliente
-JOIN LOS_POLLOS_HERMANOS.Ubicacion ub ON ub.Ubicacion_Codigo = c.Cliente_Ubicacion
-JOIN LOS_POLLOS_HERMANOS.BI_Dimension_Ubicacion u 
-    ON u.Ubicacion_Provincia = ub.Ubicacion_Provincia 
-    AND u.Ubicacion_Localidad = ub.Ubicacion_Localidad
-JOIN LOS_POLLOS_HERMANOS.BI_Dimension_Tiempo t 
-    ON t.Tiempo_Anio = YEAR(ISNULL(e.Envio_Fecha_Entrega, '2000-01-01'))
-    AND t.Tiempo_Mes = MONTH(ISNULL(e.Envio_Fecha_Entrega, '2000-01-01'))
-    AND t.Tiempo_Cuatrimestre = CEILING(MONTH(ISNULL(e.Envio_Fecha_Entrega, '2000-01-01')) / 4.0)
-WHERE
-    t.Tiempo_Id IS NOT NULL
-    AND u.Ubicacion_Id IS NOT NULL
-    AND ISNULL(e.Envio_Numero, 0) IS NOT NULL
-    AND e.Envio_Fecha_Entrega IS NOT NULL
-    AND e.Envio_Fecha_Programada IS NOT NULL
-    AND e.Envio_Total IS NOT NULL
-    AND f.Factura_Numero IS NOT NULL
-    AND c.Cliente_Codigo IS NOT NULL
-    AND ub.Ubicacion_Codigo IS NOT NULL
-GROUP BY
-    t.Tiempo_Id,
-    u.Ubicacion_Id;
-
-*/
-
+    t.Tiempo_Mes AS Mes,
+    v.Sucursal_Id AS Sucursal,
+    SUM(v.Ventas_Monto) - SUM(c.Compras_Monto) AS Ganancia
+FROM LOS_POLLOS_HERMANOS.BI_Hechos_Ventas v
+JOIN LOS_POLLOS_HERMANOS.BI_Hechos_Compras c ON
+    c.Tiempo_Id = v.Tiempo_Id
+    AND c.Sucursal_Id = v.Sucursal_Id
+JOIN LOS_POLLOS_HERMANOS.BI_Dimension_Tiempo t ON t.Tiempo_Id = v.Tiempo_Id
+GROUP BY 
+    v.Sucursal_Id, 
+    t.Tiempo_Mes;
+GO
 
 /*
-V I S T A S
 1- Ganancias:
     Por: Mes y Sucursal
     Queremos: Ganancia Total
@@ -636,7 +650,26 @@ V I S T A S
     join hechos_compras on
         hechos_ventas_mes = hechos_compras_mes
         and hechos_ventas_sucursal = hechos_compras_sucursal 
+*/
 
+
+-- (2) Factura promedio mensual (35 rows)
+CREATE VIEW LOS_POLLOS_HERMANOS.BI_Vista_Factura_Promedio_Mensual AS
+SELECT
+    u.Ubicacion_Provincia AS Provincia,
+    t.Tiempo_Anio AS Anio,
+    t.Tiempo_Cuatrimestre AS Cuatrimestre,
+    AVG(v.Ventas_Monto) AS Promedio
+FROM LOS_POLLOS_HERMANOS.BI_Hechos_Ventas v
+JOIN LOS_POLLOS_HERMANOS.BI_Dimension_Tiempo t ON t.Tiempo_Id = v.Tiempo_Id
+JOIN LOS_POLLOS_HERMANOS.BI_Dimension_Ubicacion u ON u.Ubicacion_Id = v.Ubicacion_Id
+GROUP BY 
+    u.Ubicacion_Provincia, 
+    t.Tiempo_Anio, 
+    t.Tiempo_Cuatrimestre;
+GO
+
+/*
 2- Factura Promedio Mensual:
     Por Provincia de Sucursal, Cuatrimestre, Año
 
@@ -647,18 +680,89 @@ V I S T A S
         u.Provincia, t.Cuatrimestre, t.Año
 
     Select de avg(MontoFactura)
+*/
 
-
+-- (3) Rendimiento de modelos (135 rows)
+CREATE VIEW LOS_POLLOS_HERMANOS.BI_Vista_Rendimiento_Modelos AS
+SELECT
+    T.Cuatrimestre AS Cuatrimestre,
+    T.Anio AS Anio,
+    T.Localidad AS Localidad,
+    T.Rango_Etario AS Rango_Etario,
+    MAX(CASE WHEN T.rn = 1 THEN T.Modelo_Id END) AS Modelo_1_Id,
+    MAX(CASE WHEN T.rn = 1 THEN T.Modelo_Descripcion END) AS Modelo_1_Descripcion,
+    MAX(CASE WHEN T.rn = 2 THEN T.Modelo_Id END) AS Modelo_2_Id,
+    MAX(CASE WHEN T.rn = 2 THEN T.Modelo_Descripcion END) AS Modelo_2_Descripcion,
+    MAX(CASE WHEN T.rn = 3 THEN T.Modelo_Id END) AS Modelo_3_Id,
+    MAX(CASE WHEN T.rn = 3 THEN T.Modelo_Descripcion END) AS Modelo_3_Descripcion
+FROM (
+    SELECT
+        t.Tiempo_Cuatrimestre AS Cuatrimestre,
+        t.Tiempo_Anio AS Anio,
+        u.Ubicacion_Localidad AS Localidad,
+        c.Cliente_Rango_Etario AS Rango_Etario,
+        m.Modelo_Sillon_Id AS Modelo_Id,
+        m.Modelo_Sillon_Descripcion AS Modelo_Descripcion,
+        SUM(v.Ventas_Monto) AS Total_Ventas_Modelo,
+        ROW_NUMBER() OVER (
+            PARTITION BY 
+                t.Tiempo_Cuatrimestre,
+                t.Tiempo_Anio,
+                u.Ubicacion_Localidad,
+                c.Cliente_Rango_Etario
+            ORDER BY SUM(v.Ventas_Monto) DESC
+        ) AS rn
+    FROM LOS_POLLOS_HERMANOS.BI_Hechos_Ventas v
+    JOIN LOS_POLLOS_HERMANOS.BI_Dimension_Tiempo t ON t.Tiempo_Id = v.Tiempo_Id
+    JOIN LOS_POLLOS_HERMANOS.BI_Dimension_Ubicacion u ON u.Ubicacion_Id = v.Ubicacion_Id
+    JOIN LOS_POLLOS_HERMANOS.BI_Dimension_Cliente c ON c.Cliente_Id = v.Cliente_Id
+    JOIN LOS_POLLOS_HERMANOS.BI_Dimension_Modelo_Sillon m ON m.Modelo_Sillon_Id = v.Modelo_Sillon_Id
+    GROUP BY
+        t.Tiempo_Cuatrimestre, 
+        t.Tiempo_Anio, 
+        u.Ubicacion_Localidad, 
+        c.Cliente_Rango_Etario,
+        m.Modelo_Sillon_Id, 
+        m.Modelo_Sillon_Descripcion
+) AS T
+WHERE T.rn <= 3
+GROUP BY 
+    T.Cuatrimestre, 
+    T.Anio, 
+    T.Localidad, 
+    T.Rango_Etario;
+GO
+/*
 3- Rendimiento de Modelos: 
     Por: Cuatrimestre, Año, Localidad, Rango Etario de Cliente
-    Queremos: Top 3 de modelos, ordenado por total vendido de ese modelo
+    Queremos: Top 3 de modelos segun total vendido de ese modelo
 
     Usamos:
         Hechos_Ventas 
             Group By: t.Cuatrimestre, t.Año, u.Localidad, c.Rango Etario de Cliente
     
     Ordenamos por Sum Ventas_Monto desc
+*/
 
+-- (4) Volumen de pedidos (342 rows)
+CREATE VIEW LOS_POLLOS_HERMANOS.BI_Vista_Volumen_Pedidos AS
+SELECT
+    tv.Turno_Venta_Horario AS Franja_Horaria,
+    s.Sucursal_Id AS Sucursal,
+    t.Tiempo_Mes AS Mes,
+    t.Tiempo_Anio AS Anio,
+    SUM(p.Pedidos_Cantidad) AS Volumen_Pedidos
+FROM LOS_POLLOS_HERMANOS.BI_Hechos_Pedidos p
+JOIN LOS_POLLOS_HERMANOS.BI_Dimension_Turno_Venta tv ON tv.Turno_Venta_Id = p.Turno_Venta_Id
+JOIN LOS_POLLOS_HERMANOS.BI_Dimension_Tiempo t ON t.Tiempo_Id = p.Tiempo_Id
+JOIN LOS_POLLOS_HERMANOS.BI_Dimension_Sucursal s ON s.Sucursal_Id = p.Sucursal_Id
+GROUP BY 
+    tv.Turno_Venta_Horario, 
+    s.Sucursal_Id, 
+    t.Tiempo_Mes, 
+    t.Tiempo_Anio;
+GO
+/*
 4- Volumen de Pedidos:
     Por: Turno, Sucursal, Mes, Año
     Queremos: Cantidad de pedidos registrados
@@ -666,14 +770,55 @@ V I S T A S
     Usamos:
         SUM(Pedidos_Cantidad)
             Group By: Turno, Sucursal, Mes, Año
+*/
 
+-- (5) Conversión de pedidos (54 rows)
+CREATE VIEW LOS_POLLOS_HERMANOS.BI_Vista_Conversion_Pedidos AS
+SELECT
+    e.Estado_Pedido_Estado AS Estado,
+    t1.Tiempo_Cuatrimestre AS Cuatrimestre,
+    s1.Sucursal_Id AS Sucursal,
+    SUM(p1.Pedidos_Cantidad) * 100.0 / (
+        SELECT SUM(p2.Pedidos_Cantidad)
+        FROM LOS_POLLOS_HERMANOS.BI_Hechos_Pedidos p2
+        JOIN LOS_POLLOS_HERMANOS.BI_Dimension_Tiempo t2 ON t2.Tiempo_Id = p2.Tiempo_Id
+        JOIN LOS_POLLOS_HERMANOS.BI_Dimension_Sucursal s2 ON s2.Sucursal_Id = p2.Sucursal_Id
+        WHERE 
+            t2.Tiempo_Cuatrimestre = t1.Tiempo_Cuatrimestre
+            AND s2.Sucursal_Id = s1.Sucursal_Id
+    ) AS Porcentaje
+FROM LOS_POLLOS_HERMANOS.BI_Hechos_Pedidos p1
+JOIN LOS_POLLOS_HERMANOS.BI_Dimension_Estado_Pedido e ON e.Estado_Pedido_Id = p1.Estado_Pedido_Id
+JOIN LOS_POLLOS_HERMANOS.BI_Dimension_Tiempo t1 ON t1.Tiempo_Id = p1.Tiempo_Id
+JOIN LOS_POLLOS_HERMANOS.BI_Dimension_Sucursal s1 ON s1.Sucursal_Id = p1.Sucursal_Id
+GROUP BY 
+    e.Estado_Pedido_Estado, 
+    t1.Tiempo_Cuatrimestre, 
+    s1.Sucursal_Id;
+GO
+/*
 5- Conversión de Pedidos:
     Por: Estado, Cuatrimestre, Sucursal
     Queremos: Porcentaje de pedidos
 
     Usamos: Pedidos_Cantidad / Total
         Group by: Estado, Cuatrimestre, Sucursal
+*/
 
+-- (6) Tiempo promedio de fabricación (27 rows)
+CREATE VIEW LOS_POLLOS_HERMANOS.BI_Vista_Tiempo_Promedio_Fabricacion AS
+SELECT
+    s.Sucursal_Id AS Sucursal,
+    t.Tiempo_Cuatrimestre AS Cuatrimestre,
+    AVG(v.Tiempo_Fabricacion * 1.0) AS Tiempo_Promedio
+FROM LOS_POLLOS_HERMANOS.BI_Hechos_Ventas v
+JOIN LOS_POLLOS_HERMANOS.BI_Dimension_Sucursal s ON s.Sucursal_Id = v.Sucursal_Id
+JOIN LOS_POLLOS_HERMANOS.BI_Dimension_Tiempo t ON t.Tiempo_Id = v.Tiempo_Id
+GROUP BY 
+    s.Sucursal_Id,
+    t.Tiempo_Cuatrimestre;
+GO
+/*
 6- Tiempo Promedio de Fabricacion:
     Por: Sucursal, Cuatrimestre
     Queremos: Tiempo promedio entre tiempo de pedido y tiempo de facturacion
@@ -686,26 +831,23 @@ V I S T A S
             Join con Hechos_Pedidos por Sucursal_Id
 
     
-    CREATE FUNCTION LOS_POLLOS_HERMANOS.diferenciaDiasEntreTiempos(@TiempoId1 BIGINT, @TiempoId2 BIGINT)
-    RETURNS FLOAT
-    AS
-    BEGIN
-        DECLARE @Fecha1 DATE, @Fecha2 DATE;
-
-        SELECT @Fecha1 = DATEFROMPARTS(Tiempo_Anio, Tiempo_Mes, 1)
-        FROM LOS_POLLOS_HERMANOS.BI_Dimension_Tiempo
-        WHERE Tiempo_Id = @TiempoId1;
-
-        SELECT @Fecha2 = DATEFROMPARTS(Tiempo_Anio, Tiempo_Mes, 1)
-        FROM LOS_POLLOS_HERMANOS.BI_Dimension_Tiempo
-        WHERE Tiempo_Id = @TiempoId2;
-
-        RETURN DATEDIFF(DAY, @Fecha1, @Fecha2) * 1.0;
-    END
-    GO
+    
 
     Avg(LOS_POLLOS_HERMANOS.diferenciaDiasEntreTiempos(Hechos_Pedidos.Tiempo_Id, Hechos_Ventas.Tiempo_Id))
 
+*/
+
+-- (7) Promedio de compras (12 rows)
+CREATE VIEW LOS_POLLOS_HERMANOS.BI_Vista_Promedio_Compras AS
+SELECT
+    t.Tiempo_Mes AS Mes,
+    AVG(c.Compras_Monto) AS Promedio_Compras
+FROM LOS_POLLOS_HERMANOS.BI_Hechos_Compras c
+JOIN LOS_POLLOS_HERMANOS.BI_Dimension_Tiempo t ON t.Tiempo_Id = c.Tiempo_Id
+GROUP BY
+    t.Tiempo_Mes;
+GO
+/*
 7- Promedio de Compras:
     Por: Mes
     Queremos: Importe promedio de compras
@@ -715,7 +857,25 @@ V I S T A S
             Group By: Mes
             
     AVG(Compras_Monto)
+*/
 
+-- (8) Compras por tipo de material (78 rows)
+CREATE VIEW LOS_POLLOS_HERMANOS.BI_Vista_Compras_Tipo_Material AS
+SELECT
+    tm.Tipo_Material_Tipo AS Tipo_Material,
+    s.Sucursal_Id AS Sucursal,
+    t.Tiempo_Cuatrimestre AS Cuatrimestre,
+    SUM(c.Compras_Monto) AS Total_Compras
+FROM LOS_POLLOS_HERMANOS.BI_Hechos_Compras c
+JOIN LOS_POLLOS_HERMANOS.BI_Dimension_Tipo_Material tm ON tm.Tipo_Material_Id = c.Tipo_Material_Id
+JOIN LOS_POLLOS_HERMANOS.BI_Dimension_Sucursal s ON s.Sucursal_Id = c.Sucursal_Id
+JOIN LOS_POLLOS_HERMANOS.BI_Dimension_Tiempo t ON t.Tiempo_Id = c.Tiempo_Id
+GROUP BY
+    tm.Tipo_Material_Tipo,
+    s.Sucursal_Id,
+    t.Tiempo_Cuatrimestre;
+GO
+/*
 8- Compras por Tipo de Material:
     Por: Tipo de Material, Sucursal, Cuatrimestre
     Queremos: Importe total de compras por tipo de material
@@ -723,7 +883,19 @@ V I S T A S
         Hechos_Compras
             Group By: Tipo de Material, Sucursal, Cuatrimestre
     SUM(Compras_Monto)
+*/
 
+-- (9) Porcentaje de cumplimientos de Envíos (12 rows)
+CREATE VIEW LOS_POLLOS_HERMANOS.BI_Vista_Porcentaje_Cumplimiento_Envios AS
+SELECT
+    t.Tiempo_Mes AS Mes,
+    SUM(e.Envios_Cantidad_En_Fecha) * 100.0 / SUM(e.Envios_Cantidad_Total) AS Porcentaje_Cumplimiento
+FROM LOS_POLLOS_HERMANOS.BI_Hechos_Envios e
+JOIN LOS_POLLOS_HERMANOS.BI_Dimension_Tiempo t ON t.Tiempo_Id = e.Tiempo_Id
+GROUP BY 
+    t.Tiempo_Mes;
+GO
+/*
 9- Porcentaje de cumplimientos de Envíos:
     Por: Mes
     Queremos: Porcentaje de cumplimientos
@@ -731,10 +903,25 @@ V I S T A S
     Usamos:
         Envios_En_Fecha * 100 /Envios_Totales
         Group by: Mes
+*/
 
+-- (10) Localidades que pagan mayor costo de envio (3 rows)
+CREATE VIEW LOS_POLLOS_HERMANOS.BI_Vista_Localidades_Mayor_Costo_Envio AS
+SELECT TOP 3
+    u.Ubicacion_Localidad AS Localidad,
+    AVG(e.Envios_Monto) AS Promedio_Costo_Envio
+FROM LOS_POLLOS_HERMANOS.BI_Hechos_Envios e
+JOIN LOS_POLLOS_HERMANOS.BI_Dimension_Ubicacion u ON u.Ubicacion_Id = e.Ubicacion_Id
+GROUP BY 
+    u.Ubicacion_Localidad
+ORDER BY 
+    Promedio_Costo_Envio DESC;
+GO
+
+/*
 10- Localidades que pagan mayor costo de envio:
     Por: Localidad
-    Queremos: Top 3 localidades (de cliente) con mayor pormedio de costo de envio (total)
+    Queremos: Top 3 localidades (de cliente) con mayor promedio de costo de envio (total)
 
     Usamos:
         Hechos_Envios
