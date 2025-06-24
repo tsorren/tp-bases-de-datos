@@ -5,13 +5,6 @@ GO
 -- RESET DE MODELO BI
 -- ==================
 
-USE GD1C2025
-GO
-
--- ===========================
--- RESET DE MODELO BI COMPLETO
--- ===========================
-
 -- 1. Eliminar vistas si existen
 IF OBJECT_ID('LOS_POLLOS_HERMANOS.BI_Vista_Ganancias', 'V') IS NOT NULL
     DROP VIEW LOS_POLLOS_HERMANOS.BI_Vista_Ganancias;
@@ -83,12 +76,18 @@ CREATE TABLE LOS_POLLOS_HERMANOS.BI_Dimension_Tiempo (
     Tiempo_Cuatrimestre TINYINT,
     Tiempo_Mes TINYINT
 );
+-- Almacenamos los períodos de tiempo (año, cuatrimestre y mes)
+-- Permite analizar la información de ventas, compras, pedidos y envíos a lo largo del tiempo.
 
 -- (2) Dimensión Cliente
 CREATE TABLE LOS_POLLOS_HERMANOS.BI_Dimension_Cliente (
     Cliente_Id BIGINT NOT NULL,
     Cliente_Rango_Etario VARCHAR(10)
 );
+-- Almacena los clientes y su rango etario (<25, 25-35, 35-50, >50).
+-- El rango etario se utiliza en los hechos de ventas y en la vista de rendimiento de modelos (BI_Vista_Rendimiento_Modelos)
+-- Permite obtener los modelos más vendidos según el grupo etario.
+
 
 -- (3) Dimensión Ubicacion
 CREATE TABLE LOS_POLLOS_HERMANOS.BI_Dimension_Ubicacion (
@@ -96,17 +95,32 @@ CREATE TABLE LOS_POLLOS_HERMANOS.BI_Dimension_Ubicacion (
     Ubicacion_Provincia NVARCHAR(255),
     Ubicacion_Localidad NVARCHAR(255)
 );
+-- Almacena las provincias y localidades de clientes y sucursales.
+-- Se utiliza en los hechos de ventas y envíos
+-- Tambien en vistas como BI_Vista_Factura_Promedio_Mensual y BI_Vista_Localidades_Mayor_Costo_Envio
+-- Permite realizar un análisis por región y detectar tendencias geográficas.
 
 -- (4) Dimensión Sucursal
 CREATE TABLE LOS_POLLOS_HERMANOS.BI_Dimension_Sucursal (
-    Sucursal_Id BIGINT NOT NULL
+    Sucursal_Id BIGINT NOT NULL,
+    Sucursal_Telefono NVARCHAR(255),
+    Sucursal_Mail NVARCHAR(255)
 );
+-- Almacena los datos de cada sucursal.
+-- Se utiliza en los hechos de ventas, compras y pedidos
+-- También vistas como BI_Vista_Ganancias, BI_Vista_Volumen_Pedidos y BI_Vista_Conversion_Pedidos
+-- Permite comparar el desempeño entre sucursales.
+
 
 -- (5) Dimensión Modelo_Sillon
 CREATE TABLE LOS_POLLOS_HERMANOS.BI_Dimension_Modelo_Sillon (
     Modelo_Sillon_Id BIGINT NOT NULL,
     Modelo_Sillon_Descripcion NVARCHAR(255)
 );
+-- Almacena los modelos de sillón ofrecidos por la fábrica.
+-- Se utiliza en los hechos de ventas 
+-- También en la vista BI_Vista_Rendimiento_Modelos
+-- Permite identificar los modelos más vendidos y analizar preferencias de los clientes.
 
 -- (6) Dimensión Tipo_Material
 CREATE TABLE LOS_POLLOS_HERMANOS.BI_Dimension_Tipo_Material (
@@ -119,12 +133,21 @@ CREATE TABLE LOS_POLLOS_HERMANOS.BI_Dimension_Estado_Pedido (
     Estado_Pedido_Id BIGINT IDENTITY(1,1) NOT NULL,
     Estado_Pedido_Estado NVARCHAR(255),
 );
+-- Almacena los tipos de materiales (tela, madera, relleno, etc.).
+-- Se utiliza en los hechos de compras 
+-- También en las vistas BI_Vista_Compras_Tipo_Material y BI_Vista_Promedio_Compras
+-- Permite analizar el gasto y consumo de materiales por tipo y período.
+
 
 -- (8) Dimensión Turno_Venta
 CREATE TABLE LOS_POLLOS_HERMANOS.BI_Dimension_Turno_Venta (
     Turno_Venta_Id BIGINT IDENTITY(1,1) NOT NULL,
     Turno_Venta_Horario VARCHAR(20)
 );
+-- Almacena las franjas horarias (turnos) de ventas (08:00-14:00, 14:00-20:00).
+-- Se utiliza en los hechos de pedidos 
+-- También en la vista BI_Vista_Volumen_Pedidos
+-- Permite analizar el volumen de pedidos según el turno y detectar patrones de demanda a lo largo del día.
 
 -- ==============================
 -- CREACIÓN DE TABLAS BI - HECHOS
@@ -138,8 +161,13 @@ CREATE TABLE LOS_POLLOS_HERMANOS.BI_Hechos_Ventas (
     Cliente_Id BIGINT NOT NULL,
     Modelo_Sillon_Id BIGINT NOT NULL,
     Ventas_Monto DECIMAL(28,2),
-    Tiempo_Fabricacion TINYINT
+    Ventas_Cantidad DECIMAL(18,0),
+    Ventas_Tiempo_Fabricacion TINYINT
 );
+-- Registra los hechos de ventas según período tiempo, sucursal, ubicación, cliente y modelo de sillón.
+-- Incluye el monto total de ventas, la cantidad vendida y el tiempo de fabricación promedio.
+-- Se utiliza en vistas como BI_Vista_Ganancias, BI_Vista_Factura_Promedio_Mensual, BI_Vista_Rendimiento_Modelos y BI_Vista_Tiempo_Promedio_Fabricacion.
+-- Permite analizar el desempeño de ventas desde distintas dimensiones.
 
 -- (2) Hechos Compras
 CREATE TABLE LOS_POLLOS_HERMANOS.BI_Hechos_Compras (
@@ -148,6 +176,10 @@ CREATE TABLE LOS_POLLOS_HERMANOS.BI_Hechos_Compras (
     Sucursal_Id BIGINT NOT NULL,
     Compras_Monto DECIMAL(28,2)
 );
+-- Registra los hechos de compras según período tiempo, tipo de material y sucursal.
+-- Guarda el monto total de compras realizadas.
+-- Se utiliza en vistas como BI_Vista_Ganancias, BI_Vista_Promedio_Compras y BI_Vista_Compras_Tipo_Material.
+-- Permite analizar el gasto en materiales por sucursal y período.
 
 -- (3) Hechos Pedidos
 CREATE TABLE LOS_POLLOS_HERMANOS.BI_Hechos_Pedidos (
@@ -157,6 +189,10 @@ CREATE TABLE LOS_POLLOS_HERMANOS.BI_Hechos_Pedidos (
     Turno_Venta_Id BIGINT NOT NULL,
     Pedidos_Cantidad INT
 );
+-- Registra los hechos de pedidos según período tiempo, sucursal, estado del pedido y turno de venta.
+-- Guarda la cantidad de pedidos realizados.
+-- Se utiliza en vistas como BI_Vista_Volumen_Pedidos, BI_Vista_Conversion_Pedidos y BI_Vista_Tiempo_Promedio_Fabricacion.
+-- Permite analizar el volumen y conversión de pedidos por franja horaria, sucursal y estado.
 
 -- (4) Hechos Envios
 CREATE TABLE LOS_POLLOS_HERMANOS.BI_Hechos_Envios (
@@ -166,6 +202,11 @@ CREATE TABLE LOS_POLLOS_HERMANOS.BI_Hechos_Envios (
     Envios_Cantidad_En_Fecha INT,
     Envios_Monto DECIMAL(28,2)
 );
+-- Registra los hechos de envíos según período de tiempo y la ubicación de destino.
+-- Incluye la cantidad total de envíos, los envíos entregados en fecha y el monto total de envíos.
+-- Se utiliza en vistas como BI_Vista_Porcentaje_Cumplimiento_Envios y BI_Vista_Localidades_Mayor_Costo_Envio.
+-- Permite analizar el cumplimiento y el costo de los envíos por localidad y período.
+
 
 -- =================================================
 -- CREACIÓN DE CONSTRAINTS PRIMARY KEY - DIMENSIONES
@@ -256,6 +297,7 @@ ADD CONSTRAINT FK_Hechos_Ventas_Tiempo
     CONSTRAINT FK_Hechos_Ventas_Modelo 
     FOREIGN KEY (Modelo_Sillon_Id) 
     REFERENCES LOS_POLLOS_HERMANOS.BI_Dimension_Modelo_Sillon(Modelo_Sillon_Id);
+-- Relaciona la tabla de hechos de ventas con las dimensiones de Tiempo, Sucursal, Ubicación, Cliente y Modelo de Sillón.
 
 -- (2) Hechos Compras
 ALTER TABLE LOS_POLLOS_HERMANOS.BI_Hechos_Compras
@@ -268,6 +310,7 @@ ADD CONSTRAINT FK_Hechos_Compras_Tiempo
     CONSTRAINT FK_Hechos_Compras_TipoMaterial 
     FOREIGN KEY (Tipo_Material_Id) 
     REFERENCES LOS_POLLOS_HERMANOS.BI_Dimension_Tipo_Material(Tipo_Material_Id);
+-- Relaciona la tabla de hechos de compras con las dimensiones de Tiempo, Sucursal y Tipo de Material.
 
 -- (3) Hechos Pedidos
 ALTER TABLE LOS_POLLOS_HERMANOS.BI_Hechos_Pedidos
@@ -283,6 +326,7 @@ ADD CONSTRAINT FK_Hechos_Pedidos_Tiempo
     CONSTRAINT FK_Hechos_Pedidos_Turno 
     FOREIGN KEY (Turno_Venta_Id) 
     REFERENCES LOS_POLLOS_HERMANOS.BI_Dimension_Turno_Venta(Turno_Venta_Id);
+-- Relaciona la tabla de hechos de pedidos con las dimensiones de Tiempo, Sucursal, Estado del Pedido y Turno de Venta.
 
 -- (4) Hechos Envios
 ALTER TABLE LOS_POLLOS_HERMANOS.BI_Hechos_Envios
@@ -292,6 +336,7 @@ ADD CONSTRAINT FK_Hechos_Envios_Tiempo
     CONSTRAINT FK_Hechos_Envios_Ubicacion 
     FOREIGN KEY (Ubicacion_Id) 
     REFERENCES LOS_POLLOS_HERMANOS.BI_Dimension_Ubicacion(Ubicacion_Id);
+-- Relaciona la tabla de hechos de envíos con las dimensiones de Tiempo y Ubicación.
 
 -- =================================
 -- CREACIÓN DE ÍNDICES - DIMENSIONES
@@ -300,18 +345,58 @@ ADD CONSTRAINT FK_Hechos_Envios_Tiempo
 -- (1) Dimensión Tiempo
 CREATE INDEX Indice_Dimension_Tiempo
 ON LOS_POLLOS_HERMANOS.BI_Dimension_Tiempo (Tiempo_Anio, Tiempo_Cuatrimestre, Tiempo_Mes);
+-- Creamos un índice compuesto sobre Año, Cuatrimestre y Mes para optimizar búsquedas por períodos de tiempo en los análisis BI
 
 -- (2) Dimensión Cliente
 CREATE INDEX Indice_Dimension_Cliente
 ON LOS_POLLOS_HERMANOS.BI_Dimension_Cliente (Cliente_Rango_Etario);
+-- Índice sobre el rango etario del cliente para agilizar consultas y segmentaciones por grupo de edad
 
 -- (3) Dimensión Ubicacion
 CREATE INDEX Indice_Dimension_Ubicacion
 ON LOS_POLLOS_HERMANOS.BI_Dimension_Ubicacion (Ubicacion_Provincia, Ubicacion_Localidad);
+-- Índice compuesto sobre provincia y localidad para facilitar búsquedas y análisis geográficos en BI
 
--- (10) Dimensión Turno_Venta
+-- (4) Dimensión Sucursal
+-- No necesita la creación de un índice porque las búsquedas se realizan por su clave primaria
+
+-- (5) Dimensión Modelo_Sillon
+-- No necesita la creación de un índice porque las búsquedas se realizan por su clave primaria
+
+-- (6) Dimensión Tipo_Material
+-- No necesita la creación de un índice porque las búsquedas se realizan por su clave primaria
+
+-- (7) Dimensión Estado_Pedido
+-- No necesita la creación de un índice porque las búsquedas se realizan por su clave primaria
+
+-- (8) Dimensión Turno_Venta
 CREATE INDEX Indice_Dimension_Turno_Venta
-ON LOS_POLLOS_HERMANOS.BI_Dimension_Turno_Venta (Turno_Venta_Horario)
+ON LOS_POLLOS_HERMANOS.BI_Dimension_Turno_Venta (Turno_Venta_Horario);
+-- Índice sobre el horario del turno de venta para agilizar consultas por franja horaria en el análisis de pedidos
+
+-- ============================
+-- CREACIÓN DE ÍNDICES - HECHOS
+-- ============================
+
+-- (1) Hechos Ventas
+CREATE INDEX Indice_Dimension_Turno_Venta
+ON LOS_POLLOS_HERMANOS.BI_Hechos_Ventas (Ventas_Monto, Ventas_Cantidad, Ventas_Tiempo_Fabricacion);
+-- Índice sobre monto, cantidad y tiempo de fabricación para optimizar consultas de ventas y análisis de rendimiento
+
+-- (2) Hechos Compras
+CREATE INDEX Indice_Hechos_Compras
+ON LOS_POLLOS_HERMANOS.BI_Hechos_Compras (Compras_Monto);
+-- Índice sobre el monto de compras para optimizar consultas y análisis de gastos en materiales
+
+-- (3) Hechos Pedidos
+CREATE INDEX Indice_Hechos_Pedidos
+ON LOS_POLLOS_HERMANOS.BI_Hechos_Pedidos (Pedidos_Cantidad);
+-- Índice sobre la cantidad de pedidos para optimizar consultas y análisis de volumen de pedidos
+
+-- (4) Hechos Envios
+CREATE INDEX Indice_Hechos_Envios
+ON LOS_POLLOS_HERMANOS.BI_Hechos_Envios (Envios_Cantidad_Total, Envios_Cantidad_En_Fecha, Envios_Monto);
+-- Índice sobre cantidad total, cantidad en fecha y monto de envíos para optimizar consultas y análisis de cumplimiento de envíos
 
 -- =====================
 -- CREACIÓN DE FUNCIONES
@@ -324,7 +409,7 @@ BEGIN
     DECLARE @edad int = DATEDIFF(YEAR, @fecha_nacimiento, GETDATE()) - CASE 
     WHEN MONTH(@fecha_nacimiento) > MONTH(GETDATE()) 
             OR (MONTH(@fecha_nacimiento) = MONTH(GETDATE()) AND DAY(@fecha_nacimiento) > DAY(GETDATE())) 
-        THEN 1 -- Restamos 1 si todavia no cumplio este año
+        THEN 1 -- Restamos 1 si todavía no cumplió este año
         ELSE 0 
     END
 
@@ -337,6 +422,12 @@ BEGIN
     RETURN '>50'
 END
 GO
+-- Esta función recibe una fecha de nacimiento y devuelve el rango etario correspondiente
+-- ('<25', '25-35', '35-50', '>50') según la edad calculada.
+-- Se utiliza durante la migración de datos para asignar el rango etario a cada cliente
+-- en la dimensión BI_Dimension_Cliente, permitiendo segmentar y analizar ventas y preferencias
+-- por grupo de edad en las consultas y vistas del modelo BI.
+
 
 CREATE FUNCTION LOS_POLLOS_HERMANOS.calcularFranjaHoraria(@fecha datetime2(6))
 RETURNS VARCHAR(20)
@@ -355,6 +446,11 @@ BEGIN
     RETURN @franja;
 END
 GO
+-- Esta función recibe una fecha y devuelve la franja horaria correspondiente
+-- ('08:00 - 14:00', '14:00 - 20:00') según la hora extraída de la fecha.
+-- Se utiliza durante la migración de datos para asignar el turno de venta a cada pedido
+-- en la dimensión BI_Dimension_Turno_Venta, permitiendo segmentar y analizar el volumen
+-- de pedidos y ventas por franja horaria en las consultas y vistas del modelo BI.
 
 
 -- =====================
@@ -411,6 +507,12 @@ FROM LOS_POLLOS_HERMANOS.Pedido
 GROUP BY 
     YEAR(Pedido_Fecha),
     MONTH(Pedido_Fecha);
+-- Insertamos todos los períodos únicos de año, cuatrimestre y mes
+-- presentes en las tablas Factura, Compra, Envio y Pedido.
+-- Esto asegura que la dimensión contenga todos los períodos relevantes
+-- para el análisis de ventas, compras, pedidos y envíos.
+-- Permite un análisis temporal en todas las vistas del BI.
+
 
 -- (2) Dimensión Cliente (20509 rows)
 INSERT INTO LOS_POLLOS_HERMANOS.BI_Dimension_Cliente(Cliente_Id, Cliente_Rango_Etario)
@@ -418,6 +520,9 @@ SELECT
     Cliente_Codigo,
     LOS_POLLOS_HERMANOS.calcularRangoEtario(Cliente_Fecha_Nacimiento)
 FROM LOS_POLLOS_HERMANOS.Cliente;
+-- Insertamos todos los clientes junto con su rango etario calculado.
+-- Permite segmentar y analizar ventas por grupo de edad.
+-- Utilizado para vistas como BI_Vista_Rendimiento_Modelos.
 
 -- (3) Dimensión Ubicacion (12628 rows)
 INSERT INTO LOS_POLLOS_HERMANOS.BI_Dimension_Ubicacion(
@@ -431,13 +536,24 @@ FROM LOS_POLLOS_HERMANOS.Ubicacion
 GROUP BY 
     Ubicacion_Provincia, 
     Ubicacion_Localidad;
+-- Insertamos todas las combinaciones únicas de provincia y localidad.
+-- Permite analizar indicadores por región y localidad.
+-- Utilizado para vistas como BI_Vista_Factura_Promedio_Mensual y BI_Vista_Localidades_Mayor_Costo_Envio.
 
 -- (4) Dimensión Sucursal (9 rows)
 INSERT INTO LOS_POLLOS_HERMANOS.BI_Dimension_Sucursal(
-    Sucursal_Id
+    Sucursal_Id,
+    Sucursal_Telefono,
+    Sucursal_Mail
 )
-SELECT Sucursal_Codigo
+SELECT 
+    Sucursal_Codigo,
+    Sucursal_Telefono,
+    Sucursal_Mail
 FROM LOS_POLLOS_HERMANOS.Sucursal;
+-- Insertamos todas las sucursales con sus datos de contacto.
+-- Permite analizar y comparar indicadores por sucursal.
+-- Utilizado en vistas como BI_Vista_Ganancias, BI_Vista_Volumen_Pedidos y BI_Vista_Conversion_Pedidos.
 
 -- (5) Dimensión Modelo_Sillon (7 rows)
 INSERT INTO LOS_POLLOS_HERMANOS.BI_Dimension_Modelo_Sillon(
@@ -448,6 +564,9 @@ SELECT
     Modelo_Codigo,
     Modelo_Descripcion
 FROM LOS_POLLOS_HERMANOS.Modelo;
+-- Insertamos todos los modelos de sillón disponibles.
+-- Permite analizar ventas y preferencias por modelo.
+-- Utilizado en vistas como BI_Vista_Rendimiento_Modelos.
 
 -- (6) Dimensión Tipo_Material (9 rows)
 INSERT INTO LOS_POLLOS_HERMANOS.BI_Dimension_Tipo_Material(
@@ -459,6 +578,9 @@ SELECT
     TipoMaterial_Tipo
 FROM LOS_POLLOS_HERMANOS.TipoMaterial
 JOIN LOS_POLLOS_HERMANOS.Material ON Material_Tipo = TipoMaterial_Codigo;
+-- Insertamos todos los tipos de material utilizados en los materiales.
+-- Permite analizar compras y gastos por tipo de material.
+-- Utilizado en vistas como BI_Vista_Compras_Tipo_Material y BI_Vista_Promedio_Compras.
 
 -- (7) Dimensión Estado_Pedido (2 rows)
 INSERT INTO LOS_POLLOS_HERMANOS.BI_Dimension_Estado_Pedido(
@@ -467,6 +589,9 @@ INSERT INTO LOS_POLLOS_HERMANOS.BI_Dimension_Estado_Pedido(
 SELECT Pedido_Estado
 FROM LOS_POLLOS_HERMANOS.Pedido
 GROUP BY Pedido_Estado;
+-- Insertamos todos los estados de pedido distintos.
+-- Permite analizar la conversión y seguimiento de pedidos por estado.
+-- Utilizado en vistas como BI_Vista_Conversion_Pedidos.
 
 -- (8) Dimensión Turno_Venta (2 rows)
 INSERT INTO LOS_POLLOS_HERMANOS.BI_Dimension_Turno_Venta(
@@ -478,7 +603,10 @@ FROM LOS_POLLOS_HERMANOS.Pedido
     WHERE LOS_POLLOS_HERMANOS.calcularFranjaHoraria(Pedido_Fecha) <> 'Franja inválida'
 GROUP BY 
     LOS_POLLOS_HERMANOS.calcularFranjaHoraria(Pedido_Fecha);
-    
+-- Insertamos todas las franjas horarias (turnos) detectadas en los pedidos.
+-- Permite analizar el volumen de pedidos por franja horaria.
+-- Utilizado en vistas como BI_Vista_Volumen_Pedidos.
+
 -- ================
 -- MIGRACIÓN HECHOS
 -- ================
@@ -491,7 +619,8 @@ INSERT INTO LOS_POLLOS_HERMANOS.BI_Hechos_Ventas(
     Cliente_Id,
     Modelo_Sillon_Id,
     Ventas_Monto,
-    Tiempo_Fabricacion
+    Ventas_Cantidad,
+    Ventas_Tiempo_Fabricacion
 )
 SELECT 
     t.Tiempo_Id,
@@ -500,6 +629,7 @@ SELECT
     c.Cliente_Id,
     m.Modelo_Sillon_Id,
     SUM(df.Detalle_Factura_Precio) as ventas_monto,
+    SUM(df.Detalle_Factura_Cantidad) as Ventas_Cantidad,
     AVG(DATEDIFF(DAY, p.Pedido_fecha, f.Factura_Fecha)) as tiempo_promedio
 FROM LOS_POLLOS_HERMANOS.DetalleFactura df
 JOIN LOS_POLLOS_HERMANOS.Factura f on f.Factura_Numero = df.Detalle_Factura_Factura
@@ -524,7 +654,16 @@ GROUP BY
     u.Ubicacion_Id,
     c.Cliente_Id,
     m.Modelo_Sillon_Id;
-
+-- Migramos los hechos de ventas desde el modelo transaccional a la tabla BI_Hechos_Ventas.
+-- Calculamos el monto total, la cantidad vendida y el tiempo promedio de fabricación
+-- por combinación de período, sucursal, ubicación, cliente y modelo de sillón.
+-- Relacionamos cada venta con sus dimensiones correspondientes mediante JOINs.
+-- Esta migración permite analizar ventas, ganancias, rendimiento de modelos y tiempos de fabricación
+-- Utilizado en las vistas:
+--  BI_Vista_Ganancias,
+--  BI_Vista_Factura_Promedio_Mensual,
+--  BI_Vista_Rendimiento_Modelos,
+--  BI_Vista_Tiempo_Promedio_Fabricacion
 
 -- (2) Hechos Compras -> Vistas 1, 7 y 8 (612 rows)
 INSERT INTO LOS_POLLOS_HERMANOS.BI_Hechos_Compras(
@@ -551,7 +690,14 @@ GROUP BY
     t.Tiempo_Id,
     s.Sucursal_Id,
     tm.Tipo_Material_Id;
-
+-- Migramos los hechos de compras desde el modelo transaccional a la tabla BI_Hechos_Compras.
+-- Calculamos el monto total de compras por combinación de período, sucursal y tipo de material.
+-- Relacionamos cada compra con sus dimensiones correspondientes mediante JOINs.
+-- Esta migración permite analizar gastos en materiales y compras por período, sucursal y tipo de material.
+-- Utilizado en las vistas:
+--  BI_Vista_Ganancias,
+--  BI_Vista_Promedio_Compras,
+--  BI_Vista_Compras_Tipo_Material
 
 -- (3) Hechos Pedidos -> Vistas 4, 5 y 6 (681 rows)
 INSERT INTO LOS_POLLOS_HERMANOS.BI_Hechos_Pedidos(
@@ -580,7 +726,14 @@ GROUP BY
     s.Sucursal_Id,
     ep.Estado_Pedido_Id,
     tv.Turno_Venta_Id;
-
+-- Migramos los hechos de pedidos desde el modelo transaccional a la tabla BI_Hechos_Pedidos.
+-- Calculamos la cantidad de pedidos por combinación de período, sucursal, estado del pedido y turno de venta.
+-- Relacionamos cada pedido con sus dimensiones correspondientes mediante JOINs.
+-- Esta migración permite analizar el volumen y la conversión de pedidos por franja horaria, sucursal y estado.
+-- Utilizado en las vistas:
+--  BI_Vista_Volumen_Pedidos,
+--  BI_Vista_Conversion_Pedidos,
+--  BI_Vista_Tiempo_Promedio_Fabricacion
 
 -- (4) Hechos Envios -> Vistas 9 y 10 (16752 rows) 
 INSERT INTO LOS_POLLOS_HERMANOS.BI_Hechos_Envios(
@@ -611,6 +764,14 @@ GROUP BY
     t.Tiempo_Id,
     u.Ubicacion_Id;
 GO
+-- Migramos los hechos de envíos desde el modelo transaccional a la tabla BI_Hechos_Envios.
+-- Calculamos la cantidad total de envíos, la cantidad entregada en fecha y el monto total por combinación de período y ubicación.
+-- Relacionamos cada envío con sus dimensiones correspondientes mediante JOINs.
+-- Utilizamos GROUP BY para consolidar los datos y evitar duplicados.
+-- Esta migración permite analizar el cumplimiento y el costo de los envíos por localidad y período.
+-- Utilizado en las vistas:
+--  BI_Vista_Porcentaje_Cumplimiento_Envios,
+--  BI_Vista_Localidades_Mayor_Costo_Envio
 
 -- ===============
 -- CREACIÓN VISTAS
@@ -631,27 +792,11 @@ GROUP BY
     v.Sucursal_Id, 
     t.Tiempo_Mes;
 GO
-
-/*
-1- Ganancias:
-    Por: Mes y Sucursal
-    Queremos: Ganancia Total
-
-    Usamos:
-        Hechos_Ventas
-        Hechos_Compras
-
-    Group By:
-        Mes, Sucursal
-
-
-    vista:
-    (select sum(factura_total) - sum(compra_total) from hechos_ventas
-    join hechos_compras on
-        hechos_ventas_mes = hechos_compras_mes
-        and hechos_ventas_sucursal = hechos_compras_sucursal 
-*/
-
+-- Creamos la vista BI_Vista_Ganancias para analizar las ganancias mensuales por sucursal.
+-- Calculamos la ganancia como la diferencia entre el total de ventas y el total de compras, agrupando por mes y sucursal.
+-- Utiliza los hechos de ventas y compras, vinculados por período y sucursal.
+-- Esta vista permite monitorear el desempeño económico de cada sucursal mes a mes,
+-- facilitando el análisis de ingresos y egresos.
 
 -- (2) Factura promedio mensual (35 rows)
 CREATE VIEW LOS_POLLOS_HERMANOS.BI_Vista_Factura_Promedio_Mensual AS
@@ -659,7 +804,7 @@ SELECT
     u.Ubicacion_Provincia AS Provincia,
     t.Tiempo_Anio AS Anio,
     t.Tiempo_Cuatrimestre AS Cuatrimestre,
-    AVG(v.Ventas_Monto) AS Promedio
+    AVG(v.Ventas_Monto) / 4 AS Promedio_Mensual
 FROM LOS_POLLOS_HERMANOS.BI_Hechos_Ventas v
 JOIN LOS_POLLOS_HERMANOS.BI_Dimension_Tiempo t ON t.Tiempo_Id = v.Tiempo_Id
 JOIN LOS_POLLOS_HERMANOS.BI_Dimension_Ubicacion u ON u.Ubicacion_Id = v.Ubicacion_Id
@@ -668,19 +813,12 @@ GROUP BY
     t.Tiempo_Anio, 
     t.Tiempo_Cuatrimestre;
 GO
+-- Creamos la vista BI_Vista_Factura_Promedio_Mensual para analizar el valor promedio de las facturas.
+-- Calculamos el promedio mensual de ventas por provincia de sucursal, cuatrimestre y año.
+-- Utiliza los hechos de ventas y las dimensiones de tiempo y ubicación.
+-- Esta vista permite comparar el desempeño de las sucursales en distintas regiones y períodos,
+-- facilitando el análisis de facturación promedio según la provincia y el cuatrimestre.
 
-/*
-2- Factura Promedio Mensual:
-    Por Provincia de Sucursal, Cuatrimestre, Año
-
-    Usamos:
-        Hechos_Ventas
-
-    Group By:
-        u.Provincia, t.Cuatrimestre, t.Año
-
-    Select de avg(MontoFactura)
-*/
 
 -- (3) Rendimiento de modelos (135 rows)
 CREATE VIEW LOS_POLLOS_HERMANOS.BI_Vista_Rendimiento_Modelos AS
@@ -703,14 +841,14 @@ FROM (
         c.Cliente_Rango_Etario AS Rango_Etario,
         m.Modelo_Sillon_Id AS Modelo_Id,
         m.Modelo_Sillon_Descripcion AS Modelo_Descripcion,
-        SUM(v.Ventas_Monto) AS Total_Ventas_Modelo,
+        SUM(v.Ventas_Cantidad) AS Total_Ventas_Modelo,
         ROW_NUMBER() OVER (
             PARTITION BY 
                 t.Tiempo_Cuatrimestre,
                 t.Tiempo_Anio,
                 u.Ubicacion_Localidad,
                 c.Cliente_Rango_Etario
-            ORDER BY SUM(v.Ventas_Monto) DESC
+            ORDER BY SUM(v.Ventas_Cantidad) DESC
         ) AS rn
     FROM LOS_POLLOS_HERMANOS.BI_Hechos_Ventas v
     JOIN LOS_POLLOS_HERMANOS.BI_Dimension_Tiempo t ON t.Tiempo_Id = v.Tiempo_Id
@@ -762,15 +900,10 @@ GROUP BY
     t.Tiempo_Mes, 
     t.Tiempo_Anio;
 GO
-/*
-4- Volumen de Pedidos:
-    Por: Turno, Sucursal, Mes, Año
-    Queremos: Cantidad de pedidos registrados
-
-    Usamos:
-        SUM(Pedidos_Cantidad)
-            Group By: Turno, Sucursal, Mes, Año
-*/
+-- Creamos la vista BI_Vista_Volumen_Pedidos para analizar la cantidad de pedidos registrados.
+-- Calculamos el volumen de pedidos por franja horaria, sucursal, mes y año.
+-- Utiliza los hechos de pedidos y las dimensiones de turno de venta, sucursal y tiempo.
+-- Facilita el análisis de demanda y de el volumen de pedidos, según turnos y sucursales a lo largo del tiempo.
 
 -- (5) Conversión de pedidos (54 rows)
 CREATE VIEW LOS_POLLOS_HERMANOS.BI_Vista_Conversion_Pedidos AS
@@ -796,21 +929,18 @@ GROUP BY
     t1.Tiempo_Cuatrimestre, 
     s1.Sucursal_Id;
 GO
-/*
-5- Conversión de Pedidos:
-    Por: Estado, Cuatrimestre, Sucursal
-    Queremos: Porcentaje de pedidos
-
-    Usamos: Pedidos_Cantidad / Total
-        Group by: Estado, Cuatrimestre, Sucursal
-*/
+-- Creamos la vista BI_Vista_Conversion_Pedidos para analizar el porcentaje de pedidos según su estado.
+-- Calculamos el porcentaje de pedidos por estado, cuatrimestre y sucursal.
+-- Utiliza los hechos de pedidos y las dimensiones de estado, tiempo y sucursal.
+-- Esta vista permite medir la conversión y el seguimiento de los pedidos en distintos períodos y sucursales,
+-- facilitando el análisis de eficiencia y cumplimiento en la gestión de pedidos.
 
 -- (6) Tiempo promedio de fabricación (27 rows)
 CREATE VIEW LOS_POLLOS_HERMANOS.BI_Vista_Tiempo_Promedio_Fabricacion AS
 SELECT
     s.Sucursal_Id AS Sucursal,
     t.Tiempo_Cuatrimestre AS Cuatrimestre,
-    AVG(v.Tiempo_Fabricacion * 1.0) AS Tiempo_Promedio
+    AVG(v.Ventas_Tiempo_Fabricacion * 1.0) AS Tiempo_Promedio
 FROM LOS_POLLOS_HERMANOS.BI_Hechos_Ventas v
 JOIN LOS_POLLOS_HERMANOS.BI_Dimension_Sucursal s ON s.Sucursal_Id = v.Sucursal_Id
 JOIN LOS_POLLOS_HERMANOS.BI_Dimension_Tiempo t ON t.Tiempo_Id = v.Tiempo_Id
@@ -818,24 +948,11 @@ GROUP BY
     s.Sucursal_Id,
     t.Tiempo_Cuatrimestre;
 GO
-/*
-6- Tiempo Promedio de Fabricacion:
-    Por: Sucursal, Cuatrimestre
-    Queremos: Tiempo promedio entre tiempo de pedido y tiempo de facturacion
-
-    El problema es que Dimension Tiempo no tiene el dia, solo el mes y el año.
-
-    Usamos:
-        Hechos_Pedidos
-        Hechos_Ventas
-            Join con Hechos_Pedidos por Sucursal_Id
-
-    
-    
-
-    Avg(LOS_POLLOS_HERMANOS.diferenciaDiasEntreTiempos(Hechos_Pedidos.Tiempo_Id, Hechos_Ventas.Tiempo_Id))
-
-*/
+-- Creamos la vista BI_Vista_Tiempo_Promedio_Fabricacion para analizar el tiempo promedio de fabricación.
+-- Calculamos el tiempo promedio entre el pedido y la facturación por sucursal y cuatrimestre.
+-- Utiliza los hechos de ventas y las dimensiones de sucursal y tiempo.
+-- Esta vista permite evaluar la eficiencia de fabricación de cada sucursal en distintos períodos,
+-- facilitando el control y la mejora de los tiempos de producción.
 
 -- (7) Promedio de compras (12 rows)
 CREATE VIEW LOS_POLLOS_HERMANOS.BI_Vista_Promedio_Compras AS
@@ -847,17 +964,11 @@ JOIN LOS_POLLOS_HERMANOS.BI_Dimension_Tiempo t ON t.Tiempo_Id = c.Tiempo_Id
 GROUP BY
     t.Tiempo_Mes;
 GO
-/*
-7- Promedio de Compras:
-    Por: Mes
-    Queremos: Importe promedio de compras
-
-    Usamos:
-        Hechos_Compras
-            Group By: Mes
-            
-    AVG(Compras_Monto)
-*/
+-- Creamos la vista BI_Vista_Promedio_Compras para analizar el importe promedio de compras por mes.
+-- Calculamos el promedio de compras agrupando por mes.
+-- Utiliza los hechos de compras y la dimensión de tiempo.
+-- Esta vista permite monitorear la evolución del gasto en compras a lo largo del año,
+-- facilitando el control y la planificación de compras mensuales.
 
 -- (8) Compras por tipo de material (78 rows)
 CREATE VIEW LOS_POLLOS_HERMANOS.BI_Vista_Compras_Tipo_Material AS
@@ -875,15 +986,10 @@ GROUP BY
     s.Sucursal_Id,
     t.Tiempo_Cuatrimestre;
 GO
-/*
-8- Compras por Tipo de Material:
-    Por: Tipo de Material, Sucursal, Cuatrimestre
-    Queremos: Importe total de compras por tipo de material
-    Usamos:
-        Hechos_Compras
-            Group By: Tipo de Material, Sucursal, Cuatrimestre
-    SUM(Compras_Monto)
-*/
+-- Creamos la vista BI_Vista_Compras_Tipo_Material para analizar el importe total de compras por tipo de material.
+-- Calculamos el total de compras agrupando por tipo de material, sucursal y cuatrimestre.
+-- Utiliza los hechos de compras y las dimensiones de tipo de material, sucursal y tiempo.
+-- Esta vista permite controlar el gasto en materiales y comparar el consumo entre sucursales y períodos.
 
 -- (9) Porcentaje de cumplimientos de Envíos (12 rows)
 CREATE VIEW LOS_POLLOS_HERMANOS.BI_Vista_Porcentaje_Cumplimiento_Envios AS
@@ -895,15 +1001,10 @@ JOIN LOS_POLLOS_HERMANOS.BI_Dimension_Tiempo t ON t.Tiempo_Id = e.Tiempo_Id
 GROUP BY 
     t.Tiempo_Mes;
 GO
-/*
-9- Porcentaje de cumplimientos de Envíos:
-    Por: Mes
-    Queremos: Porcentaje de cumplimientos
-
-    Usamos:
-        Envios_En_Fecha * 100 /Envios_Totales
-        Group by: Mes
-*/
+-- Creamos la vista BI_Vista_Porcentaje_Cumplimiento_Envios para analizar el porcentaje de envíos cumplidos en fecha.
+-- Calculamos el porcentaje de cumplimiento agrupando por mes.
+-- Utiliza los hechos de envíos y la dimensión de tiempo.
+-- Esta vista permite monitorear el desempeño logístico y el cumplimiento de los plazos de entrega a lo largo del tiempo.
 
 -- (10) Localidades que pagan mayor costo de envio (3 rows)
 CREATE VIEW LOS_POLLOS_HERMANOS.BI_Vista_Localidades_Mayor_Costo_Envio AS
@@ -917,16 +1018,8 @@ GROUP BY
 ORDER BY 
     Promedio_Costo_Envio DESC;
 GO
-
-/*
-10- Localidades que pagan mayor costo de envio:
-    Por: Localidad
-    Queremos: Top 3 localidades (de cliente) con mayor promedio de costo de envio (total)
-
-    Usamos:
-        Hechos_Envios
-            Group By: Localidad
-    AVG(Envios_Monto)
-    Order by: AVG(Envios_Monto) desc
-    TOP 3
-*/
+-- Creamos la vista BI_Vista_Localidades_Mayor_Costo_Envio para identificar las localidades con mayor costo de envío.
+-- Calculamos el promedio de costo de envío por localidad y seleccionamos las 3 localidades con mayor valor.
+-- Utiliza los hechos de envíos y la dimensión de ubicación.
+-- Esta vista permite detectar las zonas donde el costo logístico es más alto,
+-- facilitando la toma de decisiones para optimizar la gestión de envíos y costos.
