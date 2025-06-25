@@ -860,13 +860,7 @@ FROM (
         m.Modelo_Sillon_Id,
         m.Modelo_Sillon_Descripcion
 ) AS TopModelos
-WHERE Ranking <= 3
-ORDER BY 
-	Cuatrimestre, 
-	Anio, 
-	Localidad, 
-	Rango_Etario,
-	Ranking;
+WHERE Ranking <= 3;
 GO
 -- Creamos la vista BI_Vista_Rendimiento_Modelos para identificar los 3 modelos de sillón más vendidos.
 -- Calculamos el total de unidades vendidas por combinación de cuatrimestre, año, localidad y rango etario de cliente.
