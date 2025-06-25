@@ -819,68 +819,61 @@ GO
 -- Esta vista permite comparar el desempeño de las sucursales en distintas regiones y períodos,
 -- facilitando el análisis de facturación promedio según la provincia y el cuatrimestre.
 
-
--- (3) Rendimiento de modelos (135 rows)
+-- (3) Rendimiento de modelos (405 rows)
 CREATE VIEW LOS_POLLOS_HERMANOS.BI_Vista_Rendimiento_Modelos AS
-SELECT
-    T.Cuatrimestre AS Cuatrimestre,
-    T.Anio AS Anio,
-    T.Localidad AS Localidad,
-    T.Rango_Etario AS Rango_Etario,
-    MAX(CASE WHEN T.rn = 1 THEN T.Modelo_Id END) AS Modelo_1_Id,
-    MAX(CASE WHEN T.rn = 1 THEN T.Modelo_Descripcion END) AS Modelo_1_Descripcion,
-    MAX(CASE WHEN T.rn = 2 THEN T.Modelo_Id END) AS Modelo_2_Id,
-    MAX(CASE WHEN T.rn = 2 THEN T.Modelo_Descripcion END) AS Modelo_2_Descripcion,
-    MAX(CASE WHEN T.rn = 3 THEN T.Modelo_Id END) AS Modelo_3_Id,
-    MAX(CASE WHEN T.rn = 3 THEN T.Modelo_Descripcion END) AS Modelo_3_Descripcion
+SELECT 
+    Cuatrimestre,
+    Anio,
+    Localidad,
+    Rango_Etario,
+    Modelo_Sillon_Id,
+    Modelo_Sillon_Descripcion,
+    Total_Ventas,
+    Ranking
 FROM (
-    SELECT
+    SELECT 
         t.Tiempo_Cuatrimestre AS Cuatrimestre,
         t.Tiempo_Anio AS Anio,
         u.Ubicacion_Localidad AS Localidad,
         c.Cliente_Rango_Etario AS Rango_Etario,
-        m.Modelo_Sillon_Id AS Modelo_Id,
-        m.Modelo_Sillon_Descripcion AS Modelo_Descripcion,
-        SUM(v.Ventas_Cantidad) AS Total_Ventas_Modelo,
-        ROW_NUMBER() OVER (
+        m.Modelo_Sillon_Id,
+        m.Modelo_Sillon_Descripcion,
+        SUM(v.Ventas_Cantidad) AS Total_Ventas,
+        RANK() OVER (
             PARTITION BY 
                 t.Tiempo_Cuatrimestre,
                 t.Tiempo_Anio,
                 u.Ubicacion_Localidad,
                 c.Cliente_Rango_Etario
-            ORDER BY SUM(v.Ventas_Cantidad) DESC
-        ) AS rn
+            ORDER BY SUM(v.Ventas_Cantidad) DESC, m.Modelo_Sillon_Id -- Si tienen la misma cantidad de ventas desempata por Modelo_Sillon_Id
+        ) AS Ranking
     FROM LOS_POLLOS_HERMANOS.BI_Hechos_Ventas v
     JOIN LOS_POLLOS_HERMANOS.BI_Dimension_Tiempo t ON t.Tiempo_Id = v.Tiempo_Id
     JOIN LOS_POLLOS_HERMANOS.BI_Dimension_Ubicacion u ON u.Ubicacion_Id = v.Ubicacion_Id
     JOIN LOS_POLLOS_HERMANOS.BI_Dimension_Cliente c ON c.Cliente_Id = v.Cliente_Id
     JOIN LOS_POLLOS_HERMANOS.BI_Dimension_Modelo_Sillon m ON m.Modelo_Sillon_Id = v.Modelo_Sillon_Id
-    GROUP BY
-        t.Tiempo_Cuatrimestre, 
-        t.Tiempo_Anio, 
-        u.Ubicacion_Localidad, 
+    GROUP BY 
+        t.Tiempo_Cuatrimestre,
+        t.Tiempo_Anio,
+        u.Ubicacion_Localidad,
         c.Cliente_Rango_Etario,
-        m.Modelo_Sillon_Id, 
+        m.Modelo_Sillon_Id,
         m.Modelo_Sillon_Descripcion
-) AS T
-WHERE T.rn <= 3
-GROUP BY 
-    T.Cuatrimestre, 
-    T.Anio, 
-    T.Localidad, 
-    T.Rango_Etario;
+) AS TopModelos
+WHERE Ranking <= 3
+ORDER BY 
+	Cuatrimestre, 
+	Anio, 
+	Localidad, 
+	Rango_Etario,
+	Ranking;
 GO
-/*
-3- Rendimiento de Modelos: 
-    Por: Cuatrimestre, Año, Localidad, Rango Etario de Cliente
-    Queremos: Top 3 de modelos segun total vendido de ese modelo
-
-    Usamos:
-        Hechos_Ventas 
-            Group By: t.Cuatrimestre, t.Año, u.Localidad, c.Rango Etario de Cliente
-    
-    Ordenamos por Sum Ventas_Monto desc
-*/
+-- Creamos la vista BI_Vista_Rendimiento_Modelos para identificar los 3 modelos de sillón más vendidos.
+-- Calculamos el total de unidades vendidas por combinación de cuatrimestre, año, localidad y rango etario de cliente.
+-- Luego utilizamos RANK() para asignar un ranking de ventas y seleccionamos los top 3 modelos por grupo.
+-- Utiliza los hechos de ventas y las dimensiones de tiempo, ubicación, cliente y modelo de sillón.
+-- Esta vista permite entender qué modelos prefieren los distintos segmentos de clientes y regiones,
+-- brindando soporte para decisiones comerciales y de producción.
 
 -- (4) Volumen de pedidos (342 rows)
 CREATE VIEW LOS_POLLOS_HERMANOS.BI_Vista_Volumen_Pedidos AS

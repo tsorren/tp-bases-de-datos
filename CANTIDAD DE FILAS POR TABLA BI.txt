@@ -18,7 +18,7 @@ HECHOS:
 VISTAS:
 (1) Ganancias: 59 rows
 (2) Factura promedio mensual: 35 rows
-(3) Rendimiento de modelos: 135 rows
+(3) Rendimiento de modelos: 405 rows
 (4) Volumen de pedidos: 342 rows
 (5) Conversión de pedidos: 54 rows
 (6) Tiempo promeddio de fabricación: 27 rows
