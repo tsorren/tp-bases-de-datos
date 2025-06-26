@@ -859,7 +859,7 @@ CREATE VIEW LOS_POLLOS_HERMANOS.BI_Vista_Ganancias AS
 SELECT
     t.Tiempo_Mes AS Mes,
     v.Sucursal_Id AS Sucursal,
-    SUM(v.Ventas_Monto*v.Ventas_Cantidad) - SUM(c.Compras_Monto) AS Ganancia
+    SUM(v.Ventas_Monto) - SUM(c.Compras_Monto) AS Ganancia
 FROM LOS_POLLOS_HERMANOS.BI_Hechos_Ventas v
 JOIN LOS_POLLOS_HERMANOS.BI_Hechos_Compras c ON
     c.Tiempo_Id = v.Tiempo_Id
