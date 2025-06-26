@@ -1,6 +1,132 @@
 USE GD1C2025
 GO
 
+-- ============================
+-- RESET DEL MODELO BI COMPLETO
+-- ============================
+
+-- 1. DROPEAR VISTAS (dependen de tablas de hechos y dimensiones)
+IF OBJECT_ID('LOS_POLLOS_HERMANOS.BI_Vista_Ganancias', 'V') IS NOT NULL
+    DROP VIEW LOS_POLLOS_HERMANOS.BI_Vista_Ganancias;
+IF OBJECT_ID('LOS_POLLOS_HERMANOS.BI_Vista_Factura_Promedio_Mensual', 'V') IS NOT NULL
+    DROP VIEW LOS_POLLOS_HERMANOS.BI_Vista_Factura_Promedio_Mensual;
+IF OBJECT_ID('LOS_POLLOS_HERMANOS.BI_Vista_Rendimiento_Modelos', 'V') IS NOT NULL
+    DROP VIEW LOS_POLLOS_HERMANOS.BI_Vista_Rendimiento_Modelos;
+IF OBJECT_ID('LOS_POLLOS_HERMANOS.BI_Vista_Volumen_Pedidos', 'V') IS NOT NULL
+    DROP VIEW LOS_POLLOS_HERMANOS.BI_Vista_Volumen_Pedidos;
+IF OBJECT_ID('LOS_POLLOS_HERMANOS.BI_Vista_Conversion_Pedidos', 'V') IS NOT NULL
+    DROP VIEW LOS_POLLOS_HERMANOS.BI_Vista_Conversion_Pedidos;
+IF OBJECT_ID('LOS_POLLOS_HERMANOS.BI_Vista_Tiempo_Promedio_Fabricacion', 'V') IS NOT NULL
+    DROP VIEW LOS_POLLOS_HERMANOS.BI_Vista_Tiempo_Promedio_Fabricacion;
+IF OBJECT_ID('LOS_POLLOS_HERMANOS.BI_Vista_Promedio_Compras', 'V') IS NOT NULL
+    DROP VIEW LOS_POLLOS_HERMANOS.BI_Vista_Promedio_Compras;
+IF OBJECT_ID('LOS_POLLOS_HERMANOS.BI_Vista_Compras_Tipo_Material', 'V') IS NOT NULL
+    DROP VIEW LOS_POLLOS_HERMANOS.BI_Vista_Compras_Tipo_Material;
+IF OBJECT_ID('LOS_POLLOS_HERMANOS.BI_Vista_Porcentaje_Cumplimiento_Envios', 'V') IS NOT NULL
+    DROP VIEW LOS_POLLOS_HERMANOS.BI_Vista_Porcentaje_Cumplimiento_Envios;
+IF OBJECT_ID('LOS_POLLOS_HERMANOS.BI_Vista_Localidades_Mayor_Costo_Envio', 'V') IS NOT NULL
+    DROP VIEW LOS_POLLOS_HERMANOS.BI_Vista_Localidades_Mayor_Costo_Envio;
+
+-- 2. DROPEAR TABLAS DE HECHOS (primero quitar constraints FK)
+IF OBJECT_ID('LOS_POLLOS_HERMANOS.BI_Hechos_Ventas', 'U') IS NOT NULL
+BEGIN
+    ALTER TABLE LOS_POLLOS_HERMANOS.BI_Hechos_Ventas NOCHECK CONSTRAINT ALL;
+    DROP TABLE LOS_POLLOS_HERMANOS.BI_Hechos_Ventas;
+END
+IF OBJECT_ID('LOS_POLLOS_HERMANOS.BI_Hechos_Compras', 'U') IS NOT NULL
+BEGIN
+    ALTER TABLE LOS_POLLOS_HERMANOS.BI_Hechos_Compras NOCHECK CONSTRAINT ALL;
+    DROP TABLE LOS_POLLOS_HERMANOS.BI_Hechos_Compras;
+END
+IF OBJECT_ID('LOS_POLLOS_HERMANOS.BI_Hechos_Pedidos', 'U') IS NOT NULL
+BEGIN
+    ALTER TABLE LOS_POLLOS_HERMANOS.BI_Hechos_Pedidos NOCHECK CONSTRAINT ALL;
+    DROP TABLE LOS_POLLOS_HERMANOS.BI_Hechos_Pedidos;
+END
+IF OBJECT_ID('LOS_POLLOS_HERMANOS.BI_Hechos_Envios', 'U') IS NOT NULL
+BEGIN
+    ALTER TABLE LOS_POLLOS_HERMANOS.BI_Hechos_Envios NOCHECK CONSTRAINT ALL;
+    DROP TABLE LOS_POLLOS_HERMANOS.BI_Hechos_Envios;
+END
+
+-- 3. DROPEAR TABLAS DE DIMENSIONES (después de hechos)
+IF OBJECT_ID('LOS_POLLOS_HERMANOS.BI_Dimension_Tiempo', 'U') IS NOT NULL
+    DROP TABLE LOS_POLLOS_HERMANOS.BI_Dimension_Tiempo;
+IF OBJECT_ID('LOS_POLLOS_HERMANOS.BI_Dimension_Cliente', 'U') IS NOT NULL
+    DROP TABLE LOS_POLLOS_HERMANOS.BI_Dimension_Cliente;
+IF OBJECT_ID('LOS_POLLOS_HERMANOS.BI_Dimension_Ubicacion', 'U') IS NOT NULL
+    DROP TABLE LOS_POLLOS_HERMANOS.BI_Dimension_Ubicacion;
+IF OBJECT_ID('LOS_POLLOS_HERMANOS.BI_Dimension_Sucursal', 'U') IS NOT NULL
+    DROP TABLE LOS_POLLOS_HERMANOS.BI_Dimension_Sucursal;
+IF OBJECT_ID('LOS_POLLOS_HERMANOS.BI_Dimension_Modelo_Sillon', 'U') IS NOT NULL
+    DROP TABLE LOS_POLLOS_HERMANOS.BI_Dimension_Modelo_Sillon;
+IF OBJECT_ID('LOS_POLLOS_HERMANOS.BI_Dimension_Tipo_Material', 'U') IS NOT NULL
+    DROP TABLE LOS_POLLOS_HERMANOS.BI_Dimension_Tipo_Material;
+IF OBJECT_ID('LOS_POLLOS_HERMANOS.BI_Dimension_Estado_Pedido', 'U') IS NOT NULL
+    DROP TABLE LOS_POLLOS_HERMANOS.BI_Dimension_Estado_Pedido;
+IF OBJECT_ID('LOS_POLLOS_HERMANOS.BI_Dimension_Turno_Venta', 'U') IS NOT NULL
+    DROP TABLE LOS_POLLOS_HERMANOS.BI_Dimension_Turno_Venta;
+
+-- 4. DROPEAR FUNCIONES
+IF OBJECT_ID('LOS_POLLOS_HERMANOS.calcularRangoEtario', 'FN') IS NOT NULL
+    DROP FUNCTION LOS_POLLOS_HERMANOS.calcularRangoEtario;
+IF OBJECT_ID('LOS_POLLOS_HERMANOS.calcularFranjaHoraria', 'FN') IS NOT NULL
+    DROP FUNCTION LOS_POLLOS_HERMANOS.calcularFranjaHoraria;
+
+-- 5. DROPEAR STORED PROCEDURES
+IF OBJECT_ID('LOS_POLLOS_HERMANOS.Migrar_Datos_BI', 'P') IS NOT NULL
+    DROP PROCEDURE LOS_POLLOS_HERMANOS.Migrar_Datos_BI;
+IF OBJECT_ID('LOS_POLLOS_HERMANOS.Migrar_Hechos_Ventas', 'P') IS NOT NULL
+    DROP PROCEDURE LOS_POLLOS_HERMANOS.Migrar_Hechos_Ventas;
+IF OBJECT_ID('LOS_POLLOS_HERMANOS.Migrar_Hechos_Compras', 'P') IS NOT NULL
+    DROP PROCEDURE LOS_POLLOS_HERMANOS.Migrar_Hechos_Compras;
+IF OBJECT_ID('LOS_POLLOS_HERMANOS.Migrar_Hechos_Pedidos', 'P') IS NOT NULL
+    DROP PROCEDURE LOS_POLLOS_HERMANOS.Migrar_Hechos_Pedidos;
+IF OBJECT_ID('LOS_POLLOS_HERMANOS.Migrar_Hechos_Envios', 'P') IS NOT NULL
+    DROP PROCEDURE LOS_POLLOS_HERMANOS.Migrar_Hechos_Envios;
+IF OBJECT_ID('LOS_POLLOS_HERMANOS.Migrar_Dimension_Tiempo', 'P') IS NOT NULL
+    DROP PROCEDURE LOS_POLLOS_HERMANOS.Migrar_Dimension_Tiempo;
+IF OBJECT_ID('LOS_POLLOS_HERMANOS.Migrar_Dimension_Cliente', 'P') IS NOT NULL
+    DROP PROCEDURE LOS_POLLOS_HERMANOS.Migrar_Dimension_Cliente;
+IF OBJECT_ID('LOS_POLLOS_HERMANOS.Migrar_Dimension_Ubicacion', 'P') IS NOT NULL
+    DROP PROCEDURE LOS_POLLOS_HERMANOS.Migrar_Dimension_Ubicacion;
+IF OBJECT_ID('LOS_POLLOS_HERMANOS.Migrar_Dimension_Sucursal', 'P') IS NOT NULL
+    DROP PROCEDURE LOS_POLLOS_HERMANOS.Migrar_Dimension_Sucursal;
+IF OBJECT_ID('LOS_POLLOS_HERMANOS.Migrar_Dimension_Modelo_Sillon', 'P') IS NOT NULL
+    DROP PROCEDURE LOS_POLLOS_HERMANOS.Migrar_Dimension_Modelo_Sillon;
+IF OBJECT_ID('LOS_POLLOS_HERMANOS.Migrar_Dimension_Tipo_Material', 'P') IS NOT NULL
+    DROP PROCEDURE LOS_POLLOS_HERMANOS.Migrar_Dimension_Tipo_Material;
+IF OBJECT_ID('LOS_POLLOS_HERMANOS.Migrar_Dimension_Estado_Pedido', 'P') IS NOT NULL
+    DROP PROCEDURE LOS_POLLOS_HERMANOS.Migrar_Dimension_Estado_Pedido;
+IF OBJECT_ID('LOS_POLLOS_HERMANOS.Migrar_Dimension_Turno_Venta', 'P') IS NOT NULL
+    DROP PROCEDURE LOS_POLLOS_HERMANOS.Migrar_Dimension_Turno_Venta;
+IF OBJECT_ID('LOS_POLLOS_HERMANOS.Crear_Tablas_BI', 'P') IS NOT NULL
+    DROP PROCEDURE LOS_POLLOS_HERMANOS.Crear_Tablas_BI;
+IF OBJECT_ID('LOS_POLLOS_HERMANOS.Crear_Tabla_Dimension_Tiempo', 'P') IS NOT NULL
+    DROP PROCEDURE LOS_POLLOS_HERMANOS.Crear_Tabla_Dimension_Tiempo;
+IF OBJECT_ID('LOS_POLLOS_HERMANOS.Crear_Tabla_Dimension_Cliente', 'P') IS NOT NULL
+    DROP PROCEDURE LOS_POLLOS_HERMANOS.Crear_Tabla_Dimension_Cliente;
+IF OBJECT_ID('LOS_POLLOS_HERMANOS.Crear_Tabla_Dimension_Ubicacion', 'P') IS NOT NULL
+    DROP PROCEDURE LOS_POLLOS_HERMANOS.Crear_Tabla_Dimension_Ubicacion;
+IF OBJECT_ID('LOS_POLLOS_HERMANOS.Crear_Tabla_Dimension_Sucursal', 'P') IS NOT NULL
+    DROP PROCEDURE LOS_POLLOS_HERMANOS.Crear_Tabla_Dimension_Sucursal;
+IF OBJECT_ID('LOS_POLLOS_HERMANOS.Crear_Tabla_Dimension_Modelo_Sillon', 'P') IS NOT NULL
+    DROP PROCEDURE LOS_POLLOS_HERMANOS.Crear_Tabla_Dimension_Modelo_Sillon;
+IF OBJECT_ID('LOS_POLLOS_HERMANOS.Crear_Tabla_Dimension_Tipo_Material', 'P') IS NOT NULL
+    DROP PROCEDURE LOS_POLLOS_HERMANOS.Crear_Tabla_Dimension_Tipo_Material;
+IF OBJECT_ID('LOS_POLLOS_HERMANOS.Crear_Tabla_Dimension_Estado_Pedido', 'P') IS NOT NULL
+    DROP PROCEDURE LOS_POLLOS_HERMANOS.Crear_Tabla_Dimension_Estado_Pedido;
+IF OBJECT_ID('LOS_POLLOS_HERMANOS.Crear_Tabla_Dimension_Turno_Venta', 'P') IS NOT NULL
+    DROP PROCEDURE LOS_POLLOS_HERMANOS.Crear_Tabla_Dimension_Turno_Venta;
+IF OBJECT_ID('LOS_POLLOS_HERMANOS.Crear_Tabla_Hechos_Ventas', 'P') IS NOT NULL
+    DROP PROCEDURE LOS_POLLOS_HERMANOS.Crear_Tabla_Hechos_Ventas;
+IF OBJECT_ID('LOS_POLLOS_HERMANOS.Crear_Tabla_Hechos_Compras', 'P') IS NOT NULL
+    DROP PROCEDURE LOS_POLLOS_HERMANOS.Crear_Tabla_Hechos_Compras;
+IF OBJECT_ID('LOS_POLLOS_HERMANOS.Crear_Tabla_Hechos_Pedidos', 'P') IS NOT NULL
+    DROP PROCEDURE LOS_POLLOS_HERMANOS.Crear_Tabla_Hechos_Pedidos;
+IF OBJECT_ID('LOS_POLLOS_HERMANOS.Crear_Tabla_Hechos_Envios', 'P') IS NOT NULL
+    DROP PROCEDURE LOS_POLLOS_HERMANOS.Crear_Tabla_Hechos_Envios;
+GO
 -- ===================================
 -- CREACIÓN DE TABLAS BI - DIMENSIONES
 -- ===================================
@@ -663,13 +789,13 @@ BEGIN
         Ventas_Cantidad,
         Ventas_Tiempo_Fabricacion
     )
-    SELECT 
+    SELECT
         t.Tiempo_Id,
         s.Sucursal_Id,
         u.Ubicacion_Id,
         c.Cliente_Id,
         m.Modelo_Sillon_Id,
-        SUM(df.Detalle_Factura_Subtotal),
+        SUM(df.Detalle_Factura_Subtotal),    
         SUM(df.Detalle_Factura_Cantidad),
         AVG(DATEDIFF(DAY, p.Pedido_fecha, f.Factura_Fecha))
     FROM LOS_POLLOS_HERMANOS.DetalleFactura df
@@ -854,19 +980,34 @@ GO
 -- CREACIÓN VISTAS
 -- ===============
 
--- (1) Ganancias (59 rows)
+-- (1) Ganancias (108 rows)
 CREATE VIEW LOS_POLLOS_HERMANOS.BI_Vista_Ganancias AS
 SELECT
     t.Tiempo_Mes AS Mes,
-    v.Sucursal_Id AS Sucursal,
-    SUM(v.Ventas_Monto) - SUM(c.Compras_Monto) AS Ganancia
-FROM LOS_POLLOS_HERMANOS.BI_Hechos_Ventas v
-JOIN LOS_POLLOS_HERMANOS.BI_Hechos_Compras c ON
-    c.Tiempo_Id = v.Tiempo_Id
-    AND c.Sucursal_Id = v.Sucursal_Id
-JOIN LOS_POLLOS_HERMANOS.BI_Dimension_Tiempo t ON t.Tiempo_Id = v.Tiempo_Id
+    s.Sucursal_Id AS Sucursal,
+    (
+        SELECT SUM(v1.Ventas_Monto)
+        FROM LOS_POLLOS_HERMANOS.BI_Hechos_Ventas v1
+		JOIN LOS_POLLOS_HERMANOS.BI_Dimension_Tiempo t1 ON t1.Tiempo_Id = v1.Tiempo_Id
+        WHERE
+            t1.Tiempo_Mes = t.Tiempo_Mes
+            AND v1.Sucursal_Id = s.Sucursal_Id
+    )
+    -
+    ISNULL((
+        SELECT SUM(c.Compras_Monto)
+        FROM LOS_POLLOS_HERMANOS.BI_Hechos_Compras c
+		JOIN LOS_POLLOS_HERMANOS.BI_Dimension_Tiempo t2 ON t2.Tiempo_Id = c.Tiempo_Id
+        WHERE
+            t2.Tiempo_Mes = t.Tiempo_Mes
+            AND c.Sucursal_Id = s.Sucursal_Id
+    ), 0)
+    AS Ganancia
+FROM LOS_POLLOS_HERMANOS.BI_Dimension_Tiempo t
+JOIN LOS_POLLOS_HERMANOS.BI_Hechos_Ventas v ON v.Tiempo_Id = t.Tiempo_Id
+JOIN LOS_POLLOS_HERMANOS.BI_Dimension_Sucursal s ON s.Sucursal_Id = v.Sucursal_Id
 GROUP BY 
-    v.Sucursal_Id, 
+    s.Sucursal_Id, 
     t.Tiempo_Mes;
 GO
 -- Creamos la vista BI_Vista_Ganancias para analizar las ganancias mensuales por sucursal.
@@ -881,7 +1022,7 @@ SELECT
     u.Ubicacion_Provincia AS Provincia,
     t.Tiempo_Anio AS Anio,
     t.Tiempo_Cuatrimestre AS Cuatrimestre,
-    AVG(v.Ventas_Monto) / 4 AS Promedio_Mensual
+    AVG(v.Ventas_Monto) AS Promedio_Factura
 FROM LOS_POLLOS_HERMANOS.BI_Hechos_Ventas v
 JOIN LOS_POLLOS_HERMANOS.BI_Dimension_Tiempo t ON t.Tiempo_Id = v.Tiempo_Id
 JOIN LOS_POLLOS_HERMANOS.BI_Dimension_Ubicacion u ON u.Ubicacion_Id = v.Ubicacion_Id

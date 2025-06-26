@@ -16,7 +16,7 @@ HECHOS:
 (4) Hechos Envios: 16752 rows
 
 VISTAS:
-(1) Ganancias: 59 rows
+(1) Ganancias: 108 rows
 (2) Factura promedio mensual: 35 rows
 (3) Rendimiento de modelos: 405 rows
 (4) Volumen de pedidos: 342 rows
