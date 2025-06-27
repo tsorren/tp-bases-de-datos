@@ -10,19 +10,20 @@ DIMENSIONES:
 (8) Dimensión Turno_Venta: 2 rows 
 
 HECHOS:
-(1) Hechos Ventas: 49863 rows
+(1) Hechos Ventas: 171 rows
 (2) Hechos Compras: 612 rows
 (3) Hechos Pedidos: 681 rows
 (4) Hechos Envios: 16752 rows
+(5) Hechos Ventas Por Modelo: 49863 rows
 
 VISTAS:
-(1) Ganancias: 108 rows
+(1) Ganancias: 171 rows
 (2) Factura promedio mensual: 35 rows
 (3) Rendimiento de modelos: 405 rows
 (4) Volumen de pedidos: 342 rows
-(5) Conversión de pedidos: 54 rows
-(6) Tiempo promeddio de fabricación: 27 rows
-(7) Promedio de compras: 12 rows
-(8) Compras por tipo de material: 78 rows
-(9) Porcentaje de cumplimientos de Envíos: 12 rows
+(5) Conversión de pedidos: 90 rows
+(6) Tiempo promedio de fabricación: 45 rows
+(7) Promedio de compras: 19 rows
+(8) Compras por tipo de material: 114 rows
+(9) Porcentaje de cumplimientos de Envíos: 19 rows
 (10) Localidades que pagan mayor costo de envio: 3 rows

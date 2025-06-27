@@ -48,6 +48,11 @@ BEGIN
     ALTER TABLE LOS_POLLOS_HERMANOS.BI_Hechos_Envios NOCHECK CONSTRAINT ALL;
     DROP TABLE LOS_POLLOS_HERMANOS.BI_Hechos_Envios;
 END
+IF OBJECT_ID('LOS_POLLOS_HERMANOS.BI_Hechos_Ventas_Por_Modelo', 'U') IS NOT NULL
+BEGIN
+    ALTER TABLE LOS_POLLOS_HERMANOS.BI_Hechos_Ventas_Por_Modelo NOCHECK CONSTRAINT ALL;
+    DROP TABLE LOS_POLLOS_HERMANOS.BI_Hechos_Ventas_Por_Modelo;
+END
 
 -- 3. DROPEAR TABLAS DE DIMENSIONES (después de hechos)
 IF OBJECT_ID('LOS_POLLOS_HERMANOS.BI_Dimension_Tiempo', 'U') IS NOT NULL
@@ -84,6 +89,8 @@ IF OBJECT_ID('LOS_POLLOS_HERMANOS.Migrar_Hechos_Pedidos', 'P') IS NOT NULL
     DROP PROCEDURE LOS_POLLOS_HERMANOS.Migrar_Hechos_Pedidos;
 IF OBJECT_ID('LOS_POLLOS_HERMANOS.Migrar_Hechos_Envios', 'P') IS NOT NULL
     DROP PROCEDURE LOS_POLLOS_HERMANOS.Migrar_Hechos_Envios;
+IF OBJECT_ID('LOS_POLLOS_HERMANOS.Migrar_Hechos_Ventas_Por_Modelo', 'P') IS NOT NULL
+    DROP PROCEDURE LOS_POLLOS_HERMANOS.Migrar_Hechos_Ventas_Por_Modelo;
 IF OBJECT_ID('LOS_POLLOS_HERMANOS.Migrar_Dimension_Tiempo', 'P') IS NOT NULL
     DROP PROCEDURE LOS_POLLOS_HERMANOS.Migrar_Dimension_Tiempo;
 IF OBJECT_ID('LOS_POLLOS_HERMANOS.Migrar_Dimension_Cliente', 'P') IS NOT NULL
@@ -126,6 +133,8 @@ IF OBJECT_ID('LOS_POLLOS_HERMANOS.Crear_Tabla_Hechos_Pedidos', 'P') IS NOT NULL
     DROP PROCEDURE LOS_POLLOS_HERMANOS.Crear_Tabla_Hechos_Pedidos;
 IF OBJECT_ID('LOS_POLLOS_HERMANOS.Crear_Tabla_Hechos_Envios', 'P') IS NOT NULL
     DROP PROCEDURE LOS_POLLOS_HERMANOS.Crear_Tabla_Hechos_Envios;
+IF OBJECT_ID('LOS_POLLOS_HERMANOS.Crear_Tabla_Hechos_Ventas_Por_Modelo', 'P') IS NOT NULL
+    DROP PROCEDURE LOS_POLLOS_HERMANOS.Crear_Tabla_Hechos_Ventas_Por_Modelo;
 GO
 -- ===================================
 -- CREACIÓN DE TABLAS BI - DIMENSIONES
@@ -255,17 +264,15 @@ BEGIN
         Tiempo_Id BIGINT NOT NULL,
         Sucursal_Id BIGINT NOT NULL,
         Ubicacion_Id BIGINT NOT NULL,
-        Cliente_Id BIGINT NOT NULL,
-        Modelo_Sillon_Id BIGINT NOT NULL,
         Ventas_Monto DECIMAL(28,2),
         Ventas_Cantidad DECIMAL(18,0),
-        Ventas_Tiempo_Fabricacion TINYINT
+        Ventas_Tiempo_Fabricacion DECIMAL(11,8)
     );
 END
 GO
--- Registra los hechos de ventas según período tiempo, sucursal, ubicación, cliente y modelo de sillón.
+-- Registra los hechos de ventas según período tiempo, sucursal y ubicación
 -- Incluye el monto total de ventas, la cantidad vendida y el tiempo de fabricación promedio.
--- Se utiliza en vistas como BI_Vista_Ganancias, BI_Vista_Factura_Promedio_Mensual, BI_Vista_Rendimiento_Modelos y BI_Vista_Tiempo_Promedio_Fabricacion.
+-- Se utiliza en vistas como BI_Vista_Ganancias, BI_Vista_Factura_Promedio_Mensual y BI_Vista_Tiempo_Promedio_Fabricacion.
 -- Permite analizar el desempeño de ventas desde distintas dimensiones.
 
 -- (2) Hechos Compras
@@ -318,6 +325,24 @@ GO
 -- Se utiliza en vistas como BI_Vista_Porcentaje_Cumplimiento_Envios y BI_Vista_Localidades_Mayor_Costo_Envio.
 -- Permite analizar el cumplimiento y el costo de los envíos por localidad y período.
 
+-- (5) Hechos Ventas Por Modelo
+CREATE PROCEDURE LOS_POLLOS_HERMANOS.Crear_Tabla_Hechos_Ventas_Por_Modelo AS
+BEGIN
+    CREATE TABLE LOS_POLLOS_HERMANOS.BI_Hechos_Ventas_Por_Modelo (
+        Tiempo_Id BIGINT NOT NULL,
+        Sucursal_Id BIGINT NOT NULL,
+        Ubicacion_Id BIGINT NOT NULL,
+        Cliente_Id BIGINT NOT NULL,
+        Modelo_Sillon_Id BIGINT NOT NULL,
+        Ventas_Por_Modelo_Cantidad DECIMAL(18,0)
+    );
+END
+GO
+-- Registra los hechos de ventas según período tiempo, sucursal, ubicación, cliente y modelo de sillón.
+-- Incluye el monto total de ventas y la cantidad vendida
+-- Se utiliza en la vista BI_Vista_Rendimiento_Modelos.
+-- Permite analizar el desempeño de ventas desde distintas dimensiones.
+
 -- Stored procedure que ejecuta los stored procedures para crear todas las tablas
 CREATE PROCEDURE LOS_POLLOS_HERMANOS.Crear_Tablas_BI AS
 BEGIN
@@ -333,6 +358,7 @@ BEGIN
     EXEC LOS_POLLOS_HERMANOS.Crear_Tabla_Hechos_Compras;
     EXEC LOS_POLLOS_HERMANOS.Crear_Tabla_Hechos_Pedidos;
     EXEC LOS_POLLOS_HERMANOS.Crear_Tabla_Hechos_Envios;
+    EXEC LOS_POLLOS_HERMANOS.Crear_Tabla_Hechos_Ventas_Por_Modelo;
 END
 GO
 
@@ -392,7 +418,7 @@ ADD CONSTRAINT PK_Dimension_Turno_Venta
 -- (1) Hechos Ventas
 ALTER TABLE LOS_POLLOS_HERMANOS.BI_Hechos_Ventas
 ADD CONSTRAINT PK_Hechos_Ventas
-    PRIMARY KEY (Tiempo_Id, Sucursal_Id, Ubicacion_Id, Cliente_Id, Modelo_Sillon_Id);
+    PRIMARY KEY (Tiempo_Id, Sucursal_Id, Ubicacion_Id);
 
 -- (2) Hechos Compras
 ALTER TABLE LOS_POLLOS_HERMANOS.BI_Hechos_Compras
@@ -409,6 +435,10 @@ ALTER TABLE LOS_POLLOS_HERMANOS.BI_Hechos_Envios
 ADD CONSTRAINT PK_Hechos_Envios
     PRIMARY KEY (Tiempo_Id, Ubicacion_Id);
 
+-- (5) Hechos Ventas Por Modelo
+ALTER TABLE LOS_POLLOS_HERMANOS.BI_Hechos_Ventas_Por_Modelo
+ADD CONSTRAINT PK_Hechos_Ventas_Por_Modelo
+    PRIMARY KEY (Tiempo_Id, Sucursal_Id, Ubicacion_Id, Cliente_Id, Modelo_Sillon_Id);
 -- ============================================
 -- CREACIÓN DE CONSTRAINTS FOREIGN KEY - HECHOS
 -- ============================================
@@ -423,14 +453,8 @@ ADD CONSTRAINT FK_Hechos_Ventas_Tiempo
     REFERENCES LOS_POLLOS_HERMANOS.BI_Dimension_Sucursal(Sucursal_Id),
     CONSTRAINT FK_Hechos_Ventas_Ubicacion 
     FOREIGN KEY (Ubicacion_Id) 
-    REFERENCES LOS_POLLOS_HERMANOS.BI_Dimension_Ubicacion(Ubicacion_Id),
-    CONSTRAINT FK_Hechos_Ventas_Cliente 
-    FOREIGN KEY (Cliente_Id) 
-    REFERENCES LOS_POLLOS_HERMANOS.BI_Dimension_Cliente(Cliente_Id),
-    CONSTRAINT FK_Hechos_Ventas_Modelo 
-    FOREIGN KEY (Modelo_Sillon_Id) 
-    REFERENCES LOS_POLLOS_HERMANOS.BI_Dimension_Modelo_Sillon(Modelo_Sillon_Id);
--- Relaciona la tabla de hechos de ventas con las dimensiones de Tiempo, Sucursal, Ubicación, Cliente y Modelo de Sillón.
+    REFERENCES LOS_POLLOS_HERMANOS.BI_Dimension_Ubicacion(Ubicacion_Id);
+-- Relaciona la tabla de hechos de ventas con las dimensiones de Tiempo, Sucursal y Ubicación.
 
 -- (2) Hechos Compras
 ALTER TABLE LOS_POLLOS_HERMANOS.BI_Hechos_Compras
@@ -470,6 +494,25 @@ ADD CONSTRAINT FK_Hechos_Envios_Tiempo
     FOREIGN KEY (Ubicacion_Id) 
     REFERENCES LOS_POLLOS_HERMANOS.BI_Dimension_Ubicacion(Ubicacion_Id);
 -- Relaciona la tabla de hechos de envíos con las dimensiones de Tiempo y Ubicación.
+
+-- (5) Hechos Ventas Por Modelo
+ALTER TABLE LOS_POLLOS_HERMANOS.BI_Hechos_Ventas_Por_Modelo
+ADD CONSTRAINT FK_Hechos_Ventas_Por_Modelo_Tiempo 
+    FOREIGN KEY (Tiempo_Id) 
+    REFERENCES LOS_POLLOS_HERMANOS.BI_Dimension_Tiempo(Tiempo_Id),
+    CONSTRAINT FK_Hechos_Ventas_Por_Modelo_Por_Modelo_Sucursal 
+    FOREIGN KEY (Sucursal_Id) 
+    REFERENCES LOS_POLLOS_HERMANOS.BI_Dimension_Sucursal(Sucursal_Id),
+    CONSTRAINT FK_Hechos_Ventas_Por_Modelo_Ubicacion 
+    FOREIGN KEY (Ubicacion_Id) 
+    REFERENCES LOS_POLLOS_HERMANOS.BI_Dimension_Ubicacion(Ubicacion_Id),
+    CONSTRAINT FK_Hechos_Ventas_Por_Modelo_Cliente 
+    FOREIGN KEY (Cliente_Id) 
+    REFERENCES LOS_POLLOS_HERMANOS.BI_Dimension_Cliente(Cliente_Id),
+    CONSTRAINT FK_Hechos_Ventas_Por_Modelo_Modelo_Sillon
+    FOREIGN KEY (Modelo_Sillon_Id) 
+    REFERENCES LOS_POLLOS_HERMANOS.BI_Dimension_Modelo_Sillon(Modelo_Sillon_Id);
+-- Relaciona la tabla de hechos de ventas con las dimensiones de Tiempo, Sucursal, Ubicación, Cliente y Modelo de Sillón.
 
 -- =================================
 -- CREACIÓN DE ÍNDICES - DIMENSIONES
@@ -514,7 +557,7 @@ ON LOS_POLLOS_HERMANOS.BI_Dimension_Turno_Venta (Turno_Venta_Horario);
 -- (1) Hechos Ventas
 CREATE INDEX Indice_Hechos_Ventas
 ON LOS_POLLOS_HERMANOS.BI_Hechos_Ventas (Ventas_Monto, Ventas_Cantidad, Ventas_Tiempo_Fabricacion);
--- Índice sobre monto, cantidad y tiempo de fabricación para optimizar consultas de ventas y análisis de rendimiento
+-- Índice sobre el monto total, la cantidad de ventas y el tiempo promedio de fabricación.
 
 -- (2) Hechos Compras
 CREATE INDEX Indice_Hechos_Compras
@@ -530,6 +573,11 @@ ON LOS_POLLOS_HERMANOS.BI_Hechos_Pedidos (Pedidos_Cantidad);
 CREATE INDEX Indice_Hechos_Envios
 ON LOS_POLLOS_HERMANOS.BI_Hechos_Envios (Envios_Cantidad_Total, Envios_Cantidad_En_Fecha, Envios_Monto);
 -- Índice sobre cantidad total, cantidad en fecha y monto de envíos para optimizar consultas y análisis de cumplimiento de envíos
+
+-- (5) Hechos Ventas por Modelo
+CREATE INDEX Indice_Hechos_Ventas_Por_Modelo
+ON LOS_POLLOS_HERMANOS.BI_Hechos_Ventas_Por_Modelo (Ventas_Por_Modelo_Cantidad);
+-- Índice sobre monto, cantidad y tiempo de fabricación para optimizar consultas de ventas y análisis de rendimiento
 
 -- =====================
 -- CREACIÓN DE FUNCIONES
@@ -776,15 +824,13 @@ GO
 -- MIGRACIÓN HECHOS
 -- ================
 
--- (1) Hechos Ventas -> Vistas 1, 2, 3 y 6 (49863 rows)
+-- (1) Hechos Ventas -> Vistas 1, 2 y 6 (171 rows)
 CREATE PROCEDURE LOS_POLLOS_HERMANOS.Migrar_Hechos_Ventas AS
 BEGIN
     INSERT INTO LOS_POLLOS_HERMANOS.BI_Hechos_Ventas(
         Tiempo_Id,
         Sucursal_Id,
         Ubicacion_Id,
-        Cliente_Id,
-        Modelo_Sillon_Id,
         Ventas_Monto,
         Ventas_Cantidad,
         Ventas_Tiempo_Fabricacion
@@ -793,17 +839,29 @@ BEGIN
         t.Tiempo_Id,
         s.Sucursal_Id,
         u.Ubicacion_Id,
-        c.Cliente_Id,
-        m.Modelo_Sillon_Id,
-        SUM(df.Detalle_Factura_Subtotal),    
-        SUM(df.Detalle_Factura_Cantidad),
-        AVG(DATEDIFF(DAY, p.Pedido_fecha, f.Factura_Fecha))
-    FROM LOS_POLLOS_HERMANOS.DetalleFactura df
-    JOIN LOS_POLLOS_HERMANOS.Factura f ON f.Factura_Numero = df.Detalle_Factura_Factura
-    JOIN LOS_POLLOS_HERMANOS.DetallePedido dp ON df.Detalle_Factura_Detalle_Pedido = dp.Detalle_Pedido_Numero
-    JOIN LOS_POLLOS_HERMANOS.Pedido p ON p.Pedido_Numero = dp.Detalle_Pedido_Pedido
-    JOIN LOS_POLLOS_HERMANOS.Sillon si ON si.Sillon_Codigo = dp.Detalle_Pedido_Sillon
-    JOIN LOS_POLLOS_HERMANOS.BI_Dimension_Modelo_Sillon m ON m.Modelo_Sillon_Id = si.Sillon_Modelo
+        SUM(f.Factura_Total),    
+        COUNT(f.Factura_Numero),
+        (
+            SELECT AVG(DATEDIFF(DAY, p.Pedido_Fecha, f2.Factura_Fecha) * 1.0)
+            FROM LOS_POLLOS_HERMANOS.Factura f2
+            JOIN LOS_POLLOS_HERMANOS.DetalleFactura df ON df.Detalle_Factura_Factura = f2.Factura_Numero
+            JOIN LOS_POLLOS_HERMANOS.DetallePedido dp ON dp.Detalle_Pedido_Numero = df.Detalle_Factura_Detalle_Pedido
+            JOIN LOS_POLLOS_HERMANOS.Pedido p ON p.Pedido_Numero = dp.Detalle_Pedido_Pedido
+            JOIN LOS_POLLOS_HERMANOS.Sucursal su2 ON su2.Sucursal_Codigo = f2.Factura_Sucursal
+            JOIN LOS_POLLOS_HERMANOS.Ubicacion ub2 ON su2.Sucursal_Ubicacion = ub2.Ubicacion_Codigo
+            JOIN LOS_POLLOS_HERMANOS.BI_Dimension_Ubicacion u2 ON 
+                u2.Ubicacion_Provincia = ub2.Ubicacion_Provincia
+                AND u2.Ubicacion_Localidad = ub2.Ubicacion_Localidad
+            JOIN LOS_POLLOS_HERMANOS.BI_Dimension_Tiempo t2 ON 
+                t2.Tiempo_Anio = YEAR(f2.Factura_Fecha)
+                AND t2.Tiempo_Mes = MONTH(f2.Factura_Fecha)
+                AND t2.Tiempo_Cuatrimestre = CEILING(MONTH(f2.Factura_Fecha)/4.0)
+            WHERE 
+                t2.Tiempo_Id = t.Tiempo_Id
+                AND f2.Factura_Sucursal = s.Sucursal_Id
+                AND u2.Ubicacion_Id = u.Ubicacion_Id
+        )
+    FROM LOS_POLLOS_HERMANOS.Factura f
     JOIN LOS_POLLOS_HERMANOS.BI_Dimension_Tiempo t ON 
         t.Tiempo_Anio = YEAR(f.Factura_Fecha)
         AND t.Tiempo_Mes = MONTH(f.Factura_Fecha)
@@ -818,20 +876,17 @@ BEGIN
     GROUP BY 
         t.Tiempo_Id,
         s.Sucursal_Id,
-        u.Ubicacion_Id,
-        c.Cliente_Id,
-        m.Modelo_Sillon_Id;
+        u.Ubicacion_Id;
 END
 GO
 -- Migramos los hechos de ventas desde el modelo transaccional a la tabla BI_Hechos_Ventas.
 -- Calculamos el monto total, la cantidad vendida y el tiempo promedio de fabricación
--- por combinación de período, sucursal, ubicación, cliente y modelo de sillón.
+-- por combinación de período, sucursal, y ubicación.
 -- Relacionamos cada venta con sus dimensiones correspondientes mediante JOINs.
--- Esta migración permite analizar ventas, ganancias, rendimiento de modelos y tiempos de fabricación
+-- Esta migración permite analizar ventas, ganancias y tiempos de fabricación
 -- Utilizado en las vistas:
 --  BI_Vista_Ganancias,
 --  BI_Vista_Factura_Promedio_Mensual,
---  BI_Vista_Rendimiento_Modelos,
 --  BI_Vista_Tiempo_Promedio_Fabricacion
 
 -- (2) Hechos Compras -> Vistas 1, 7 y 8 (612 rows)
@@ -953,6 +1008,56 @@ GO
 --  BI_Vista_Porcentaje_Cumplimiento_Envios,
 --  BI_Vista_Localidades_Mayor_Costo_Envio
 
+-- (5) Hechos Ventas Por Modelo -> Vista 3 (49863 rows)
+CREATE PROCEDURE LOS_POLLOS_HERMANOS.Migrar_Hechos_Ventas_Por_Modelo AS
+BEGIN
+    INSERT INTO LOS_POLLOS_HERMANOS.BI_Hechos_Ventas_Por_Modelo(
+        Tiempo_Id,
+        Sucursal_Id,
+        Ubicacion_Id,
+        Cliente_Id,
+        Modelo_Sillon_Id,
+        Ventas_Por_Modelo_Cantidad
+    )
+    SELECT
+        t.Tiempo_Id,
+        s.Sucursal_Id,
+        u.Ubicacion_Id,
+        c.Cliente_Id,
+        m.Modelo_Sillon_Id,   
+        SUM(df.Detalle_Factura_Cantidad)
+    FROM LOS_POLLOS_HERMANOS.DetalleFactura df
+    JOIN LOS_POLLOS_HERMANOS.Factura f ON f.Factura_Numero = df.Detalle_Factura_Factura
+    JOIN LOS_POLLOS_HERMANOS.DetallePedido dp ON df.Detalle_Factura_Detalle_Pedido = dp.Detalle_Pedido_Numero
+    JOIN LOS_POLLOS_HERMANOS.Sillon si ON si.Sillon_Codigo = dp.Detalle_Pedido_Sillon
+    JOIN LOS_POLLOS_HERMANOS.BI_Dimension_Modelo_Sillon m ON m.Modelo_Sillon_Id = si.Sillon_Modelo
+    JOIN LOS_POLLOS_HERMANOS.BI_Dimension_Tiempo t ON 
+        t.Tiempo_Anio = YEAR(f.Factura_Fecha)
+        AND t.Tiempo_Mes = MONTH(f.Factura_Fecha)
+        AND t.Tiempo_Cuatrimestre = CEILING(MONTH(f.Factura_Fecha)/4.0)
+    JOIN LOS_POLLOS_HERMANOS.BI_Dimension_Sucursal s ON s.Sucursal_Id = f.Factura_Sucursal
+    JOIN LOS_POLLOS_HERMANOS.Sucursal su ON s.Sucursal_Id = su.Sucursal_Codigo
+    JOIN LOS_POLLOS_HERMANOS.Ubicacion ub ON su.Sucursal_Ubicacion = ub.Ubicacion_Codigo
+    JOIN LOS_POLLOS_HERMANOS.BI_Dimension_Ubicacion u ON 
+        u.Ubicacion_Provincia = ub.Ubicacion_Provincia
+        AND u.Ubicacion_Localidad = ub.Ubicacion_Localidad
+    JOIN LOS_POLLOS_HERMANOS.BI_Dimension_Cliente c ON c.Cliente_Id = f.Factura_Cliente
+    GROUP BY 
+        t.Tiempo_Id,
+        s.Sucursal_Id,
+        u.Ubicacion_Id,
+        c.Cliente_Id,
+        m.Modelo_Sillon_Id;
+END
+GO
+-- Migramos los hechos de ventas por modelo desde el modelo transaccional a la tabla BI_Hechos_Ventas_Por_Modelo.
+-- Calculamos la cantidad vendida
+-- por combinación de período, sucursal, ubicación, cliente y modelo de sillón.
+-- Relacionamos cada venta con sus dimensiones correspondientes mediante JOINs.
+-- Esta migración permite analizar rendimiento de modelos.
+-- Utilizado en las vistas:
+--  BI_Vista_Rendimiento_Modelos
+
 -- Stored procedure que engloba todas las migraciones
 CREATE PROCEDURE LOS_POLLOS_HERMANOS.Migrar_Datos_BI AS
 BEGIN
@@ -968,6 +1073,7 @@ BEGIN
     EXEC LOS_POLLOS_HERMANOS.Migrar_Hechos_Compras;
     EXEC LOS_POLLOS_HERMANOS.Migrar_Hechos_Pedidos;
     EXEC LOS_POLLOS_HERMANOS.Migrar_Hechos_Envios;
+    EXEC LOS_POLLOS_HERMANOS.Migrar_Hechos_Ventas_Por_Modelo;
 END
 GO
 
@@ -980,9 +1086,10 @@ GO
 -- CREACIÓN VISTAS
 -- ===============
 
--- (1) Ganancias (108 rows)
+-- (1) Ganancias (171 rows)
 CREATE VIEW LOS_POLLOS_HERMANOS.BI_Vista_Ganancias AS
 SELECT
+    t.Tiempo_Anio AS Anio,
     t.Tiempo_Mes AS Mes,
     s.Sucursal_Id AS Sucursal,
     (
@@ -991,6 +1098,7 @@ SELECT
 		JOIN LOS_POLLOS_HERMANOS.BI_Dimension_Tiempo t1 ON t1.Tiempo_Id = v1.Tiempo_Id
         WHERE
             t1.Tiempo_Mes = t.Tiempo_Mes
+            AND t1.Tiempo_Anio = t.Tiempo_Anio
             AND v1.Sucursal_Id = s.Sucursal_Id
     )
     -
@@ -1000,6 +1108,7 @@ SELECT
 		JOIN LOS_POLLOS_HERMANOS.BI_Dimension_Tiempo t2 ON t2.Tiempo_Id = c.Tiempo_Id
         WHERE
             t2.Tiempo_Mes = t.Tiempo_Mes
+            AND t2.Tiempo_Anio = t.Tiempo_Anio
             AND c.Sucursal_Id = s.Sucursal_Id
     ), 0)
     AS Ganancia
@@ -1007,8 +1116,9 @@ FROM LOS_POLLOS_HERMANOS.BI_Dimension_Tiempo t
 JOIN LOS_POLLOS_HERMANOS.BI_Hechos_Ventas v ON v.Tiempo_Id = t.Tiempo_Id
 JOIN LOS_POLLOS_HERMANOS.BI_Dimension_Sucursal s ON s.Sucursal_Id = v.Sucursal_Id
 GROUP BY 
-    s.Sucursal_Id, 
-    t.Tiempo_Mes;
+    t.Tiempo_Anio,
+    t.Tiempo_Mes,
+    s.Sucursal_Id;
 GO
 -- Creamos la vista BI_Vista_Ganancias para analizar las ganancias mensuales por sucursal.
 -- Calculamos la ganancia como la diferencia entre el total de ventas y el total de compras, agrupando por mes y sucursal.
@@ -1022,7 +1132,7 @@ SELECT
     u.Ubicacion_Provincia AS Provincia,
     t.Tiempo_Anio AS Anio,
     t.Tiempo_Cuatrimestre AS Cuatrimestre,
-    AVG(v.Ventas_Monto) AS Promedio_Factura
+    CAST(SUM(v.Ventas_Monto) AS DECIMAL(18,2)) / SUM(v.Ventas_Cantidad) AS Promedio_Factura
 FROM LOS_POLLOS_HERMANOS.BI_Hechos_Ventas v
 JOIN LOS_POLLOS_HERMANOS.BI_Dimension_Tiempo t ON t.Tiempo_Id = v.Tiempo_Id
 JOIN LOS_POLLOS_HERMANOS.BI_Dimension_Ubicacion u ON u.Ubicacion_Id = v.Ubicacion_Id
@@ -1056,16 +1166,16 @@ FROM (
         c.Cliente_Rango_Etario AS Rango_Etario,
         m.Modelo_Sillon_Id,
         m.Modelo_Sillon_Descripcion,
-        SUM(v.Ventas_Cantidad) AS Total_Ventas,
+        SUM(v.Ventas_Por_Modelo_Cantidad) AS Total_Ventas,
         RANK() OVER (
             PARTITION BY 
                 t.Tiempo_Cuatrimestre,
                 t.Tiempo_Anio,
                 u.Ubicacion_Localidad,
                 c.Cliente_Rango_Etario
-            ORDER BY SUM(v.Ventas_Cantidad) DESC, m.Modelo_Sillon_Id -- Si tienen la misma cantidad de ventas desempata por Modelo_Sillon_Id
+            ORDER BY SUM(v.Ventas_Por_Modelo_Cantidad) DESC, m.Modelo_Sillon_Id -- Si tienen la misma cantidad de ventas desempata por Modelo_Sillon_Id
         ) AS Ranking
-    FROM LOS_POLLOS_HERMANOS.BI_Hechos_Ventas v
+    FROM LOS_POLLOS_HERMANOS.BI_Hechos_Ventas_Por_Modelo v
     JOIN LOS_POLLOS_HERMANOS.BI_Dimension_Tiempo t ON t.Tiempo_Id = v.Tiempo_Id
     JOIN LOS_POLLOS_HERMANOS.BI_Dimension_Ubicacion u ON u.Ubicacion_Id = v.Ubicacion_Id
     JOIN LOS_POLLOS_HERMANOS.BI_Dimension_Cliente c ON c.Cliente_Id = v.Cliente_Id
@@ -1083,7 +1193,7 @@ GO
 -- Creamos la vista BI_Vista_Rendimiento_Modelos para identificar los 3 modelos de sillón más vendidos.
 -- Calculamos el total de unidades vendidas por combinación de cuatrimestre, año, localidad y rango etario de cliente.
 -- Luego utilizamos RANK() para asignar un ranking de ventas y seleccionamos los top 3 modelos por grupo.
--- Utiliza los hechos de ventas y las dimensiones de tiempo, ubicación, cliente y modelo de sillón.
+-- Utiliza los hechos de ventas por modelo y las dimensiones de tiempo, ubicación, cliente y modelo de sillón.
 -- Esta vista permite entender qué modelos prefieren los distintos segmentos de clientes y regiones,
 -- brindando soporte para decisiones comerciales y de producción.
 
@@ -1110,10 +1220,11 @@ GO
 -- Utiliza los hechos de pedidos y las dimensiones de turno de venta, sucursal y tiempo.
 -- Facilita el análisis de demanda y de el volumen de pedidos, según turnos y sucursales a lo largo del tiempo.
 
--- (5) Conversión de pedidos (54 rows)
+-- (5) Conversión de pedidos (90 rows)
 CREATE VIEW LOS_POLLOS_HERMANOS.BI_Vista_Conversion_Pedidos AS
 SELECT
     e.Estado_Pedido_Estado AS Estado,
+    t1.Tiempo_Anio AS Anio,
     t1.Tiempo_Cuatrimestre AS Cuatrimestre,
     s1.Sucursal_Id AS Sucursal,
     SUM(p1.Pedidos_Cantidad) * 100.0 / (
@@ -1130,7 +1241,8 @@ JOIN LOS_POLLOS_HERMANOS.BI_Dimension_Estado_Pedido e ON e.Estado_Pedido_Id = p1
 JOIN LOS_POLLOS_HERMANOS.BI_Dimension_Tiempo t1 ON t1.Tiempo_Id = p1.Tiempo_Id
 JOIN LOS_POLLOS_HERMANOS.BI_Dimension_Sucursal s1 ON s1.Sucursal_Id = p1.Sucursal_Id
 GROUP BY 
-    e.Estado_Pedido_Estado, 
+    e.Estado_Pedido_Estado,
+    t1.Tiempo_Anio, 
     t1.Tiempo_Cuatrimestre, 
     s1.Sucursal_Id;
 GO
@@ -1140,17 +1252,19 @@ GO
 -- Esta vista permite medir la conversión y el seguimiento de los pedidos en distintos períodos y sucursales,
 -- facilitando el análisis de eficiencia y cumplimiento en la gestión de pedidos.
 
--- (6) Tiempo promedio de fabricación (27 rows)
+-- (6) Tiempo promedio de fabricación (45 rows)
 CREATE VIEW LOS_POLLOS_HERMANOS.BI_Vista_Tiempo_Promedio_Fabricacion AS
 SELECT
     s.Sucursal_Id AS Sucursal,
+    t.Tiempo_Anio AS Anio,
     t.Tiempo_Cuatrimestre AS Cuatrimestre,
-    AVG(v.Ventas_Tiempo_Fabricacion * 1.0) AS Tiempo_Promedio
+    AVG(v.Ventas_Tiempo_Fabricacion) AS Tiempo_Promedio
 FROM LOS_POLLOS_HERMANOS.BI_Hechos_Ventas v
 JOIN LOS_POLLOS_HERMANOS.BI_Dimension_Sucursal s ON s.Sucursal_Id = v.Sucursal_Id
 JOIN LOS_POLLOS_HERMANOS.BI_Dimension_Tiempo t ON t.Tiempo_Id = v.Tiempo_Id
 GROUP BY 
     s.Sucursal_Id,
+    t.Tiempo_Anio,
     t.Tiempo_Cuatrimestre;
 GO
 -- Creamos la vista BI_Vista_Tiempo_Promedio_Fabricacion para analizar el tiempo promedio de fabricación.
@@ -1159,14 +1273,16 @@ GO
 -- Esta vista permite evaluar la eficiencia de fabricación de cada sucursal en distintos períodos,
 -- facilitando el control y la mejora de los tiempos de producción.
 
--- (7) Promedio de compras (12 rows)
+-- (7) Promedio de compras (19 rows)
 CREATE VIEW LOS_POLLOS_HERMANOS.BI_Vista_Promedio_Compras AS
 SELECT
+    t.Tiempo_Anio AS Anio,
     t.Tiempo_Mes AS Mes,
     AVG(c.Compras_Monto) AS Promedio_Compras
 FROM LOS_POLLOS_HERMANOS.BI_Hechos_Compras c
 JOIN LOS_POLLOS_HERMANOS.BI_Dimension_Tiempo t ON t.Tiempo_Id = c.Tiempo_Id
 GROUP BY
+    t.Tiempo_Anio,
     t.Tiempo_Mes;
 GO
 -- Creamos la vista BI_Vista_Promedio_Compras para analizar el importe promedio de compras por mes.
@@ -1175,11 +1291,12 @@ GO
 -- Esta vista permite monitorear la evolución del gasto en compras a lo largo del año,
 -- facilitando el control y la planificación de compras mensuales.
 
--- (8) Compras por tipo de material (78 rows)
+-- (8) Compras por tipo de material (114 rows)
 CREATE VIEW LOS_POLLOS_HERMANOS.BI_Vista_Compras_Tipo_Material AS
 SELECT
     tm.Tipo_Material_Tipo AS Tipo_Material,
     s.Sucursal_Id AS Sucursal,
+    t.Tiempo_Anio AS Anio,
     t.Tiempo_Cuatrimestre AS Cuatrimestre,
     SUM(c.Compras_Monto) AS Total_Compras
 FROM LOS_POLLOS_HERMANOS.BI_Hechos_Compras c
@@ -1189,6 +1306,7 @@ JOIN LOS_POLLOS_HERMANOS.BI_Dimension_Tiempo t ON t.Tiempo_Id = c.Tiempo_Id
 GROUP BY
     tm.Tipo_Material_Tipo,
     s.Sucursal_Id,
+    t.Tiempo_Anio,
     t.Tiempo_Cuatrimestre;
 GO
 -- Creamos la vista BI_Vista_Compras_Tipo_Material para analizar el importe total de compras por tipo de material.
@@ -1196,14 +1314,16 @@ GO
 -- Utiliza los hechos de compras y las dimensiones de tipo de material, sucursal y tiempo.
 -- Esta vista permite controlar el gasto en materiales y comparar el consumo entre sucursales y períodos.
 
--- (9) Porcentaje de cumplimientos de Envíos (12 rows)
+-- (9) Porcentaje de cumplimientos de Envíos (19 rows)
 CREATE VIEW LOS_POLLOS_HERMANOS.BI_Vista_Porcentaje_Cumplimiento_Envios AS
 SELECT
+    t.Tiempo_Anio AS Anio,
     t.Tiempo_Mes AS Mes,
     SUM(e.Envios_Cantidad_En_Fecha) * 100.0 / SUM(e.Envios_Cantidad_Total) AS Porcentaje_Cumplimiento
 FROM LOS_POLLOS_HERMANOS.BI_Hechos_Envios e
 JOIN LOS_POLLOS_HERMANOS.BI_Dimension_Tiempo t ON t.Tiempo_Id = e.Tiempo_Id
 GROUP BY 
+    t.Tiempo_Anio,
     t.Tiempo_Mes;
 GO
 -- Creamos la vista BI_Vista_Porcentaje_Cumplimiento_Envios para analizar el porcentaje de envíos cumplidos en fecha.
