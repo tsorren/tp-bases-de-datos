@@ -904,7 +904,7 @@ BEGIN
         tm.Tipo_Material_Id,
         SUM(dc.Detalle_Compra_Subtotal)
     FROM LOS_POLLOS_HERMANOS.DetalleCompra dc
-    JOIN LOS_POLLOS_HERMANOS.Compra c on c.Compra_Numero = dc.Detalle_Compra_Compra
+    JOIN LOS_POLLOS_HERMANOS.Compra c ON c.Compra_Numero = dc.Detalle_Compra_Compra
     JOIN LOS_POLLOS_HERMANOS.BI_Dimension_Sucursal s ON s.Sucursal_Id = c.Compra_Sucursal
     JOIN LOS_POLLOS_HERMANOS.BI_Dimension_Tiempo t ON 
         t.Tiempo_Anio = YEAR(c.Compra_Fecha)
